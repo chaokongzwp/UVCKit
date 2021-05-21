@@ -38,7 +38,7 @@
 
 
 - (void) controlElementChanged:(id)sender	{
-	//NSLog(@"%s",__func__);
+	NSLog(@"%s",__func__);
 	if (sender == expElement)	{
 		[device setExposureTime:[sender val]];
 	}

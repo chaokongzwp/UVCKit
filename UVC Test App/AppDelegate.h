@@ -3,11 +3,12 @@
 #import <USBBusProber/USBBusProber.h>
 #import "AVCaptureVideoSource.h"
 #import "CVGLView.h"
+#import <VVUVCKit/VVUVCUIElement.h>
+#import "UVCButton.h"
 
 
 
-
-@interface AppDelegate : NSObject <NSApplicationDelegate,AVCaptureVideoSourceDelegate>	{
+@interface AppDelegate : NSObject <NSApplicationDelegate,AVCaptureVideoSourceDelegate, VVUVCUIElementDelegate, UVCMouseDelegate>	{
 	CVDisplayLinkRef			displayLink;
 	NSOpenGLContext				*sharedContext;
 	NSOpenGLPixelFormat			*pixelFormat;
@@ -17,6 +18,16 @@
 	
 	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras
 	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
+	
+	__weak IBOutlet UVCButton *rightPanTiltButton;
+	
+	__weak IBOutlet UVCButton *upPanTiltButton;
+	
+	__weak IBOutlet UVCButton *downPanTiltButton;
+	__weak IBOutlet UVCButton *leftPanTiltButton;
+	
+	IBOutlet VVUVCUIElement *zoomElement;
+	
 }
 
 - (IBAction) camPUBUsed:(id)sender;

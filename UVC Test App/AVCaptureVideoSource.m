@@ -7,6 +7,18 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 
 
 
+@implementation UVCCaptureDeviceFormat
+- (NSString *)formatDesc{
+	return [NSString stringWithFormat:@"%d * %d", self.width, self.height];
+}
+@end
+
+
+@interface AVCaptureVideoSource()
+@property (nonatomic, strong) NSMutableDictionary<UVCCaptureDeviceFormat *, AVCaptureDeviceFormat
+*> *formatMap;
+@end
+
 
 @implementation AVCaptureVideoSource
 
@@ -21,9 +33,10 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		propOutput = nil;
 		propQueue = nil;
 		propTexture = nil;
+		self.formatMap = [NSMutableDictionary dictionary];
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
 - (void) dealloc	{
@@ -35,13 +48,53 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		propTexture = nil;
 	}
 	OSSpinLockUnlock(&propLock);
-	[super dealloc];
+//	[super dealloc];
 }
 
 
 /*===================================================================================*/
 #pragma mark --------------------- control messages
 /*------------------------------------*/
+#define FourCC2Str(fourcc) (const char[]){*(((char*)&fourcc)+3), *(((char*)&fourcc)+2), *(((char*)&fourcc)+1), *(((char*)&fourcc)+0),0}
+
+- (NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> *)getMediaSubTypes {
+	if (propDeviceInput == nil){
+		return nil;
+	}
+	
+	AVCaptureDevice		*propDevice = propDeviceInput.device;
+	NSMutableDictionary<NSString *, NSMutableArray *> *types = [NSMutableDictionary dictionary];
+	
+	for (AVCaptureDeviceFormat *format in propDevice.formats){
+		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
+		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
+//		[types addObject:codeTypeStr];
+		
+		NSMutableArray *dimensionList = types[codeTypeStr];
+		if (dimensionList == nil) {
+			dimensionList = [NSMutableArray array];
+			types[codeTypeStr] = dimensionList;
+		}
+		
+		UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
+		
+		
+		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
+		NSLog(@"%u %u", dimensions.height, dimensions.width);
+		
+		uvcFormat.height = dimensions.height;
+		uvcFormat.width = dimensions.width;
+		
+		[dimensionList addObject:uvcFormat];
+	}
+	
+	return types;
+}
+
+- (void)updateDeviceFormat:(UVCCaptureDeviceFormat *)uvcFormat{
+	
+}
+
 
 
 - (void) loadDeviceWithUniqueID:(NSString *)n	{
@@ -53,10 +106,35 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	NSError				*err = nil;
 	OSSpinLockLock(&propLock);
 	AVCaptureDevice		*propDevice = [AVCaptureDevice deviceWithUniqueID:n];
+	
+	NSLog(@"formats %@", propDevice.formats);
+
+	for (AVCaptureDeviceFormat *format in propDevice.formats){
+//		NSLog(@"%d %d", format.highResolutionStillImageDimensions.height, format.highResolutionStillImageDimensions.width);
+		NSLog(@"%@", format.mediaType);
+		NSLog(@"%@", format.formatDescription);
+//		id fd = format.formatDescription;
+		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
+		
+		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
+		NSLog(@"%@", codeTypeStr);
+		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
+		NSLog(@"%u %u", dimensions.height, dimensions.width);
+		CFDictionaryRef dic = CMFormatDescriptionGetExtensions(format.formatDescription);
+		NSLog(@"%@", dic);
+		NSString *desc = format.description;
+		NSLog(@"%@", desc);
+	}
+	
+	
 	propDeviceInput = (propDevice==nil) ? nil : [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
 	if (propDeviceInput != nil)	{
 		propSession = [[AVCaptureSession alloc] init];
 		propOutput = [[AVCaptureVideoDataOutput alloc] init];
+		
+		NSLog(@"availableVideoCodecTypes %@", propOutput.availableVideoCodecTypes);
+		NSLog(@"availableVideoCVPixelFormatTypes %@", propOutput.availableVideoCVPixelFormatTypes);
+		
 		
 		if (![propSession canAddInput:propDeviceInput])	{
 			NSLog(@"\t\tproblem adding propDeviceInput in %s",__func__);
@@ -127,14 +205,14 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		if (propOutput != nil)
 			[propSession removeOutput:propOutput];
 		
-		dispatch_release(propQueue);
+//		dispatch_release(propQueue);
 		propQueue = NULL;
 		
-		[propDeviceInput release];
+//		[propDeviceInput release];
 		propDeviceInput = nil;
-		[propOutput release];
+//		[propOutput release];
 		propOutput = nil;
-		[propSession release];
+//		[propSession release];
 		propSession = nil;
 	}
 }
@@ -218,7 +296,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		NSString		*uniqueID = [devicePtr uniqueID];
 		[newItem setRepresentedObject:uniqueID];
 		[returnMe addObject:newItem];
-		[newItem release];
+//		[newItem release];
 	}
 	return returnMe;
 }

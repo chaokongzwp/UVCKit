@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B4E1C01264412AD005A857A /* IMAGE.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4E1C00264412AD005A857A /* IMAGE.xcassets */; };
+		4B92806E264A693A00C06688 /* UVCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B92806D264A693A00C06688 /* UVCButton.m */; };
 		960A01BF19D88DD4000A8627 /* APPLE_LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 960A01BE19D88DD4000A8627 /* APPLE_LICENSE */; };
 		9627739719D56BE5001EDD16 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9627739619D56BE5001EDD16 /* IOKit.framework */; };
 		9627739D19D56C69001EDD16 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2713119D5695B00705982 /* Cocoa.framework */; };
@@ -116,6 +118,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B4E1C00264412AD005A857A /* IMAGE.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IMAGE.xcassets; sourceTree = "<group>"; };
+		4B92806C264A693A00C06688 /* UVCButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCButton.h; sourceTree = "<group>"; };
+		4B92806D264A693A00C06688 /* UVCButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCButton.m; sourceTree = "<group>"; };
 		960A01BE19D88DD4000A8627 /* APPLE_LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APPLE_LICENSE; sourceTree = "<group>"; };
 		9627739619D56BE5001EDD16 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		9627739C19D56C69001EDD16 /* UVC Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UVC Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -247,6 +252,9 @@
 				962773B919D56D27001EDD16 /* AVCaptureVideoSource.m */,
 				962773C119D5D406001EDD16 /* CVGLView.h */,
 				962773C219D5D406001EDD16 /* CVGLView.m */,
+				4B4E1C00264412AD005A857A /* IMAGE.xcassets */,
+				4B92806C264A693A00C06688 /* UVCButton.h */,
+				4B92806D264A693A00C06688 /* UVCButton.m */,
 			);
 			path = "UVC Test App";
 			sourceTree = "<group>";
@@ -528,6 +536,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 96C2712419D5695B00705982;
@@ -548,6 +557,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				962773A319D56C69001EDD16 /* InfoPlist.strings in Resources */,
+				4B4E1C01264412AD005A857A /* IMAGE.xcassets in Resources */,
 				962773A919D56C69001EDD16 /* Credits.rtf in Resources */,
 				962773AF19D56C69001EDD16 /* MainMenu.xib in Resources */,
 			);
@@ -580,6 +590,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				962773A519D56C69001EDD16 /* main.m in Sources */,
+				4B92806E264A693A00C06688 /* UVCButton.m in Sources */,
 				962773AC19D56C69001EDD16 /* AppDelegate.m in Sources */,
 				962773BA19D56D27001EDD16 /* AVCaptureVideoSource.m in Sources */,
 				962773C319D5D406001EDD16 /* CVGLView.m in Sources */,
@@ -686,6 +697,7 @@
 		962773B119D56C69001EDD16 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
@@ -700,6 +712,7 @@
 		962773B219D56C69001EDD16 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
@@ -811,6 +824,11 @@
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "USBBusProber/USBBusProber-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					__ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES,
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = "USBBusProber/USBBusProber-Info.plist";
 				INSTALL_PATH = "@rpath";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";

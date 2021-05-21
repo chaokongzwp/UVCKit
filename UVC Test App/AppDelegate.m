@@ -3,8 +3,46 @@
 
 
 
-@implementation AppDelegate
+@implementation AppDelegate 
 
+- (IBAction)leftPTZAction:(id)sender {
+	[uvcController panTilt:UVC_PAN_TILT_LEFT];
+}
+
+- (IBAction)rightPTZAction:(id)sender {
+	[uvcController panTilt:UVC_PAN_TILT_RIGHT];
+}
+
+- (IBAction)upPTZAction:(id)sender {
+	[uvcController panTilt:UVC_PAN_TILT_UP];
+}
+
+- (IBAction)downPTZAction:(id)sender {
+	[uvcController panTilt:UVC_PAN_TILT_DOWN];
+}
+
+
+- (void)mouseDown:(NSEvent *)event sender:(nonnull id)sender{
+	if (sender == upPanTiltButton) {
+		[uvcController panTilt:UVC_PAN_TILT_UP];
+	} else if (sender == downPanTiltButton) {
+		[uvcController panTilt:UVC_PAN_TILT_DOWN];
+	}else if (sender == rightPanTiltButton) {
+		[uvcController panTilt:UVC_PAN_TILT_RIGHT];
+	}else if (sender == leftPanTiltButton) {
+		[uvcController panTilt:UVC_PAN_TILT_LEFT];
+	}
+}
+
+- (void)mouseUp:(NSEvent *)event sender:(nonnull id)sender{
+	[uvcController panTilt:UVC_PAN_TILT_CANCEL];
+}
+
+- (void) controlElementChanged:(id)sender{
+	if (sender == zoomElement){
+		[uvcController setZoom:[sender val]];
+	}
+}
 
 - (id) init	{
 	if (self = [super init])	{
@@ -50,29 +88,33 @@
 			displayLink = NULL;
 		}
 		else
-			CVDisplayLinkSetOutputCallback(displayLink, displayLinkCallback, self);
+			CVDisplayLinkSetOutputCallback(displayLink, displayLinkCallback, (__bridge void * _Nullable)(self));
 		//	make the video source (which needs the CV texture cache)
 		vidSrc = [[AVCaptureVideoSource alloc] init];
 		[vidSrc setDelegate:self];
 		
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
-- (void)dealloc	{
-    [super dealloc];
-}
+
 - (void) awakeFromNib	{
 	//	populate the camera pop-up button
 	[self populateCamPopUpButton];
+	[zoomElement setTitle:@"Zoom"];
+	
+	upPanTiltButton.delegate = self;
+	downPanTiltButton.delegate = self;
+	rightPanTiltButton.delegate = self;
+	leftPanTiltButton.delegate = self;
 }
 - (void) populateCamPopUpButton	{
 	[camPUB removeAllItems];
 	
 	NSMenuItem		*tmpItem = [[NSMenuItem alloc] initWithTitle:@"Select a camera!" action:nil keyEquivalent:@""];
 	[[camPUB menu] addItem:tmpItem];
-	[tmpItem release];
+//	[tmpItem release];
 	tmpItem = nil;
 	
 	NSArray		*devices = [vidSrc arrayOfSourceMenuItems];
@@ -94,11 +136,7 @@
 	if (repObj == nil)
 		return;
 	
-	//NSLog(@"\t\trepObj is an instance of %@, and is \"%@\"",[repObj class],repObj);
-	if (uvcController != nil)	{
-		[uvcController release];
-		uvcController = nil;
-	}
+//	NSLog(@"\t\trepObj is an instance of %@, and is \"%@\"",[repObj class],repObj);
 	[vidSrc loadDeviceWithUniqueID:[selectedItem representedObject]];
 	uvcController = [[VVUVCController alloc] initWithDeviceIDString:repObj];
 	if (uvcController==nil)
@@ -106,6 +144,13 @@
 	else	{
 		//[uvcController _autoDetectProcessingUnitID];
 		[uvcController openSettingsWindow];
+		
+		if ([uvcController zoomSupported])	{
+			[zoomElement setMin:(int)[uvcController minZoom]];
+			[zoomElement setMax:(int)[uvcController maxZoom]];
+			[zoomElement setVal:(int)[uvcController zoom]];
+		}
+		[zoomElement setEnabled:[uvcController zoomSupported]];
 	}
 }
 - (void) renderCallback	{
@@ -148,9 +193,10 @@ CVReturn displayLinkCallback(CVDisplayLinkRef displayLink,
 	CVOptionFlags *flagsOut, 
 	void *displayLinkContext)
 {
-	NSAutoreleasePool		*pool =[[NSAutoreleasePool alloc] init];
-	[(AppDelegate *)displayLinkContext renderCallback];
-	[pool release];
+	@autoreleasepool {
+		[(__bridge AppDelegate *)displayLinkContext renderCallback];
+	}
+	
 	return kCVReturnSuccess;
 }
 

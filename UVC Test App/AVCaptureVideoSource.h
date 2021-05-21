@@ -14,7 +14,13 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 - (void) listOfStaticSourcesUpdated:(id)videoSource;
 @end
 
+@interface UVCCaptureDeviceFormat : NSObject
+@property (assign, nonatomic) int32_t width;
+@property (assign, nonatomic) int32_t height;
+@property (copy, nonatomic)  NSString *subMediaType;
 
+- (NSString *)formatDesc;
+@end
 
 
 @interface AVCaptureVideoSource : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>	{
@@ -39,4 +45,5 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 
 - (CVOpenGLTextureRef) safelyGetRetainedTextureRef;
 
+- (NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> *)getMediaSubTypes;
 @end

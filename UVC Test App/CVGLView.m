@@ -71,7 +71,7 @@
 		initialized = NO;
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
 - (id) initWithCoder:(NSCoder *)c	{
@@ -80,7 +80,7 @@
 		initialized = NO;
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
 
@@ -89,7 +89,7 @@
 	OSSpinLockLock(&renderLock);
 	if (!initialized)	{
 		NSOpenGLContext			*sharedCtx = [appDelegate sharedContext];
-		NSOpenGLPixelFormat		*pFmt = [appDelegate pixelFormat];
+		NSOpenGLPixelFormat		*pFmt = [(AppDelegate *)appDelegate pixelFormat];
 		
 		NSOpenGLContext			*newCtx = [[NSOpenGLContext alloc] initWithFormat:pFmt shareContext:sharedCtx];
 		[self setOpenGLContext:newCtx];

@@ -96,7 +96,34 @@ typedef struct	{
 	uvc_control_info_t	*ctrlInfo;
 } uvc_param;
 
+typedef enum{
+	UVC_PAN_TILT_UP,
+	UVC_PAN_TILT_RIGHT,
+	UVC_PAN_TILT_DOWN,
+	UVC_PAN_TILT_LEFT,
+	UVC_PAN_TILT_CANCEL
+} UVC_PAN_TILT_DIRECTION;
 
+
+// relative pan tilt operations
+typedef struct {
+	int8_t pan_direction;
+	int8_t tilt_direction;
+	uint8_t min_pan_speed;
+	uint8_t min_tilt_speed;
+	uint8_t max_pan_speed;
+	uint8_t max_tilt_speed;
+	uint8_t resolution_pan_speed;
+	uint8_t resolution_tilt_speed;
+	uint8_t default_pan_speed;
+	uint8_t default_tilt_speed;
+	uint8_t current_pan_speed;
+	uint8_t current_tilt_speed;
+	uvc_control_info_t	*ctrlInfo;
+	BOOL supported;
+	BOOL result;
+	const char * error;
+}RelativePanTiltInfo;
 
 
 
@@ -122,7 +149,7 @@ This is probably the only class you'll have to work with in this framework.  The
 	uvc_param			focus;
 	uvc_param			zoom;
 	uvc_param			panTilt;
-	uvc_param			panTiltRel;
+	RelativePanTiltInfo			panTiltRel;
 	uvc_param			roll;
 	uvc_param			rollRel;
 	
@@ -401,5 +428,5 @@ This is probably the only class you'll have to work with in this framework.  The
 ///	The max white balance value
 - (long) maxWhiteBalance;
 
-
+- (BOOL) panTilt:(UVC_PAN_TILT_DIRECTION)direction;
 @end

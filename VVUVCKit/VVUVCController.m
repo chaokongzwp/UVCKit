@@ -199,7 +199,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	_panTiltCtrl.isRelative = NO;
 	_panTiltRelCtrl.unit = UVC_INPUT_TERMINAL_ID;
 	_panTiltRelCtrl.selector = UVC_CT_PANTILT_RELATIVE_CONTROL;
-	_panTiltRelCtrl.intendedSize = 1;
+	_panTiltRelCtrl.intendedSize = 4;
 	_panTiltRelCtrl.hasMin = YES;
 	_panTiltRelCtrl.hasMax = YES;
 	_panTiltRelCtrl.hasDef = YES;
@@ -365,10 +365,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSMutableArray	*devices = [prober devicesArray];
 		for (BusProbeDevice *devicePtr in devices)	{
 			if ([devicePtr locationID] == locationID)	{
-				//NSLog(@"\t\tfound device %@",[devicePtr deviceName]);
+				NSLog(@"\t\tfound device %@",[devicePtr deviceName]);
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
-				//NSLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
-				//NSLog(@"\t\tdevice dict is %@",tmpDict);
+				NSLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
+				NSLog(@"\t\tdevice dict is %@",tmpDict);
 				//[tmpDict writeToFile:[@"~/Desktop/tmpOut.plist" stringByExpandingTildeInPath] atomically:YES];
 				
 				
@@ -831,11 +831,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 //	this method gets called by _setData and _getDataFor
 - (BOOL) _sendControlRequest:(IOUSBDevRequest *)controlRequest {
-	//NSLog(@"%s",__func__);
-	//NSLog(@"\t\tindex=%d",controlRequest->wIndex);
-	//NSLog(@"\t\trequestType=%d",controlRequest->bmRequestType);
-	//NSLog(@"\t\trequest=%d",controlRequest->bRequest);
-	//NSLog(@"\t\t0x%X 0x%X 0x%X 0x%X",controlRequest.bRequest,controlRequest.wValue,controlRequest.wIndex,controlRequest.wLength);
+	NSLog(@"%s",__func__);
+//	NSLog(@"\t\tindex=%d",controlRequest->wIndex);
+//	NSLog(@"\t\trequestType=%0x",controlRequest->bmRequestType);
+//	NSLog(@"\t\trequest=%0x",controlRequest->bRequest);
+	NSLog(@"\t\t bmRequestType 0x%0X bRequest 0x%X wValue 0x%X wIndex 0x%X wLength 0x%X", controlRequest->bmRequestType, controlRequest->bRequest,controlRequest->wValue,controlRequest->wIndex,controlRequest->wLength);
 	if( !interface ){
 		NSLog( @"CameraControl Error: No interface to send request" );
 		return NO;
@@ -929,7 +929,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateParam:&focus];
 	[self _populateParam:&zoom];
 	[self _populateParam:&panTilt];
-	[self _populateParam:&panTiltRel];
+	[self getRelativePanTiltInfo:&panTiltRel];
+//	[self _populateParam:&panTiltRel];
 	[self _populateParam:&roll];
 	[self _populateParam:&rollRel];
 	
@@ -947,7 +948,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateParam:&autoWhiteBalance];
 	
 	[self _populateParam:&whiteBalance];
-	/*
+
 	NSLog(@"\t\t*******************");
 	NSLog(@"\t\t (min) - [val] - (max), def");
 	NSLog(@"\t\t*******************");
@@ -960,7 +961,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	NSLogParam(@"\t\t focus",focus);
 	NSLogParam(@"\t\t zoom",zoom);
 	NSLogParam(@"\t\t pan/tilt (abs)",panTilt);
-	NSLogParam(@"\t\t pan/tilt (rel)",panTiltRel);
+//	NSLogParam(@"\t\t pan/tilt (rel)",panTiltRel);
 	NSLogParam(@"\t\t roll (abs)",roll);
 	NSLogParam(@"\t\t roll (rel)",rollRel);
 	
@@ -977,8 +978,121 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	NSLogParam(@"\t\t auto wb",autoWhiteBalance);
 	NSLogParam(@"\t\t wb",whiteBalance);
 	NSLog(@"\t\t*******************");
-	*/
+
 }
+
+
+- (void)getRelativePanTiltInfo:(RelativePanTiltInfo *)param {
+	//NSLog(@"%s ... %p",__func__,param);
+	/*
+	if (param == &panTilt || param == &roll)	{
+		NSLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
+		goto DISABLED_PARAM;
+	}
+	*/
+	//long			*longPtr = nil;
+	u_int8_t		*bytesPtr = nil;
+	long			tmpLong = 0;
+	int				bytesRead = 0;
+	
+	//	do a "get info" request on the param first to check the param and make sure it can be set
+	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
+	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+	if (bytesRead <= 0)	{
+		//NSLog(@"\t\terr: couldn't get info %s",__func__);
+		goto DISABLED_PARAM;
+	}
+	tmpLong = 0x00000000;
+	memcpy(&tmpLong,bytesPtr,bytesRead);
+	free(bytesPtr);
+	bytesPtr = nil;
+	
+	//	make sure the param can be get and set- otherwise, disable the param!
+	BOOL canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
+	if (!canGetAndSet)	{
+		//NSLog(@"\t\terr: can't get or set %s",__func__);
+		goto DISABLED_PARAM;
+	}
+	
+	//	if i'm here, the "get info" request was successful, and the param can be both set and retrieved!
+	param->supported = YES;
+	
+	//	get the current val (which is definitely supported)
+	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+	if (bytesRead <= 0)	{
+		//NSLog(@"\t\terr: couldn't get current val in %s",__func__);
+		goto DISABLED_PARAM;
+	}
+	param->pan_direction = bytesPtr[0];
+	param->current_pan_speed = bytesPtr[1];
+	param->tilt_direction = bytesPtr[2];
+	param->current_tilt_speed = bytesPtr[3];
+	free(bytesPtr);
+	bytesPtr = nil;
+
+	
+	//	min
+	{
+		bytesRead = [self _requestValType:UVC_GET_MIN forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+		if (bytesRead <= 0)
+			goto DISABLED_PARAM;
+		param->pan_direction = bytesPtr[0];
+		param->min_pan_speed = bytesPtr[1];
+		param->tilt_direction = bytesPtr[2];
+		param->min_tilt_speed = bytesPtr[3];
+		free(bytesPtr);
+		bytesPtr = nil;
+	}
+	
+	//	max
+	{
+		bytesRead = [self _requestValType:UVC_GET_MAX forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+		if (bytesRead <= 0)
+			goto DISABLED_PARAM;
+		param->pan_direction = bytesPtr[0];
+		param->max_pan_speed = bytesPtr[1];
+		param->tilt_direction = bytesPtr[2];
+		param->max_tilt_speed = bytesPtr[3];
+		free(bytesPtr);
+		bytesPtr = nil;
+	}
+	
+	//	default
+	{
+		bytesRead = [self _requestValType:UVC_GET_DEF forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+		if (bytesRead <= 0)
+			goto DISABLED_PARAM;
+		param->pan_direction = bytesPtr[0];
+		param->default_pan_speed = bytesPtr[1];
+		param->tilt_direction = bytesPtr[2];
+		param->default_tilt_speed = bytesPtr[3];
+		free(bytesPtr);
+		bytesPtr = nil;
+	}
+	
+	//	res
+	{
+		bytesRead = [self _requestValType:UVC_GET_RES forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
+		if (bytesRead <= 0)
+			goto DISABLED_PARAM;
+		param->pan_direction = bytesPtr[0];
+		param->resolution_pan_speed = bytesPtr[1];
+		param->tilt_direction = bytesPtr[2];
+		param->resolution_tilt_speed = bytesPtr[3];
+		free(bytesPtr);
+		bytesPtr = nil;
+		//NSLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
+		//if (param->actualSize != bytesRead)
+		//	NSLog(@"******* ERR: bytes read on default don't match bytes read on val!");
+	}
+	
+	return;
+	DISABLED_PARAM:
+	//NSLog(@"\t\tDISABLED_PARAM %s",__func__);
+	param->supported = NO;
+	//param->ctrlInfo = nil;
+}
+
 - (void) _populateParam:(uvc_param *)param	{
 	//NSLog(@"%s ... %p",__func__,param);
 	/*
@@ -1160,6 +1274,32 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//NSLog(@"\t\t%s - FINISHED",__func__);
 	return returnMe;
 }
+
+- (BOOL)pushPanTiltToDevice:(RelativePanTiltInfo *)param
+			   panDirectiorn:(int8_t)panDirection
+					panSpeed:(u_int8_t)panSpeed
+			  tiltDirection:(int8_t)tiltDirection
+				   tiltSpeed:(u_int8_t)tiltSpeed{
+	u_int8_t data[4];
+	data[0]=panDirection;
+	data[1]=panSpeed;
+	data[2]=tiltDirection;
+	data[3]=tiltSpeed;
+	
+	NSLog(@"DATA 0x%0x 0x%0x 0x%0x 0x%0x", data[0], data[1], data[2], data[3]);
+	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
+}
+
+- (BOOL)resetPanTilt:(RelativePanTiltInfo *)param{
+	u_int8_t data[4];
+	data[0]=0;
+	data[1]=param->default_pan_speed;
+	data[2]=0;
+	data[3]=param->default_tilt_speed;
+	
+	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
+}
+
 - (void) _resetParamToDefault:(uvc_param *)param	{
 	//NSLog(@"%s ... %p",__func__,param);
 	/*
@@ -1189,7 +1329,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&focus];
 	[self _resetParamToDefault:&zoom];
 	[self _resetParamToDefault:&panTilt];
-	[self _resetParamToDefault:&panTiltRel];
+	[self resetPanTilt:&panTiltRel];
 	[self _resetParamToDefault:&roll];
 	[self _resetParamToDefault:&rollRel];
 	
@@ -1396,6 +1536,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!focus.supported) ? 0 : focus.max;
 }
 - (void) setZoom:(long)n	{
+	NSLog(@"set zoom %ld", n);
 	[self setVal:n forParam:&zoom];
 }
 - (long) zoom	{
@@ -1667,6 +1808,26 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 - (long) maxWhiteBalance	{
 	return whiteBalance.max;
+}
+
+- (BOOL) panTilt:(UVC_PAN_TILT_DIRECTION)direction{
+	switch (direction) {
+		case UVC_PAN_TILT_UP:
+			return [self pushPanTiltToDevice:&panTiltRel panDirectiorn:0 panSpeed:0 tiltDirection:1 tiltSpeed:panTiltRel.default_tilt_speed];
+			
+		case UVC_PAN_TILT_RIGHT:
+			return [self pushPanTiltToDevice:&panTiltRel panDirectiorn:1 panSpeed:panTiltRel.default_pan_speed tiltDirection:0 tiltSpeed:0];
+			
+		case UVC_PAN_TILT_DOWN:
+			return [self pushPanTiltToDevice:&panTiltRel panDirectiorn:0 panSpeed:0 tiltDirection:-1 tiltSpeed:panTiltRel.default_tilt_speed];
+			
+		case UVC_PAN_TILT_LEFT:
+			return [self pushPanTiltToDevice:&panTiltRel panDirectiorn:-1 panSpeed:panTiltRel.default_pan_speed tiltDirection:0 tiltSpeed:0];
+			
+		default:
+			return  [self pushPanTiltToDevice:&panTiltRel panDirectiorn:0 panSpeed:0 tiltDirection:0 tiltSpeed:0];;
+	}
+	
 }
 
 
