@@ -102,12 +102,19 @@
 - (void) awakeFromNib	{
 	//	populate the camera pop-up button
 	[self populateCamPopUpButton];
+	[subMediaTypePUB removeAllItems];
+	[dimensionPUB removeAllItems];
+	
 	[zoomElement setTitle:@"Zoom"];
 	
 	upPanTiltButton.delegate = self;
 	downPanTiltButton.delegate = self;
 	rightPanTiltButton.delegate = self;
 	leftPanTiltButton.delegate = self;
+//	backgroudView
+	backgroudView.wantsLayer = true;///设置背景颜色
+
+	backgroudView.layer.backgroundColor = [NSColor blackColor].CGColor;
 }
 - (void) populateCamPopUpButton	{
 	[camPUB removeAllItems];
@@ -123,10 +130,62 @@
 	
 	[camPUB selectItemAtIndex:0];
 }
+
+- (UVCCaptureDeviceFormat *)updateDimensionPopUpButton:(NSString *)subMediaType{
+	NSArray<UVCCaptureDeviceFormat *> *dimensionList = subMediaTypesInfo[subMediaType];
+	NSMutableArray		*returnMe = [NSMutableArray arrayWithCapacity:0];
+	UVCCaptureDeviceFormat *activeFormat = [vidSrc activeFormatInfo];
+	
+	for (UVCCaptureDeviceFormat *dimension in dimensionList)	{
+		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:dimension.formatDesc action:nil keyEquivalent:@""];
+		[newItem setRepresentedObject:dimension];
+		[returnMe addObject:newItem];
+	}
+	
+	[dimensionPUB removeAllItems];
+	unsigned long selectItem = returnMe.count - 1;
+	for (unsigned long i = 0; i < returnMe.count;i++){
+		NSMenuItem *item = returnMe[i];
+		[[dimensionPUB menu] addItem:item];
+
+		if ([[item title] isEqualToString:activeFormat.formatDesc]) {
+			selectItem = i;
+		}
+	}
+	
+	[dimensionPUB selectItemAtIndex:selectItem];
+	return dimensionList[selectItem];
+}
+
+- (void)updateSubMediaTypesPopUpButton{
+	NSMutableArray		*returnMe = [NSMutableArray arrayWithCapacity:0];
+	for (NSString *subMediaType in subMediaTypesInfo.allKeys)	{
+		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:subMediaType action:nil keyEquivalent:@""];
+		[newItem setRepresentedObject:subMediaTypesInfo[subMediaType]];
+		[returnMe addObject:newItem];
+	}
+	UVCCaptureDeviceFormat *activeFormat = [vidSrc activeFormatInfo];
+	[subMediaTypePUB removeAllItems];
+	int selectItem = 0;
+	for (int i = 0; i < returnMe.count;i++){
+		NSMenuItem *item = returnMe[i];
+		[[subMediaTypePUB menu] addItem:item];
+		if ([[item title] isEqualToString:activeFormat.subMediaType]) {
+			selectItem = i;
+		}
+	}
+	
+	[subMediaTypePUB selectItemAtIndex:selectItem];
+	
+	[self updateDimensionPopUpButton:activeFormat.subMediaType];
+}
+
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
 	//	start the displaylink
-	CVDisplayLinkStart(displayLink);
+//	CVDisplayLinkStart(displayLink);
 }
+
 - (IBAction) camPUBUsed:(id)sender	{
 	//NSLog(@"%s",__func__);
 	NSMenuItem		*selectedItem = [sender selectedItem];
@@ -143,7 +202,7 @@
 		NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
 	else	{
 		//[uvcController _autoDetectProcessingUnitID];
-		[uvcController openSettingsWindow];
+//		[uvcController openSettingsWindow];
 		
 		if ([uvcController zoomSupported])	{
 			[zoomElement setMin:(int)[uvcController minZoom]];
@@ -152,7 +211,36 @@
 		}
 		[zoomElement setEnabled:[uvcController zoomSupported]];
 	}
+	subMediaTypesInfo= [vidSrc getMediaSubTypes];
+	[self updateSubMediaTypesPopUpButton];
+	
+	[vidSrc setPreviewLayer:backgroudView];
 }
+
+- (IBAction)subMediaType:(id)sender {
+	NSMenuItem		*selectedItem = [sender selectedItem];
+	if (selectedItem == nil)
+		return;
+	
+	UVCCaptureDeviceFormat *format = [self updateDimensionPopUpButton:selectedItem.title];
+	
+	[vidSrc updateDeviceFormat:format];
+	[vidSrc setPreviewLayer:backgroudView];
+}
+
+- (IBAction)dimension:(id)sender {
+	NSMenuItem		*selectedItem = [sender selectedItem];
+	if (selectedItem == nil)
+		return;
+	UVCCaptureDeviceFormat *repObj = [selectedItem representedObject];
+	if (repObj == nil)
+		return;
+	
+	[vidSrc updateDeviceFormat:repObj];
+	[vidSrc setPreviewLayer:backgroudView];
+}
+
+
 - (void) renderCallback	{
 	CVOpenGLTextureRef		newTex = [vidSrc safelyGetRetainedTextureRef];
 	if (newTex == nil)

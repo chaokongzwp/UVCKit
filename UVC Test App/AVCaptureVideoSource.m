@@ -78,7 +78,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		
 		UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
 		
-		
+		uvcFormat.subMediaType = codeTypeStr;
 		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
 		NSLog(@"%u %u", dimensions.height, dimensions.width);
 		
@@ -91,13 +91,106 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	return types;
 }
 
-- (void)updateDeviceFormat:(UVCCaptureDeviceFormat *)uvcFormat{
+- (UVCCaptureDeviceFormat *)activeFormatInfo{
+	if (propDeviceInput == nil) {
+		return nil;
+	}
 	
+	AVCaptureDeviceFormat *format = propDeviceInput.device.activeFormat;
+	FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
+	NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
+	UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
+	uvcFormat.subMediaType = codeTypeStr;
+	
+	CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
+	NSLog(@"%u %u", dimensions.height, dimensions.width);
+	
+	uvcFormat.height = dimensions.height;
+	uvcFormat.width = dimensions.width;
+	
+	return uvcFormat;
+}
+
+- (void)updateDeviceFormat:(UVCCaptureDeviceFormat *)uvcFormat{
+	if (propDeviceInput == nil){
+		return;
+	}
+	
+	
+	NSLog(@"updateDeviceFormat %@ %@", uvcFormat.subMediaType, uvcFormat.formatDesc);
+	
+	AVCaptureDevice		*propDevice = propDeviceInput.device;
+	for (AVCaptureDeviceFormat *format in propDevice.formats) {
+		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
+		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
+		NSLog(@"%@", codeTypeStr);
+		if ([uvcFormat.subMediaType isEqualToString:codeTypeStr]) {
+			CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
+			NSLog(@"%u %u", dimensions.height, dimensions.width);
+			
+			if (uvcFormat.height == dimensions.height && uvcFormat.width == dimensions.width) {
+				if ([self running])
+					[self stop];
+				BOOL				bail = NO;
+				NSError				*err = nil;
+				OSSpinLockLock(&propLock);
+				NSLog(@"formats %@", propDevice.formats);
+				[propDevice lockForConfiguration:&err];
+				[propDevice setActiveFormat:format];
+				[propDevice unlockForConfiguration];
+				
+				NSMutableDictionary *videoSettings = [NSMutableDictionary new];
+				[videoSettings setValue:@(codeType) forKey:(NSString *)kCVPixelBufferPixelFormatTypeKey];
+				[videoSettings setValue:@(uvcFormat.width) forKey:(NSString *)kCVPixelBufferWidthKey];
+				[videoSettings setValue:@(uvcFormat.height) forKey:(NSString *)kCVPixelBufferHeightKey];
+			
+				propDeviceInput = [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
+				
+				if (propDeviceInput != nil)	{
+					propSession = [[AVCaptureSession alloc] init];
+					propOutput = [[AVCaptureVideoDataOutput alloc] init];
+					if (![propSession canAddInput:propDeviceInput])	{
+						NSLog(@"\t\tproblem adding propDeviceInput in %s",__func__);
+						bail = YES;
+					}
+					if (![propSession canAddOutput:propOutput])	{
+						NSLog(@"\t\tproblem adding propOutput in %s",__func__);
+						bail = YES;
+					}
+					
+					if (!bail)	{
+						propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+						[propOutput setSampleBufferDelegate:self queue:propQueue];
+						propOutput.videoSettings = videoSettings;
+						[propSession addInput:propDeviceInput];
+						[propSession addOutput:propOutput];
+						[propSession startRunning];
+					}
+				}
+				else
+					bail = YES;
+				OSSpinLockUnlock(&propLock);
+				
+				if (bail)
+					[self stop];
+				else
+					[self start];
+				break;
+			}
+		}
+	}
 }
 
 
+- (void)setPreviewLayer:(NSView *)view{
+	AVCaptureVideoPreviewLayer *preLayer = [AVCaptureVideoPreviewLayer layerWithSession: propSession];
+	preLayer.frame = view.bounds;
+	preLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+	[view.layer addSublayer:preLayer];
+}
 
-- (void) loadDeviceWithUniqueID:(NSString *)n	{
+
+- (void) loadDeviceWithUniqueID:(NSString *)n {
 	if ([self running])
 		[self stop];
 	if (n==nil)
@@ -106,35 +199,15 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	NSError				*err = nil;
 	OSSpinLockLock(&propLock);
 	AVCaptureDevice		*propDevice = [AVCaptureDevice deviceWithUniqueID:n];
-	
-	NSLog(@"formats %@", propDevice.formats);
-
-	for (AVCaptureDeviceFormat *format in propDevice.formats){
-//		NSLog(@"%d %d", format.highResolutionStillImageDimensions.height, format.highResolutionStillImageDimensions.width);
-		NSLog(@"%@", format.mediaType);
-		NSLog(@"%@", format.formatDescription);
-//		id fd = format.formatDescription;
-		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
-		
-		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
-		NSLog(@"%@", codeTypeStr);
-		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
-		NSLog(@"%u %u", dimensions.height, dimensions.width);
-		CFDictionaryRef dic = CMFormatDescriptionGetExtensions(format.formatDescription);
-		NSLog(@"%@", dic);
-		NSString *desc = format.description;
-		NSLog(@"%@", desc);
-	}
-	
+	[propDevice lockForConfiguration:&err];
+	[propDevice setActiveFormat:propDevice.formats[0]];
+	[propDevice unlockForConfiguration];
+	NSLog(@"formats %@", propDevice.activeFormat);
 	
 	propDeviceInput = (propDevice==nil) ? nil : [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
 	if (propDeviceInput != nil)	{
 		propSession = [[AVCaptureSession alloc] init];
 		propOutput = [[AVCaptureVideoDataOutput alloc] init];
-		
-		NSLog(@"availableVideoCodecTypes %@", propOutput.availableVideoCodecTypes);
-		NSLog(@"availableVideoCVPixelFormatTypes %@", propOutput.availableVideoCVPixelFormatTypes);
-		
 		
 		if (![propSession canAddInput:propDeviceInput])	{
 			NSLog(@"\t\tproblem adding propDeviceInput in %s",__func__);
@@ -228,13 +301,14 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 }
 - (void)captureOutput:(AVCaptureOutput *)o didOutputSampleBuffer:(CMSampleBufferRef)b fromConnection:(AVCaptureConnection *)c	{
 	//NSLog(@"%s",__func__);
-	/*
+	
 	CMFormatDescriptionRef		portFormatDesc = CMSampleBufferGetFormatDescription(b);
-	NSLog(@"\t\t\tCMMediaType is %ld, video is %ld",CMFormatDescriptionGetMediaType(portFormatDesc),kCMMediaType_Video);
-	NSLog(@"\t\t\tthe FourCharCode for the media subtype is %ld",CMFormatDescriptionGetMediaSubType(portFormatDesc));
+//	NSLog(@"\t\t\tCMMediaType is %s, video is %s",FourCC2Str(CMFormatDescriptionGetMediaType(portFormatDesc)),FourCC2Str(kCMMediaType_Video));
+	FourCharCode code= CMFormatDescriptionGetMediaSubType(portFormatDesc);
+	NSLog(@"\t\t\tthe FourCharCode for the media subtype is %s",FourCC2Str(code));
 	CMVideoDimensions		vidDims = CMVideoFormatDescriptionGetDimensions(portFormatDesc);
 	NSLog(@"\t\t\tport size is %d x %d",vidDims.width,vidDims.height);
-	*/
+	
 	
 	
 	//	if this came from a connection belonging to the data output
@@ -242,8 +316,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	//CMBlockBufferRef		blockBufferRef = CMSampleBufferGetDataBuffer(b)
 	CVImageBufferRef		imgBufferRef = CMSampleBufferGetImageBuffer(b);
 	if (imgBufferRef != NULL)	{
-		//CGSize		imgBufferSize = CVImageBufferGetDisplaySize(imgBufferRef);
-		//NSSizeLog(@"\t\timg buffer size is",imgBufferSize);
+		CGSize		imgBufferSize = CVImageBufferGetDisplaySize(imgBufferRef);
+		NSLog(@"\t\timg buffer size is %f %f",imgBufferSize.height, imgBufferSize.width);
 		CVOpenGLTextureRef		cvTexRef = NULL;
 		CVReturn				err = kCVReturnSuccess;
 		

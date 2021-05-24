@@ -46,4 +46,8 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 - (CVOpenGLTextureRef) safelyGetRetainedTextureRef;
 
 - (NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> *)getMediaSubTypes;
+- (void)updateDeviceFormat:(UVCCaptureDeviceFormat *)uvcFormat;
+- (UVCCaptureDeviceFormat *)activeFormatInfo;
+
+- (void)setPreviewLayer:(NSView *)view;
 @end

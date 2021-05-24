@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -658,16 +658,10 @@
                 <rect key="frame" x="0.0" y="0.0" width="876" height="703"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <openGLView wantsLayer="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550" customClass="CVGLView">
-                        <rect key="frame" x="7" y="312" width="862" height="349"/>
-                        <connections>
-                            <outlet property="appDelegate" destination="494" id="562"/>
-                        </connections>
-                    </openGLView>
                     <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="536">
-                        <rect key="frame" x="335" y="666" width="207" height="25"/>
+                        <rect key="frame" x="315" y="666" width="247" height="25"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="200" id="MnJ-sE-Eoh"/>
+                            <constraint firstAttribute="width" constant="240" id="MnJ-sE-Eoh"/>
                         </constraints>
                         <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="539" id="537">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -737,28 +731,92 @@
                             <outlet property="delegate" destination="494" id="Xrj-bF-EUR"/>
                         </connections>
                     </customView>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="vOY-xu-Fok">
+                        <rect key="frame" x="0.0" y="312" width="876" height="349"/>
+                        <subviews>
+                            <openGLView wantsLayer="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550" customClass="CVGLView">
+                                <rect key="frame" x="7" y="0.0" width="862" height="349"/>
+                                <connections>
+                                    <outlet property="appDelegate" destination="494" id="562"/>
+                                </connections>
+                            </openGLView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="550" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="top" id="G6K-pc-r7H"/>
+                            <constraint firstAttribute="trailing" secondItem="550" secondAttribute="trailing" constant="7" id="VSm-Y3-fsu"/>
+                            <constraint firstItem="550" firstAttribute="leading" secondItem="vOY-xu-Fok" secondAttribute="leading" constant="7" id="sr3-ph-U9p"/>
+                            <constraint firstAttribute="bottom" secondItem="550" secondAttribute="bottom" id="ydk-v6-Tiv"/>
+                        </constraints>
+                    </customView>
+                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dvO-gW-Pom" userLabel="dimension">
+                        <rect key="frame" x="587" y="231" width="207" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="200" id="nd0-2d-cL0"/>
+                        </constraints>
+                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="h02-Ba-tpp" id="UJj-8Z-XiE">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="HEq-NY-B9v">
+                                <items>
+                                    <menuItem title="Item 1" state="on" id="h02-Ba-tpp"/>
+                                    <menuItem title="Item 2" id="KG3-LJ-lvW"/>
+                                    <menuItem title="Item 3" id="EQ4-Wm-LQh"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="dimension:" target="494" id="k1R-kh-uRq"/>
+                        </connections>
+                    </popUpButton>
+                    <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d7S-IH-QXS" userLabel="subMediaType">
+                        <rect key="frame" x="335" y="231" width="207" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="200" id="uNh-hq-8Dh"/>
+                        </constraints>
+                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="5wr-Dc-QbA" id="7za-U8-Uy1">
+                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="menu"/>
+                            <menu key="menu" id="FRI-9N-mDV">
+                                <items>
+                                    <menuItem title="Item 1" state="on" id="5wr-Dc-QbA"/>
+                                    <menuItem title="Item 2" id="ixe-sm-kDr"/>
+                                    <menuItem title="Item 3" id="7Nc-ik-MCX"/>
+                                </items>
+                            </menu>
+                        </popUpButtonCell>
+                        <connections>
+                            <action selector="subMediaType:" target="494" id="6Gb-OV-L6I"/>
+                        </connections>
+                    </popUpButton>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="d7S-IH-QXS" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="8td-lx-WMY"/>
+                    <constraint firstItem="vOY-xu-Fok" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="ACv-4j-iQn"/>
+                    <constraint firstItem="dvO-gW-Pom" firstAttribute="centerY" secondItem="d7S-IH-QXS" secondAttribute="centerY" id="Drm-5E-xmc"/>
                     <constraint firstItem="536" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="Ehq-jy-PI4"/>
-                    <constraint firstItem="550" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="7" id="FJB-Lu-lG9"/>
                     <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="JrV-Uy-cZ9"/>
+                    <constraint firstAttribute="trailing" secondItem="vOY-xu-Fok" secondAttribute="trailing" id="Lar-bV-Urm"/>
                     <constraint firstItem="n69-en-zAy" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="23" id="SeF-4q-LoC"/>
-                    <constraint firstAttribute="trailing" secondItem="550" secondAttribute="trailing" constant="7" id="Wb6-5k-sQr"/>
-                    <constraint firstItem="550" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="9" id="hJb-QS-O3H"/>
-                    <constraint firstItem="Loy-sH-nVK" firstAttribute="top" secondItem="550" secondAttribute="bottom" constant="43" id="qUx-pp-1Ed"/>
+                    <constraint firstItem="Loy-sH-nVK" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="43" id="YXY-LP-MUi"/>
+                    <constraint firstItem="vOY-xu-Fok" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="9" id="hEW-bd-bpv"/>
+                    <constraint firstItem="d7S-IH-QXS" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="57" id="iBq-gr-CD3"/>
+                    <constraint firstItem="dvO-gW-Pom" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="trailing" constant="52" id="mhH-HI-tou"/>
                     <constraint firstAttribute="bottom" secondItem="n69-en-zAy" secondAttribute="bottom" constant="52" id="tDn-Mf-XUe"/>
                     <constraint firstItem="n69-en-zAy" firstAttribute="centerX" secondItem="Loy-sH-nVK" secondAttribute="centerX" id="xUg-Kk-RpW"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-569" y="-97"/>
+            <point key="canvasLocation" x="-883" y="-120.5"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
+                <outlet property="backgroudView" destination="vOY-xu-Fok" id="UCA-pL-PXg"/>
                 <outlet property="camPUB" destination="536" id="547"/>
+                <outlet property="dimensionPUB" destination="dvO-gW-Pom" id="1Ot-NI-lnL"/>
                 <outlet property="downPanTiltButton" destination="31v-TC-uGf" id="4Ax-eX-EwV"/>
                 <outlet property="glView" destination="550" id="555"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
+                <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
                 <outlet property="window" destination="371" id="532"/>
                 <outlet property="zoomElement" destination="n69-en-zAy" id="FsE-so-ej0"/>
@@ -768,9 +826,9 @@
     </objects>
     <resources>
         <image name="circle" width="24" height="24"/>
-        <image name="down" width="16" height="12"/>
-        <image name="left" width="14" height="16"/>
-        <image name="right" width="14" height="16"/>
-        <image name="up" width="16" height="14"/>
+        <image name="down" width="8" height="6"/>
+        <image name="left" width="7" height="8"/>
+        <image name="right" width="7" height="8"/>
+        <image name="up" width="8" height="7"/>
     </resources>
 </document>
