@@ -438,6 +438,56 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 										break;
 									}
 								}
+								
+								// extension Unit ID
+								for (NSDictionary *videoControlChild in videoControlChildren)	{
+									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
+									if ([controlChildName containsString:@"VDC (Control) Extension Unit"])	{
+										
+										//	get the 'children' array from the control child dict
+										NSArray			*extensionUnitChildren = [videoControlChild objectForKey:@"children"];
+										//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
+										for (NSDictionary *extensionUnitChild in extensionUnitChildren)	{
+											NSString		*unitIDString = [extensionUnitChild objectForKey:@"Unit ID:"];
+											if (unitIDString != nil)	{
+												//NSLog(@"\t\tunitIDString is %@",unitIDString);
+												extensionUnitID = (int)[unitIDString integerValue];
+												//NSLog(@"\t\tverifying: extensionUnitID now %d",extensionUnitID);
+												
+												//	...i can break because i found the unit ID
+												break;
+											}
+										}
+										
+										//	...i can break because i found the processing unit dict
+										break;
+									}
+								}
+								
+								for (NSDictionary *videoControlChild in videoControlChildren)	{
+									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
+									if ([controlChildName containsString:@"VDC (Control) Output Terminal"])	{
+										
+										//	get the 'children' array from the control child dict
+										NSArray			*outputTerminalChildren = [videoControlChild objectForKey:@"children"];
+										//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
+										for (NSDictionary *outputTerminalChild in outputTerminalChildren)	{
+											NSString		*unitIDString = [outputTerminalChild objectForKey:@"Unit ID:"];
+											if (unitIDString != nil)	{
+												//NSLog(@"\t\tunitIDString is %@",unitIDString);
+												outputTerminalID = (int)[unitIDString integerValue];
+												//NSLog(@"\t\tverifying: outputTerminalID now %d",outputTerminalID);
+												
+												//	...i can break because i found the unit ID
+												break;
+											}
+										}
+										
+										//	...i can break because i found the processing unit dict
+										break;
+									}
+								}
+								
 								//	...i can break because i found the video/control dict
 								break;
 							}
@@ -861,6 +911,136 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	*/
 	return YES;
 }
+
+
+- (int)getExtensionLen{
+	//NSLog(@"%s ... 0x%X",__func__,requestType);
+	int					returnMe = 0;
+	IOUSBDevRequest		controlRequest;
+	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
+	controlRequest.bRequest = UVC_GET_LEN;
+	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
+	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
+	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
+	//controlRequest.wIndex = (512 | interfaceNumber);
+	//	if it's a "get info" request, the length is always going to be 1!
+	controlRequest.wLength = 2;
+	controlRequest.wLenDone = 0;
+	
+	void *ret = malloc(controlRequest.wLength);
+	bzero(ret,2);
+	controlRequest.pData = ret;
+	
+	//	send the request, if it wasn't successful, return -1
+	if (![self _sendControlRequest:&controlRequest])
+		returnMe = -1;
+	//	else returnMe should be the number of bytes i actually read!
+	else
+		returnMe = controlRequest.wLenDone;
+	
+	//	if the number of bytes i actually read was <= 0 or the request failed, free the buffer i allocated!
+	if (returnMe <= 0)	{
+		controlRequest.pData = nil;
+	} else {
+		NSLog(@"%d", *((short int *)ret));
+		UInt8 data[2];
+		memcpy(data, ret, 2);
+		NSLog(@"%x %x", data[0], data[1]);
+		returnMe = *((short int *)ret);
+	}
+	
+	free(ret);
+	ret = nil;
+	
+	return returnMe;
+}
+
+- (NSString *)getExtensionVersion{
+	uint16 len = [self getExtensionLen];
+	//NSLog(@"%s ... 0x%X",__func__,requestType);
+	int					returnMe = 0;
+	NSString *version = nil;
+	IOUSBDevRequest		controlRequest;
+	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
+	controlRequest.bRequest = UVC_GET_CUR;
+	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
+	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
+	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
+	//controlRequest.wIndex = (512 | interfaceNumber);
+	//	if it's a "get info" request, the length is always going to be 1!
+	controlRequest.wLength = len;
+	controlRequest.wLenDone = 0;
+	
+	struct fireware_info *ret = malloc(sizeof(struct fireware_info));
+	bzero(ret,len);
+	controlRequest.pData = ret;
+	
+	//	send the request, if it wasn't successful, return -1
+	if (![self _sendControlRequest:&controlRequest])
+		returnMe = -1;
+	//	else returnMe should be the number of bytes i actually read!
+	else
+		returnMe = controlRequest.wLenDone;
+	
+	//	if the number of bytes i actually read was <= 0 or the request failed, free the buffer i allocated!
+	if (returnMe <= 0)	{
+		controlRequest.pData = nil;
+	} else {
+		NSString *cameraVer = [NSString stringWithFormat:@"Version : %d.%d.%d \n", ret->CamVersion[0], ret->CamVersion[1], ret->CamVersion[2]];
+		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
+		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
+		NSString *authorized = ret->AuthorizedStated?@"Authorized":@"";
+		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
+		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
+	}
+	
+	free(ret);
+	ret = nil;
+	return version;
+}
+
+-(void)setUpdateMode{
+	uint16 len = [self getExtensionLen];
+	int	   returnMe = 0;
+	NSString *version = nil;
+	IOUSBDevRequest		controlRequest;
+	controlRequest.bmRequestType = 0x21;//USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
+	controlRequest.bRequest = UVC_SET_CUR;
+	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
+	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
+	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
+	//controlRequest.wIndex = (512 | interfaceNumber);
+	//	if it's a "get info" request, the length is always going to be 1!
+	controlRequest.wLength = len;
+	controlRequest.wLenDone = 0;
+	
+	struct fireware_info *ret = malloc(sizeof(struct fireware_info));
+	bzero(ret,len);
+	controlRequest.pData = ret;
+	
+	//	send the request, if it wasn't successful, return -1
+	if (returnMe <= 0)	{
+		controlRequest.pData = nil;
+	} else {
+		NSString *cameraVer = [NSString stringWithFormat:@"Version : %d.%d.%d \n", ret->CamVersion[0], ret->CamVersion[1], ret->CamVersion[2]];
+		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
+		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
+		NSString *authorized = ret->AuthorizedStated?@"Authorized":@"";
+		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
+		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
+	}
+	free(ret);
+}
+
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{
 	//NSLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
@@ -871,6 +1051,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
 	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	controlRequest.wIndex = (ctrl->unit==UVC_INPUT_TERMINAL_ID) ? inputTerminalID : processingUnitID;
+	
+	NSLog(@"inputTerminalID %x, processingUnitID %x, unit %x", inputTerminalID, processingUnitID, ctrl->unit);
 	controlRequest.wIndex = ((controlRequest.wIndex<<8) | interfaceNumber);
 	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
 	//controlRequest.wIndex = (512 | interfaceNumber);

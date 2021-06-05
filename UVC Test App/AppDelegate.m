@@ -38,11 +38,35 @@
 	[uvcController panTilt:UVC_PAN_TILT_CANCEL];
 }
 
+- (IBAction)zoom_minus:(id)sender {
+	if (uvcController.zoom > uvcController.minZoom){
+		[uvcController setZoom:uvcController.zoom - 1];
+	}
+	
+	[uvcController setUpdateMode];
+}
+
+- (IBAction)zoom_plus:(id)sender {
+	if (uvcController.zoom < uvcController.maxZoom){
+		[uvcController setZoom:uvcController.zoom + 1];
+	}
+	
+	[uvcController getExtensionVersion];
+}
+
+- (IBAction)pathControlAction:(id)sender {
+	
+}
+
+
+
 - (void) controlElementChanged:(id)sender{
 	if (sender == zoomElement){
 		[uvcController setZoom:[sender val]];
 	}
 }
+
+
 
 - (id) init	{
 	if (self = [super init])	{
@@ -104,7 +128,7 @@
 	[self populateCamPopUpButton];
 	[subMediaTypePUB removeAllItems];
 	[dimensionPUB removeAllItems];
-	
+
 	[zoomElement setTitle:@"Zoom"];
 	
 	upPanTiltButton.delegate = self;
@@ -115,6 +139,8 @@
 	backgroudView.wantsLayer = true;///设置背景颜色
 
 	backgroudView.layer.backgroundColor = [NSColor blackColor].CGColor;
+//	mainView.wantsLayer = true;
+//	mainView.layer.backgroundColor = [NSColor whiteColor].CGColor;
 }
 - (void) populateCamPopUpButton	{
 	[camPUB removeAllItems];
@@ -124,11 +150,36 @@
 //	[tmpItem release];
 	tmpItem = nil;
 	
-	NSArray		*devices = [vidSrc arrayOfSourceMenuItems];
-	for (NSMenuItem *itemPtr in devices)
+	NSArray		*devicesMenuItems = [vidSrc arrayOfSourceMenuItems];
+	for (NSMenuItem *itemPtr in devicesMenuItems)
 		[[camPUB menu] addItem:itemPtr];
 	
 	[camPUB selectItemAtIndex:0];
+	
+	
+//	checkDeviceChange = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+//		NSArray<NSMenuItem *> *currentItems = [vidSrc arrayOfSourceMenuItems];;
+//		NSInteger index = 0;
+//		BOOL isFind = NO;
+//
+//		for (NSInteger i = 0; i < currentItems.count; i++) {
+//			NSString * dId= currentItems[i].representedObject;
+//			if ([dId isEqualToString:camPUB.selectedItem.representedObject]){
+//				[camPUB removeAllItems];
+//				isFind = YES;
+//				index = i;
+//				break;
+//			}
+//		}
+//
+//		for (NSMenuItem *itemPtr in devicesMenuItems) {
+//			[[camPUB menu] addItem:itemPtr];
+//		}
+//
+//		[camPUB selectItemAtIndex:index];
+//	}];
+	
+//	[checkDeviceChange fire];
 }
 
 - (UVCCaptureDeviceFormat *)updateDimensionPopUpButton:(NSString *)subMediaType{

@@ -28,10 +28,15 @@
 	
 	IBOutlet VVUVCUIElement *zoomElement;
 	
+	__weak IBOutlet NSView *mainView;
 	__weak IBOutlet NSPopUpButton *dimensionPUB;
 	__weak IBOutlet NSPopUpButton *subMediaTypePUB;
 	__weak IBOutlet NSView *backgroudView;
 	NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> * subMediaTypesInfo;
+	
+	__weak IBOutlet NSPathControl *pathControlWidget;
+	__weak IBOutlet NSPathCell *pathControl;
+	NSTimer *checkDeviceChange;
 }
 
 - (IBAction) camPUBUsed:(id)sender;

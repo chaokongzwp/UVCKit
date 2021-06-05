@@ -721,16 +721,6 @@
                             </imageView>
                         </subviews>
                     </view>
-                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="n69-en-zAy" customClass="VVUVCUIElement">
-                        <rect key="frame" x="40" y="52" width="168" height="34"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="168" id="Dc3-9A-5Zs"/>
-                            <constraint firstAttribute="height" constant="34" id="uT1-gh-445"/>
-                        </constraints>
-                        <connections>
-                            <outlet property="delegate" destination="494" id="Xrj-bF-EUR"/>
-                        </connections>
-                    </customView>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="vOY-xu-Fok">
                         <rect key="frame" x="0.0" y="312" width="876" height="349"/>
                         <subviews>
@@ -788,21 +778,55 @@
                             <action selector="subMediaType:" target="494" id="6Gb-OV-L6I"/>
                         </connections>
                     </popUpButton>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="8NC-cu-ePY" userLabel="zoom-out">
+                        <rect key="frame" x="65" y="71" width="18" height="18"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-out" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XAt-MD-Zes">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="zoom_minus:" target="494" id="7Sc-jC-X7r"/>
+                        </connections>
+                    </button>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="aye-38-2Ps" userLabel="zoom-in">
+                        <rect key="frame" x="165" y="71" width="18" height="18"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom_plus" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Szl-gc-PGD">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="zoom_plus:" target="494" id="sAl-JV-z88"/>
+                        </connections>
+                    </button>
+                    <pathControl verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dvo-U4-YE8">
+                        <rect key="frame" x="338" y="171" width="232" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="kac-MW-mnf">
+                            <font key="font" metaFont="system"/>
+                            <url key="url" string="file://localhost/Applications/"/>
+                        </pathCell>
+                        <connections>
+                            <action selector="pathControlAction:" target="494" id="iXA-70-qZB"/>
+                        </connections>
+                    </pathControl>
                 </subviews>
                 <constraints>
                     <constraint firstItem="d7S-IH-QXS" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="8td-lx-WMY"/>
                     <constraint firstItem="vOY-xu-Fok" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="ACv-4j-iQn"/>
+                    <constraint firstItem="aye-38-2Ps" firstAttribute="leading" secondItem="8NC-cu-ePY" secondAttribute="trailing" constant="82" id="D3n-at-drQ"/>
                     <constraint firstItem="dvO-gW-Pom" firstAttribute="centerY" secondItem="d7S-IH-QXS" secondAttribute="centerY" id="Drm-5E-xmc"/>
                     <constraint firstItem="536" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="Ehq-jy-PI4"/>
                     <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="JrV-Uy-cZ9"/>
                     <constraint firstAttribute="trailing" secondItem="vOY-xu-Fok" secondAttribute="trailing" id="Lar-bV-Urm"/>
-                    <constraint firstItem="n69-en-zAy" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="23" id="SeF-4q-LoC"/>
+                    <constraint firstAttribute="bottom" secondItem="aye-38-2Ps" secondAttribute="bottom" constant="71" id="Oob-g2-QDC"/>
+                    <constraint firstItem="aye-38-2Ps" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="Xe2-2g-DHn"/>
                     <constraint firstItem="Loy-sH-nVK" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="43" id="YXY-LP-MUi"/>
+                    <constraint firstItem="8NC-cu-ePY" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="ZcN-x5-G9m"/>
                     <constraint firstItem="vOY-xu-Fok" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="9" id="hEW-bd-bpv"/>
                     <constraint firstItem="d7S-IH-QXS" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="57" id="iBq-gr-CD3"/>
                     <constraint firstItem="dvO-gW-Pom" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="trailing" constant="52" id="mhH-HI-tou"/>
-                    <constraint firstAttribute="bottom" secondItem="n69-en-zAy" secondAttribute="bottom" constant="52" id="tDn-Mf-XUe"/>
-                    <constraint firstItem="n69-en-zAy" firstAttribute="centerX" secondItem="Loy-sH-nVK" secondAttribute="centerX" id="xUg-Kk-RpW"/>
+                    <constraint firstAttribute="bottom" secondItem="8NC-cu-ePY" secondAttribute="bottom" constant="71" id="nJ7-5Z-s7r"/>
+                    <constraint firstItem="8NC-cu-ePY" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="65" id="ovf-Kq-x0w"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="-883" y="-120.5"/>
@@ -815,11 +839,13 @@
                 <outlet property="downPanTiltButton" destination="31v-TC-uGf" id="4Ax-eX-EwV"/>
                 <outlet property="glView" destination="550" id="555"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
+                <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>
+                <outlet property="pathControl" destination="kac-MW-mnf" id="ENj-f5-c9u"/>
+                <outlet property="pathControlWidget" destination="Dvo-U4-YE8" id="2dq-8f-TBh"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
                 <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
                 <outlet property="window" destination="371" id="532"/>
-                <outlet property="zoomElement" destination="n69-en-zAy" id="FsE-so-ej0"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
@@ -830,5 +856,7 @@
         <image name="left" width="7" height="8"/>
         <image name="right" width="7" height="8"/>
         <image name="up" width="8" height="7"/>
+        <image name="zoom-out" width="18" height="18"/>
+        <image name="zoom_plus" width="18" height="18"/>
     </resources>
 </document>

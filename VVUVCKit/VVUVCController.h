@@ -125,7 +125,12 @@ typedef struct {
 	const char * error;
 }RelativePanTiltInfo;
 
-
+struct fireware_info{
+	UInt8  CamVersion[3];   //firmware version of camera Version = byte1.byte2.byte3
+	UInt8  dwCamDate[4];    //Year =  (byte4<<8) | byte5 Month = byte6 Day = byte7
+	UInt8  ProductVer[32];    // AutoFocus Version = byte8.byte9.byte10
+	UInt8  AuthorizedStated;  //Device  Authorized  Stated
+} __attribute__((packed));
 
 ///	An instance of VVUVCController will control the UVC params for a single USB video device.  This is probably the only class you'll have to create or work with in this framework.
 /**
@@ -138,6 +143,10 @@ This is probably the only class you'll have to work with in this framework.  The
 	UInt8							interfaceNumber;	//	pulled from interface on generalInit!
 	int					inputTerminalID;	//	the "address" of the terminal unit, which handles hardware controls like aperture/focus.  if this val is wrong, the hardware controls won't be available.
 	int					processingUnitID;	//	the "address" of the processing unit, which handles software controls like contrast/hue.  if this val is wrong, the software controls won't be available.
+	
+	int 				outputTerminalID;
+	
+	int					extensionUnitID;
 	
 	//id					<VVUVCControllerDelegate>delegate;
 	uvc_param			scanningMode;
@@ -429,4 +438,8 @@ This is probably the only class you'll have to work with in this framework.  The
 - (long) maxWhiteBalance;
 
 - (BOOL) panTilt:(UVC_PAN_TILT_DIRECTION)direction;
+
+- (NSString *)getExtensionVersion;
+
+-(void)setUpdateMode;
 @end

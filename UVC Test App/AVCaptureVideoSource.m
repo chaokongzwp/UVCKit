@@ -159,8 +159,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 					}
 					
 					if (!bail)	{
-						propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
-						[propOutput setSampleBufferDelegate:self queue:propQueue];
+//						propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+//						[propOutput setSampleBufferDelegate:self queue:propQueue];
 						propOutput.videoSettings = videoSettings;
 						[propSession addInput:propDeviceInput];
 						[propSession addOutput:propOutput];
@@ -199,9 +199,6 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	NSError				*err = nil;
 	OSSpinLockLock(&propLock);
 	AVCaptureDevice		*propDevice = [AVCaptureDevice deviceWithUniqueID:n];
-	[propDevice lockForConfiguration:&err];
-	[propDevice setActiveFormat:propDevice.formats[0]];
-	[propDevice unlockForConfiguration];
 	NSLog(@"formats %@", propDevice.activeFormat);
 	
 	propDeviceInput = (propDevice==nil) ? nil : [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
@@ -219,8 +216,16 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		}
 		
 		if (!bail)	{
-			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
-			[propOutput setSampleBufferDelegate:self queue:propQueue];
+//			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+//			[propOutput setSampleBufferDelegate:self queue:propQueue];
+			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(propDevice.activeFormat.formatDescription);
+			CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(propDevice.activeFormat.formatDescription);
+			
+			NSMutableDictionary *videoSettings = [NSMutableDictionary new];
+			[videoSettings setValue:@(codeType) forKey:(NSString *)kCVPixelBufferPixelFormatTypeKey];
+			[videoSettings setValue:@(dimensions.width) forKey:(NSString *)kCVPixelBufferWidthKey];
+			[videoSettings setValue:@(dimensions.height) forKey:(NSString *)kCVPixelBufferHeightKey];
+			propOutput.videoSettings = videoSettings;
 			
 			[propSession addInput:propDeviceInput];
 			[propSession addOutput:propOutput];
