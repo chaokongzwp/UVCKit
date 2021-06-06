@@ -42,22 +42,13 @@
 	if (uvcController.zoom > uvcController.minZoom){
 		[uvcController setZoom:uvcController.zoom - 1];
 	}
-	
-	[uvcController setUpdateMode];
 }
 
 - (IBAction)zoom_plus:(id)sender {
 	if (uvcController.zoom < uvcController.maxZoom){
 		[uvcController setZoom:uvcController.zoom + 1];
 	}
-	
-	[uvcController getExtensionVersion];
 }
-
-- (IBAction)pathControlAction:(id)sender {
-	
-}
-
 
 
 - (void) controlElementChanged:(id)sender{
@@ -150,31 +141,6 @@
 		[[camPUB menu] addItem:itemPtr];
 	
 	[camPUB selectItemAtIndex:0];
-	
-	
-//	checkDeviceChange = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-//		NSArray<NSMenuItem *> *currentItems = [vidSrc arrayOfSourceMenuItems];;
-//		NSInteger index = 0;
-//		BOOL isFind = NO;
-//
-//		for (NSInteger i = 0; i < currentItems.count; i++) {
-//			NSString * dId= currentItems[i].representedObject;
-//			if ([dId isEqualToString:camPUB.selectedItem.representedObject]){
-//				[camPUB removeAllItems];
-//				isFind = YES;
-//				index = i;
-//				break;
-//			}
-//		}
-//
-//		for (NSMenuItem *itemPtr in devicesMenuItems) {
-//			[[camPUB menu] addItem:itemPtr];
-//		}
-//
-//		[camPUB selectItemAtIndex:index];
-//	}];
-	
-//	[checkDeviceChange fire];
 }
 
 - (UVCCaptureDeviceFormat *)updateDimensionPopUpButton:(NSString *)subMediaType{
@@ -339,6 +305,8 @@
                 BOOL isYES = [fm fileExistsAtPath:url.path];
                 [firmwareFileTextfield setStringValue:url.path];
                 NSLog(@"%d", isYES);
+                [uvcController setUpdateMode];
+                break;
             }
         }
     }];
