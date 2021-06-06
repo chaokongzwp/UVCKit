@@ -995,7 +995,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSString *cameraVer = [NSString stringWithFormat:@"Version : %d.%d.%d \n", ret->CamVersion[0], ret->CamVersion[1], ret->CamVersion[2]];
 		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
 		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
-		NSString *authorized = ret->AuthorizedStated?@"Authorized":@"";
+		NSString *authorized = ret->AuthorizedStated?@"\nAuthorized":@"";
 		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
 		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
 	}
@@ -1026,6 +1026,13 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	struct fireware_info *ret = malloc(sizeof(struct fireware_info));
 	bzero(ret,len);
 	controlRequest.pData = ret;
+    
+    //    send the request, if it wasn't successful, return -1
+    if (![self _sendControlRequest:&controlRequest])
+        returnMe = -1;
+    //    else returnMe should be the number of bytes i actually read!
+    else
+        returnMe = controlRequest.wLenDone;
 	
 	//	send the request, if it wasn't successful, return -1
 	if (returnMe <= 0)	{
@@ -1034,7 +1041,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSString *cameraVer = [NSString stringWithFormat:@"Version : %d.%d.%d \n", ret->CamVersion[0], ret->CamVersion[1], ret->CamVersion[2]];
 		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
 		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
-		NSString *authorized = ret->AuthorizedStated?@"Authorized":@"";
+		NSString *authorized = ret->AuthorizedStated?@"\nAuthorized":@"";
 		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
 		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
 	}

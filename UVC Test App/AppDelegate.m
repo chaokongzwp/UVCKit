@@ -145,11 +145,6 @@
 - (void) populateCamPopUpButton	{
 	[camPUB removeAllItems];
 	
-	NSMenuItem		*tmpItem = [[NSMenuItem alloc] initWithTitle:@"Select a camera!" action:nil keyEquivalent:@""];
-	[[camPUB menu] addItem:tmpItem];
-//	[tmpItem release];
-	tmpItem = nil;
-	
 	NSArray		*devicesMenuItems = [vidSrc arrayOfSourceMenuItems];
 	for (NSMenuItem *itemPtr in devicesMenuItems)
 		[[camPUB menu] addItem:itemPtr];
@@ -235,38 +230,120 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
 	//	start the displaylink
 //	CVDisplayLinkStart(displayLink);
+    NSMenuItem        *selectedItem = [camPUB selectedItem];
+    [self handleSelectedCamera:selectedItem];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processAddDeviceEventWithNotification:) name:AVCaptureDeviceWasConnectedNotification object:nil];
+     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRemoveDeviceEventWithNotification:) name:AVCaptureDeviceWasDisconnectedNotification object:nil];
+}
+
+- (void)processAddDeviceEventWithNotification:(NSNotification *)noti{
+    NSLog(@"processAddDeviceEventWithNotification %@", noti);
+    AVCaptureDevice *device = noti.object;
+    NSLog(@"processAddDeviceEventWithNotification %@", device);
+    NSLog(@"processAddDeviceEventWithNotification %@", device.activeFormat.mediaType);
+    if (@available(macOS 10.15, *)) {
+        NSLog(@"processAddDeviceEventWithNotification %@", device.deviceType);
+    } else {
+        // Fallback on earlier versions
+    }
+    
+    if (![device.activeFormat.mediaType isEqualToString:@"vide"]){
+        // Fallback on earlier versions
+        return;
+    }
+    
+    NSMenuItem        *newItem = [[NSMenuItem alloc] initWithTitle:device.localizedName action:nil keyEquivalent:@""];
+    [newItem setRepresentedObject:device.uniqueID];
+    [[camPUB menu] addItem:newItem];
+}
+
+- (void)processRemoveDeviceEventWithNotification:(NSNotification *)noti{
+    NSLog(@"processRemoveDeviceEventWithNotification %@", noti);
+    
+    AVCaptureDevice *device = noti.object;
+//    NSInteger selectIndex = camPUB.indexOfSelectedItem;
+    BOOL isFind = NO;
+    
+    NSArray<NSMenuItem *> * menuItemList = camPUB.itemArray;
+    NSInteger deleteIndex = 0;
+    for (NSInteger i = 0; i < menuItemList.count; i++) {
+        NSMenuItem *item = menuItemList[i];
+        id    repObj = [item representedObject];
+        if ([device.uniqueID isEqualToString:repObj]) {
+            deleteIndex = i;
+            isFind = YES;
+            break;
+        }
+    }
+    
+    if (isFind) {
+        [camPUB removeItemAtIndex:deleteIndex];
+        NSMenuItem        *selectedItem = [camPUB selectedItem];
+        [self handleSelectedCamera:selectedItem];
+    }
+}
+
+- (void)handleSelectedCamera:(NSMenuItem *)selectedItem{
+    if (selectedItem == nil)
+        return;
+    id    repObj = [selectedItem representedObject];
+    if (repObj == nil || [[vidSrc currentDeivceId] isEqualToString:repObj])
+        return;
+    
+    [vidSrc loadDeviceWithUniqueID:[selectedItem representedObject]];
+    uvcController = [[VVUVCController alloc] initWithDeviceIDString:repObj];
+    if (uvcController==nil){
+        NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+        [versionTextView setString:@""];
+    } else    {
+        //[uvcController _autoDetectProcessingUnitID];
+//        [uvcController openSettingsWindow];
+        
+        if ([uvcController zoomSupported])    {
+            [zoomElement setMin:(int)[uvcController minZoom]];
+            [zoomElement setMax:(int)[uvcController maxZoom]];
+            [zoomElement setVal:(int)[uvcController zoom]];
+        }
+        [zoomElement setEnabled:[uvcController zoomSupported]];
+        [versionTextView setString:[uvcController getExtensionVersion]];
+    }
+    subMediaTypesInfo= [vidSrc getMediaSubTypes];
+    [self updateSubMediaTypesPopUpButton];
+    
+    [vidSrc setPreviewLayer:backgroudView];
 }
 
 - (IBAction) camPUBUsed:(id)sender	{
 	//NSLog(@"%s",__func__);
 	NSMenuItem		*selectedItem = [sender selectedItem];
-	if (selectedItem == nil)
-		return;
-	id				repObj = [selectedItem representedObject];
-	if (repObj == nil)
-		return;
-	
-//	NSLog(@"\t\trepObj is an instance of %@, and is \"%@\"",[repObj class],repObj);
-	[vidSrc loadDeviceWithUniqueID:[selectedItem representedObject]];
-	uvcController = [[VVUVCController alloc] initWithDeviceIDString:repObj];
-	if (uvcController==nil)
-		NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
-	else	{
-		//[uvcController _autoDetectProcessingUnitID];
-//		[uvcController openSettingsWindow];
-		
-		if ([uvcController zoomSupported])	{
-			[zoomElement setMin:(int)[uvcController minZoom]];
-			[zoomElement setMax:(int)[uvcController maxZoom]];
-			[zoomElement setVal:(int)[uvcController zoom]];
-		}
-		[zoomElement setEnabled:[uvcController zoomSupported]];
-	}
-	subMediaTypesInfo= [vidSrc getMediaSubTypes];
-	[self updateSubMediaTypesPopUpButton];
-	
-	[vidSrc setPreviewLayer:backgroudView];
+    [self handleSelectedCamera:selectedItem];
 }
+
+- (IBAction)searchFirmwareFileAction:(id)sender {
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+
+    [panel setCanChooseFiles:YES];//是否能选择文件file
+    [panel setCanChooseDirectories:NO];//是否能打开文件夹
+    [panel setAllowsMultipleSelection:NO];//是否允许多选file
+    panel.allowedFileTypes =@[@"bin"];
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result == NSFileHandlingPanelOKButton) {
+            for (NSURL *url in [panel URLs]) {
+                NSLog(@"--->%@",url.path);
+                NSFileManager *fm = [NSFileManager defaultManager];
+                // YES 存在   NO 不存在
+                BOOL isYES = [fm fileExistsAtPath:url.path];
+                [firmwareFileTextfield setStringValue:url.path];
+                NSLog(@"%d", isYES);
+            }
+        }
+    }];
+}
+
 
 - (IBAction)subMediaType:(id)sender {
 	NSMenuItem		*selectedItem = [sender selectedItem];

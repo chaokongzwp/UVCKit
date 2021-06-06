@@ -242,6 +242,10 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		[self start];
 }
 
+- (NSString *)currentDeivceId{
+    return propDeviceInput.device.uniqueID;
+}
+
 
 - (void) start	{
 	//NSLog(@"%s ... %@",__func__,self);

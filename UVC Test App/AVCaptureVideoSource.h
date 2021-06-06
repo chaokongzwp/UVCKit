@@ -36,6 +36,7 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 }
 
 - (void) loadDeviceWithUniqueID:(NSString *)n;
+- (NSString *)currentDeivceId;
 - (void) stop;
 - (void) _stop;
 

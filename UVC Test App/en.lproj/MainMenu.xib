@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -653,7 +653,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="703"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <view key="contentView" wantsLayer="YES" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="876" height="703"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -726,6 +726,10 @@
                         <subviews>
                             <openGLView wantsLayer="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550" customClass="CVGLView">
                                 <rect key="frame" x="7" y="0.0" width="862" height="349"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="862" id="9nZ-Bf-QDS"/>
+                                    <constraint firstAttribute="height" constant="349" id="H8J-T4-EET"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="appDelegate" destination="494" id="562"/>
                                 </connections>
@@ -798,17 +802,78 @@
                             <action selector="zoom_plus:" target="494" id="sAl-JV-z88"/>
                         </connections>
                     </button>
-                    <pathControl verticalHuggingPriority="750" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dvo-U4-YE8">
-                        <rect key="frame" x="338" y="171" width="232" height="22"/>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NCH-1b-IOC">
+                        <rect key="frame" x="336" y="159" width="50" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="kac-MW-mnf">
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Version" id="l5P-UD-mac">
                             <font key="font" metaFont="system"/>
-                            <url key="url" string="file://localhost/Applications/"/>
-                        </pathCell>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <scrollView fixedFrame="YES" borderType="groove" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YzY-jE-0lY">
+                        <rect key="frame" x="392" y="120" width="398" height="100"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" drawsBackground="NO" id="c6d-eN-Bjp">
+                            <rect key="frame" x="2" y="2" width="394" height="96"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="KPx-Qc-dSx">
+                                    <rect key="frame" x="0.0" y="0.0" width="394" height="96"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <size key="minSize" width="394" height="96"/>
+                                    <size key="maxSize" width="398" height="10000000"/>
+                                    <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                </textView>
+                            </subviews>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="6kG-ez-YPQ">
+                            <rect key="frame" x="-100" y="-100" width="240" height="16"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="n71-HH-2iu">
+                            <rect key="frame" x="380" y="2" width="16" height="96"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <progressIndicator maxValue="100" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="Mg5-IU-RdT">
+                        <rect key="frame" x="338" y="28" width="451" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="18" id="j4j-9i-5Mu"/>
+                            <constraint firstAttribute="width" constant="451" id="mrf-8w-ntl"/>
+                        </constraints>
+                    </progressIndicator>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m17-75-doC">
+                        <rect key="frame" x="105" y="73" width="39" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Zoom" id="uZm-Q9-1zi">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uh5-xD-EZg">
+                        <rect key="frame" x="709" y="63" width="87" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Upgrade" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HhS-FG-sq4">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
                         <connections>
-                            <action selector="pathControlAction:" target="494" id="iXA-70-qZB"/>
+                            <action selector="searchFirmwareFileAction:" target="494" id="pvi-hQ-udx"/>
                         </connections>
-                    </pathControl>
+                    </button>
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sK4-r0-QWv">
+                        <rect key="frame" x="338" y="66" width="370" height="29"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Firmware File Path" bezelStyle="round" id="txa-ha-Dbx">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstItem="d7S-IH-QXS" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="8td-lx-WMY"/>
@@ -819,6 +884,7 @@
                     <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="JrV-Uy-cZ9"/>
                     <constraint firstAttribute="trailing" secondItem="vOY-xu-Fok" secondAttribute="trailing" id="Lar-bV-Urm"/>
                     <constraint firstAttribute="bottom" secondItem="aye-38-2Ps" secondAttribute="bottom" constant="71" id="Oob-g2-QDC"/>
+                    <constraint firstAttribute="trailing" secondItem="Mg5-IU-RdT" secondAttribute="trailing" constant="87" id="R7E-by-7e5"/>
                     <constraint firstItem="aye-38-2Ps" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="Xe2-2g-DHn"/>
                     <constraint firstItem="Loy-sH-nVK" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="43" id="YXY-LP-MUi"/>
                     <constraint firstItem="8NC-cu-ePY" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="ZcN-x5-G9m"/>
@@ -827,9 +893,10 @@
                     <constraint firstItem="dvO-gW-Pom" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="trailing" constant="52" id="mhH-HI-tou"/>
                     <constraint firstAttribute="bottom" secondItem="8NC-cu-ePY" secondAttribute="bottom" constant="71" id="nJ7-5Z-s7r"/>
                     <constraint firstItem="8NC-cu-ePY" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="65" id="ovf-Kq-x0w"/>
+                    <constraint firstAttribute="bottom" secondItem="Mg5-IU-RdT" secondAttribute="bottom" constant="29" id="xns-PE-DbC"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-883" y="-120.5"/>
+            <point key="canvasLocation" x="-918" y="-222.5"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
@@ -837,14 +904,16 @@
                 <outlet property="camPUB" destination="536" id="547"/>
                 <outlet property="dimensionPUB" destination="dvO-gW-Pom" id="1Ot-NI-lnL"/>
                 <outlet property="downPanTiltButton" destination="31v-TC-uGf" id="4Ax-eX-EwV"/>
+                <outlet property="firmwareFileTextfield" destination="sK4-r0-QWv" id="60p-Lw-4al"/>
                 <outlet property="glView" destination="550" id="555"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
                 <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>
-                <outlet property="pathControl" destination="kac-MW-mnf" id="ENj-f5-c9u"/>
-                <outlet property="pathControlWidget" destination="Dvo-U4-YE8" id="2dq-8f-TBh"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
                 <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
+                <outlet property="upgradeProgressIndicator" destination="Mg5-IU-RdT" id="2BU-jV-o6G"/>
+                <outlet property="versionTextView" destination="KPx-Qc-dSx" id="Zig-1O-55H"/>
+                <outlet property="vesionTextField" destination="YzY-jE-0lY" id="ap7-Tk-Wor"/>
                 <outlet property="window" destination="371" id="532"/>
             </connections>
         </customObject>

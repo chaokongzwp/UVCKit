@@ -33,10 +33,15 @@
 	__weak IBOutlet NSPopUpButton *subMediaTypePUB;
 	__weak IBOutlet NSView *backgroudView;
 	NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> * subMediaTypesInfo;
-	
-	__weak IBOutlet NSPathControl *pathControlWidget;
-	__weak IBOutlet NSPathCell *pathControl;
 	NSTimer *checkDeviceChange;
+
+    
+    __unsafe_unretained IBOutlet NSTextView *versionTextView;
+    
+    __weak IBOutlet NSTextField *firmwareFileTextfield;
+    
+    
+    __weak IBOutlet NSProgressIndicator *upgradeProgressIndicator;
 }
 
 - (IBAction) camPUBUsed:(id)sender;
