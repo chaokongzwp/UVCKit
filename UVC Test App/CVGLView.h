@@ -6,7 +6,7 @@
 
 @interface CVGLView : NSOpenGLView	{
 	IBOutlet id		appDelegate;
-	OSSpinLock		renderLock;
+    NSRecursiveLock*    renderLock;
 	BOOL			initialized;
 }
 

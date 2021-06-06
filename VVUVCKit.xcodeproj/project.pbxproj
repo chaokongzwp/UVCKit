@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4B4E1C01264412AD005A857A /* IMAGE.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B4E1C00264412AD005A857A /* IMAGE.xcassets */; };
 		4B92806E264A693A00C06688 /* UVCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B92806D264A693A00C06688 /* UVCButton.m */; };
+		4B985CF8266CD02E00D8CA52 /* UVCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B985CF7266CD02E00D8CA52 /* UVCUtils.m */; };
 		960A01BF19D88DD4000A8627 /* APPLE_LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 960A01BE19D88DD4000A8627 /* APPLE_LICENSE */; };
 		9627739719D56BE5001EDD16 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9627739619D56BE5001EDD16 /* IOKit.framework */; };
 		9627739D19D56C69001EDD16 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2713119D5695B00705982 /* Cocoa.framework */; };
@@ -121,6 +122,8 @@
 		4B4E1C00264412AD005A857A /* IMAGE.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = IMAGE.xcassets; sourceTree = "<group>"; };
 		4B92806C264A693A00C06688 /* UVCButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCButton.h; sourceTree = "<group>"; };
 		4B92806D264A693A00C06688 /* UVCButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCButton.m; sourceTree = "<group>"; };
+		4B985CF6266CD02E00D8CA52 /* UVCUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCUtils.h; sourceTree = "<group>"; };
+		4B985CF7266CD02E00D8CA52 /* UVCUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCUtils.m; sourceTree = "<group>"; };
 		960A01BE19D88DD4000A8627 /* APPLE_LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APPLE_LICENSE; sourceTree = "<group>"; };
 		9627739619D56BE5001EDD16 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		9627739C19D56C69001EDD16 /* UVC Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UVC Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -255,6 +258,8 @@
 				4B4E1C00264412AD005A857A /* IMAGE.xcassets */,
 				4B92806C264A693A00C06688 /* UVCButton.h */,
 				4B92806D264A693A00C06688 /* UVCButton.m */,
+				4B985CF6266CD02E00D8CA52 /* UVCUtils.h */,
+				4B985CF7266CD02E00D8CA52 /* UVCUtils.m */,
 			);
 			path = "UVC Test App";
 			sourceTree = "<group>";
@@ -589,6 +594,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B985CF8266CD02E00D8CA52 /* UVCUtils.m in Sources */,
 				962773A519D56C69001EDD16 /* main.m in Sources */,
 				4B92806E264A693A00C06688 /* UVCButton.m in Sources */,
 				962773AC19D56C69001EDD16 /* AppDelegate.m in Sources */,
@@ -703,6 +709,7 @@
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
 				INFOPLIST_FILE = "UVC Test App/UVC Test App-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -718,6 +725,7 @@
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
 				INFOPLIST_FILE = "UVC Test App/UVC Test App-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -792,6 +800,7 @@
 				GCC_PREFIX_HEADER = "VVUVCKit/VVUVCKit-Prefix.pch";
 				INFOPLIST_FILE = "VVUVCKit/VVUVCKit-Info.plist";
 				INSTALL_PATH = "@rpath";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
@@ -809,6 +818,7 @@
 				GCC_PREFIX_HEADER = "VVUVCKit/VVUVCKit-Prefix.pch";
 				INFOPLIST_FILE = "VVUVCKit/VVUVCKit-Info.plist";
 				INSTALL_PATH = "@rpath";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;

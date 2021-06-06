@@ -1,6 +1,6 @@
 #import "AppDelegate.h"
 
-
+#import "UVCUtils.h"
 
 
 @implementation AppDelegate 
@@ -288,6 +288,55 @@
     [self handleSelectedCamera:selectedItem];
 }
 
+- (void)getCameraDir:(void (^)(NSString * result))handle{
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+
+    [panel setCanChooseFiles:NO];//是否能选择文件file
+    [panel setCanChooseDirectories:YES];//是否能打开文件夹
+    [panel setAllowsMultipleSelection:NO];//是否允许多选file
+    panel.allowedFileTypes =@[@"bin"];
+
+    [panel beginWithCompletionHandler:^(NSModalResponse result) {
+        if (result == NSModalResponseOK) {
+            for (NSURL *url in [panel URLs]) {
+                NSLog(@"--->%@",url.path);
+                handle(url.path);
+                break;
+            }
+        }
+    }];
+}
+
+- (void)copyFile:(NSString *)file toTargetDir:(NSString *)dir{
+    NSLog(@"copyFile %@ to %@", file, dir);
+    dir = [dir stringByAppendingString:@"/fw.bin"];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *err = nil;
+    if ([fm fileExistsAtPath:dir]){
+        if (![fm removeItemAtPath:dir error:&err]){
+            NSLog(@"removeItemAtPath %@ fail %@", dir, err);
+        }
+    }
+    
+    if (![fm copyItemAtPath:file toPath:dir error:&err]){
+        NSLog(@"copyFile %@ to %@ fail %@", file, dir,err);
+    }
+}
+
+- (void)createUpdateTagFileInDir:(NSString *)dir{
+    //创建文件管理对象
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *createDirPath = [NSString stringWithFormat:@"%@/update",dir];
+    NSError *err = nil;
+    BOOL isYES = [fm createDirectoryAtPath:createDirPath withIntermediateDirectories:YES attributes:nil error:&err];
+       
+    if (isYES) {
+        NSLog(@"创建 [%@] 成功", dir);
+    } else {
+        NSLog(@"创建 [%@] 失败 [%@]", dir, err);
+    }
+}
+
 - (IBAction)searchFirmwareFileAction:(id)sender {
     NSOpenPanel *panel = [NSOpenPanel openPanel];
 
@@ -297,7 +346,7 @@
     panel.allowedFileTypes =@[@"bin"];
 
     [panel beginWithCompletionHandler:^(NSModalResponse result) {
-        if (result == NSFileHandlingPanelOKButton) {
+        if (result == NSModalResponseOK) {
             for (NSURL *url in [panel URLs]) {
                 NSLog(@"--->%@",url.path);
                 NSFileManager *fm = [NSFileManager defaultManager];
@@ -306,6 +355,14 @@
                 [firmwareFileTextfield setStringValue:url.path];
                 NSLog(@"%d", isYES);
                 [uvcController setUpdateMode];
+                
+                [UVCUtils showAlert:@"选择摄像头更新文件夹！" title:@"请选择" window:mainView.window completionHandler:^{
+                    [self getCameraDir:^(NSString *result) {
+                        [self createUpdateTagFileInDir:result];
+                        [self copyFile:url.path toTargetDir:result];
+                    }];
+                }];
+                
                 break;
             }
         }

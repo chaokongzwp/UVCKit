@@ -76,7 +76,7 @@
 }
 - (id) initWithCoder:(NSCoder *)c	{
 	if (self = [super initWithCoder:c])	{
-		renderLock = OS_SPINLOCK_INIT;
+		renderLock = [NSRecursiveLock new];
 		initialized = NO;
 		return self;
 	}
@@ -86,7 +86,7 @@
 
 
 - (void) drawRect:(NSRect)r	{
-	OSSpinLockLock(&renderLock);
+    [renderLock lock];
 	if (!initialized)	{
 		NSOpenGLContext			*sharedCtx = [appDelegate sharedContext];
 		NSOpenGLPixelFormat		*pFmt = [(AppDelegate *)appDelegate pixelFormat];
@@ -96,14 +96,14 @@
 		[newCtx setView:self];
 		initialized = YES;
 	}
-	OSSpinLockUnlock(&renderLock);
+    [renderLock unlock];
 }
 - (void) drawTextureRef:(CVOpenGLTextureRef)n	{
 	if (n==nil)
 		return;
 	//NSLog(@"%s",__func__);
 	
-	OSSpinLockLock(&renderLock);
+    [renderLock lock];
 	
 	CGLContextObj	cgl_ctx = [[self openGLContext] CGLContextObj];
 	GLuint			name = CVOpenGLTextureGetName(n);
@@ -145,7 +145,7 @@
 	
 	glFlush();
 	
-	OSSpinLockUnlock(&renderLock);
+    [renderLock  unlock];
 }
 
 

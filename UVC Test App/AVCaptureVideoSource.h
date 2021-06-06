@@ -24,7 +24,7 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 
 
 @interface AVCaptureVideoSource : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>	{
-	OSSpinLock							propLock;
+    NSRecursiveLock*							propLock;
 	id <AVCaptureVideoSourceDelegate>	propDelegate;
 	BOOL								propRunning;
 	

@@ -25,7 +25,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 
 - (id) init	{
 	if (self = [super init])	{
-		propLock = OS_SPINLOCK_INIT;
+		propLock = [NSRecursiveLock new];
 		propDelegate = nil;
 		propRunning = NO;
 		propDeviceInput = nil;
@@ -42,12 +42,12 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 - (void) dealloc	{
 	[self stop];
 	
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	if (propTexture != nil)	{
 		CVOpenGLTextureRelease(propTexture);
 		propTexture = nil;
 	}
-	OSSpinLockUnlock(&propLock);
+    [propLock unlock];
 //	[super dealloc];
 }
 
@@ -133,7 +133,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 					[self stop];
 				BOOL				bail = NO;
 				NSError				*err = nil;
-				OSSpinLockLock(&propLock);
+                [propLock lock];
 				NSLog(@"formats %@", propDevice.formats);
 				[propDevice lockForConfiguration:&err];
 				[propDevice setActiveFormat:format];
@@ -159,22 +159,24 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 					}
 					
 					if (!bail)	{
-//						propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
-//						[propOutput setSampleBufferDelegate:self queue:propQueue];
+//                        propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+//                        [propOutput setSampleBufferDelegate:self queue:propQueue];
 						propOutput.videoSettings = videoSettings;
 						[propSession addInput:propDeviceInput];
 						[propSession addOutput:propOutput];
 						[propSession startRunning];
 					}
 				}
-				else
-					bail = YES;
-				OSSpinLockUnlock(&propLock);
+                else{
+                    bail = YES;
+                }
+                [propLock unlock];
 				
-				if (bail)
+                if (bail){
 					[self stop];
-				else
+                } else {
 					[self start];
+                }
 				break;
 			}
 		}
@@ -197,7 +199,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		return;
 	BOOL				bail = NO;
 	NSError				*err = nil;
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	AVCaptureDevice		*propDevice = [AVCaptureDevice deviceWithUniqueID:n];
 	NSLog(@"formats %@", propDevice.activeFormat);
 	
@@ -232,9 +234,10 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 			[propSession startRunning];
 		}
 	}
-	else
+    else{
 		bail = YES;
-	OSSpinLockUnlock(&propLock);
+    }
+    [propLock unlock];
 	
 	if (bail)
 		[self stop];
@@ -249,25 +252,27 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 
 - (void) start	{
 	//NSLog(@"%s ... %@",__func__,self);
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	if (!propRunning)	{
 		[self _start];
 		propRunning = YES;
 	}
-	else
+    else{
 		NSLog(@"\t\tERR: starting something that wasn't stopped, %s",__func__);
-	OSSpinLockUnlock(&propLock);
+    }
+    [propLock unlock];
 }
 - (void) stop	{
 	//NSLog(@"%s ... %@",__func__,self);
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	if (propRunning)	{
 		[self _stop];
 		propRunning = NO;
 	}
-	else
+    else {
 		NSLog(@"\t\tERR: stopping something that wasn't running, %s",__func__);
-	OSSpinLockUnlock(&propLock);
+    }
+    [propLock unlock];
 }
 
 
@@ -312,7 +317,6 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	//NSLog(@"%s",__func__);
 	
 	CMFormatDescriptionRef		portFormatDesc = CMSampleBufferGetFormatDescription(b);
-//	NSLog(@"\t\t\tCMMediaType is %s, video is %s",FourCC2Str(CMFormatDescriptionGetMediaType(portFormatDesc)),FourCC2Str(kCMMediaType_Video));
 	FourCharCode code= CMFormatDescriptionGetMediaSubType(portFormatDesc);
 	NSLog(@"\t\t\tthe FourCharCode for the media subtype is %s",FourCC2Str(code));
 	CMVideoDimensions		vidDims = CMVideoFormatDescriptionGetDimensions(portFormatDesc);
@@ -327,26 +331,26 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	if (imgBufferRef != NULL)	{
 		CGSize		imgBufferSize = CVImageBufferGetDisplaySize(imgBufferRef);
 		NSLog(@"\t\timg buffer size is %f %f",imgBufferSize.height, imgBufferSize.width);
-		CVOpenGLTextureRef		cvTexRef = NULL;
-		CVReturn				err = kCVReturnSuccess;
-		
-		
-		err = CVOpenGLTextureCacheCreateTextureFromImage(NULL,_textureCache,imgBufferRef,NULL,&cvTexRef);
-		if (err != kCVReturnSuccess)	{
-			NSLog(@"\t\terr %d at CVOpenGLTextureCacheCreateTextureFromImage() in %s",err,__func__);
-		}
-		else	{
-			OSSpinLockLock(&propLock);
-			if (propTexture != nil)	{
-				CVOpenGLTextureRelease(propTexture);
-				propTexture = nil;
-			}
-			propTexture = cvTexRef;
-			//CVOpenGLTextureRelease(cvTexRef);
-			OSSpinLockUnlock(&propLock);
-		}
+//		CVOpenGLTextureRef		cvTexRef = NULL;
+//		CVReturn				err = kCVReturnSuccess;
+//
+//
+//		err = CVOpenGLTextureCacheCreateTextureFromImage(NULL,_textureCache,imgBufferRef,NULL,&cvTexRef);
+//		if (err != kCVReturnSuccess)	{
+//			NSLog(@"\t\terr %d at CVOpenGLTextureCacheCreateTextureFromImage() in %s",err,__func__);
+//		}
+//		else	{
+//            [propLock lock];
+//			if (propTexture != nil)	{
+//				CVOpenGLTextureRelease(propTexture);
+//				propTexture = nil;
+//			}
+//			propTexture = cvTexRef;
+//			//CVOpenGLTextureRelease(cvTexRef);
+//            [propLock unlock];
+//		}
 	}
-	CVOpenGLTextureCacheFlush(_textureCache,0);
+//	CVOpenGLTextureCacheFlush(_textureCache,0);
 	
 	
 }
@@ -359,15 +363,15 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 
 - (BOOL) running	{
 	BOOL		returnMe;
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	returnMe = propRunning;
-	OSSpinLockUnlock(&propLock);
+    [propLock unlock];
 	return returnMe;
 }
 - (void) setDelegate:(id<AVCaptureVideoSourceDelegate>)n	{
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	propDelegate = n;
-	OSSpinLockUnlock(&propLock);
+    [propLock unlock];
 }
 - (NSArray *) arrayOfSourceMenuItems	{
 	NSArray		*devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
@@ -385,12 +389,12 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 }
 - (CVOpenGLTextureRef) safelyGetRetainedTextureRef	{
 	CVOpenGLTextureRef		returnMe = NULL;
-	OSSpinLockLock(&propLock);
+    [propLock lock];
 	if (propTexture != nil)	{
 		returnMe = propTexture;
 		CVOpenGLTextureRetain(returnMe);
 	}
-	OSSpinLockUnlock(&propLock);
+    [propLock unlock];
 	return returnMe;
 }
 
