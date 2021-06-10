@@ -64,12 +64,10 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	
 	AVCaptureDevice		*propDevice = propDeviceInput.device;
 	NSMutableDictionary<NSString *, NSMutableArray *> *types = [NSMutableDictionary dictionary];
-	
+	NSLog(@"[%@] Media Sub Types:", [propDevice localizedName]);
 	for (AVCaptureDeviceFormat *format in propDevice.formats){
 		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
 		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
-//		[types addObject:codeTypeStr];
-		
 		NSMutableArray *dimensionList = types[codeTypeStr];
 		if (dimensionList == nil) {
 			dimensionList = [NSMutableArray array];
@@ -80,7 +78,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		
 		uvcFormat.subMediaType = codeTypeStr;
 		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
-		NSLog(@"%u %u", dimensions.height, dimensions.width);
+		NSLog(@"%@ %u*%u", codeTypeStr, dimensions.width, dimensions.height);
 		
 		uvcFormat.height = dimensions.height;
 		uvcFormat.width = dimensions.width;

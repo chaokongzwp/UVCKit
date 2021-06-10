@@ -347,7 +347,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return nil;
 }
 - (id) initWithLocationID:(UInt32)locationID {
-	//NSLog(@"%s ... %d, %X",__func__,(unsigned int)locationID,(unsigned int)locationID);
+	NSLog(@"%s ... %d, %X",__func__,(unsigned int)locationID,(unsigned int)locationID);
 	self = [super init];
 	if (self!=nil) {
 		//	technically i don't need to set these here- they're calculated below from the BusProber, but default values are good, m'kay?
@@ -1010,7 +1010,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	int	   returnMe = 0;
 	NSString *version = nil;
 	IOUSBDevRequest		controlRequest;
-	controlRequest.bmRequestType = 0x21;//USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
+	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
 	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
 	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
@@ -1025,7 +1025,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	struct fireware_info *ret = malloc(sizeof(struct fireware_info));
 	bzero(ret,len);
+	memset(ret, 0xaa, 1);
 	controlRequest.pData = ret;
+	
     
     //    send the request, if it wasn't successful, return -1
     if (![self _sendControlRequest:&controlRequest])
@@ -1107,6 +1109,42 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	returnMe = [self _sendControlRequest:&controlRequest];
 	return returnMe;
 }
+
+//UVC_CT_ZOOM_ABSOLUTE_CONTROL = 0x0B,
+//UVC_CT_ZOOM_RELATIVE_CONTROL = 0x0C,
+//UVC_CT_PANTILT_ABSOLUTE_CONTROL = 0x0D,
+//UVC_CT_PANTILT_RELATIVE_CONTROL = 0x0E,
+
+
+- (BOOL) setRelativeZoomControl:(UInt8)bZoom{
+	BOOL			returnMe = NO;
+	UInt8 bytes[3];
+	
+	bytes[0] = bZoom;
+	bytes[1] = 0;
+	if (bZoom == 0) {
+		bytes[2] = 0;
+	}else{
+		bytes[2] = 7;
+	}
+	
+	//NSLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
+	IOUSBDevRequest		controlRequest;
+	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
+	controlRequest.bRequest = UVC_SET_CUR;
+	controlRequest.wValue = (UVC_CT_ZOOM_RELATIVE_CONTROL << 8) | 0x00;
+	controlRequest.wIndex = ((inputTerminalID<<8) | interfaceNumber);
+	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
+	//controlRequest.wIndex = (512 | interfaceNumber);
+	controlRequest.wLength = 3;
+	controlRequest.wLenDone = 0;
+	controlRequest.pData = bytes;
+	returnMe = [self _sendControlRequest:&controlRequest];
+	return returnMe;
+}
+
+
+
 - (void) _populateAllParams	{
 	
 	[self _populateParam:&scanningMode];
@@ -1479,14 +1517,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
 }
 
-- (BOOL)resetPanTilt:(RelativePanTiltInfo *)param{
-	u_int8_t data[4];
-	data[0]=0;
-	data[1]=param->default_pan_speed;
-	data[2]=0;
-	data[3]=param->default_tilt_speed;
+- (BOOL)resetPanTilt{
+	u_int8_t data[8];
+	memset(data, 0, 8);
 	
-	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
+	return [self _setBytes:data sized:4 toControl:&_panTiltCtrl];
 }
 
 - (void) _resetParamToDefault:(uvc_param *)param	{
@@ -1518,7 +1553,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&focus];
 	[self _resetParamToDefault:&zoom];
 	[self _resetParamToDefault:&panTilt];
-	[self resetPanTilt:&panTiltRel];
+	[self resetPanTilt];
 	[self _resetParamToDefault:&roll];
 	[self _resetParamToDefault:&rollRel];
 	

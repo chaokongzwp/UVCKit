@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "zoom_plus.png",
+      "filename" : "home-filling.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "home-filling-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "home-filling-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

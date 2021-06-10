@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -649,11 +649,15 @@
             </items>
             <point key="canvasLocation" x="-237" y="322"/>
         </menu>
-        <window title="UVC Test App" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="371">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+        <window title="UVC Test App" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" animationBehavior="default" id="371">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="703"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
+            <value key="minSize" type="size" width="876" height="703"/>
+            <value key="maxSize" type="size" width="876" height="703"/>
+            <value key="minFullScreenContentSize" type="size" width="876" height="703"/>
+            <value key="maxFullScreenContentSize" type="size" width="876" height="703"/>
             <view key="contentView" wantsLayer="YES" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="876" height="703"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -679,46 +683,61 @@
                         </connections>
                     </popUpButton>
                     <view id="Loy-sH-nVK">
-                        <rect key="frame" x="44" y="109" width="160" height="160"/>
+                        <rect key="frame" x="44" y="66" width="163" height="203"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jko-bb-c6A" customClass="UVCButton">
-                                <rect key="frame" x="112" y="73" width="48" height="14"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m17-75-doC">
+                                <rect key="frame" x="62" y="19" width="39" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="left" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="tqI-OU-o8B">
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Zoom" id="uZm-Q9-1zi">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8NC-cu-ePY" userLabel="zoom-out" customClass="UVCButton">
+                                <rect key="frame" x="20" y="11" width="32" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-in" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XAt-MD-Zes">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LeT-V1-JI6" customClass="UVCButton">
-                                <rect key="frame" x="72" y="112" width="16" height="48"/>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jko-bb-c6A" customClass="UVCButton">
+                                <rect key="frame" x="117" y="107" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="up" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="1gq-Y7-8mF">
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="arrow-right-filling" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="tqI-OU-o8B">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L6J-SZ-fAs" customClass="UVCButton">
-                                <rect key="frame" x="0.0" y="73" width="48" height="14"/>
+                                <rect key="frame" x="11" y="107" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="right" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="BCZ-Gr-Swf">
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="arrow-left-filling" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="BCZ-Gr-Swf">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31v-TC-uGf" customClass="UVCButton">
-                                <rect key="frame" x="72" y="0.0" width="16" height="48"/>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aye-38-2Ps" userLabel="zoom-in" customClass="UVCButton">
+                                <rect key="frame" x="111" y="11" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="down" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="EK1-8X-LVq">
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-out" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Szl-gc-PGD">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZcG-2z-RVH">
-                                <rect key="frame" x="51" y="51" width="58" height="57"/>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8FE-Da-i8G">
+                                <rect key="frame" x="65" y="107" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" image="circle" id="bic-X3-fju"/>
-                            </imageView>
+                                <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="home-filling" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="rSY-z6-teq">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="homeResetAction:" target="494" id="ajc-kb-z8h"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="vOY-xu-Fok">
@@ -782,26 +801,6 @@
                             <action selector="subMediaType:" target="494" id="6Gb-OV-L6I"/>
                         </connections>
                     </popUpButton>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="8NC-cu-ePY" userLabel="zoom-out">
-                        <rect key="frame" x="65" y="71" width="18" height="18"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-out" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XAt-MD-Zes">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="zoom_minus:" target="494" id="7Sc-jC-X7r"/>
-                        </connections>
-                    </button>
-                    <button translatesAutoresizingMaskIntoConstraints="NO" id="aye-38-2Ps" userLabel="zoom-in">
-                        <rect key="frame" x="165" y="71" width="18" height="18"/>
-                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom_plus" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Szl-gc-PGD">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="zoom_plus:" target="494" id="sAl-JV-z88"/>
-                        </connections>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NCH-1b-IOC">
                         <rect key="frame" x="336" y="164" width="50" height="16"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Version" id="l5P-UD-mac">
@@ -847,19 +846,11 @@
                             <constraint firstAttribute="width" constant="451" id="mrf-8w-ntl"/>
                         </constraints>
                     </progressIndicator>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="m17-75-doC">
-                        <rect key="frame" x="105" y="73" width="39" height="16"/>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Zoom" id="uZm-Q9-1zi">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Uh5-xD-EZg">
                         <rect key="frame" x="709" y="63" width="87" height="32"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="Ky6-AV-kD0"/>
-                            <constraint firstAttribute="width" constant="73" id="rny-cE-Baq"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="73" id="rny-cE-Baq"/>
                         </constraints>
                         <buttonCell key="cell" type="push" title="Upgrade" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HhS-FG-sq4">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -872,7 +863,7 @@
                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="sK4-r0-QWv">
                         <rect key="frame" x="338" y="66" width="370" height="29"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="370" id="yhW-eX-c1B"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="370" id="yhW-eX-c1B"/>
                             <constraint firstAttribute="height" constant="29" id="zFy-xF-kpR"/>
                         </constraints>
                         <textFieldCell key="cell" lineBreakMode="truncatingHead" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="Firmware File Path" bezelStyle="round" id="txa-ha-Dbx">
@@ -881,39 +872,49 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LeT-V1-JI6" customClass="UVCButton">
+                        <rect key="frame" x="108" y="223" width="32" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="arrow-up-filling" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="1gq-Y7-8mF">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31v-TC-uGf" customClass="UVCButton">
+                        <rect key="frame" x="108" y="120" width="32" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="arrow-down-filling" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="EK1-8X-LVq">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="aye-38-2Ps" firstAttribute="leading" secondItem="m17-75-doC" secondAttribute="trailing" constant="23" id="3Mr-9X-FfJ"/>
+                    <constraint firstAttribute="bottom" secondItem="Mg5-IU-RdT" secondAttribute="bottom" constant="29" id="0Uy-Sx-ziJ"/>
                     <constraint firstItem="d7S-IH-QXS" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="8td-lx-WMY"/>
                     <constraint firstItem="vOY-xu-Fok" firstAttribute="leading" secondItem="372" secondAttribute="leading" id="ACv-4j-iQn"/>
-                    <constraint firstItem="m17-75-doC" firstAttribute="leading" secondItem="8NC-cu-ePY" secondAttribute="trailing" constant="24" id="AKR-Hm-t1s"/>
-                    <constraint firstItem="aye-38-2Ps" firstAttribute="leading" secondItem="8NC-cu-ePY" secondAttribute="trailing" constant="82" id="D3n-at-drQ"/>
                     <constraint firstItem="dvO-gW-Pom" firstAttribute="centerY" secondItem="d7S-IH-QXS" secondAttribute="centerY" id="Drm-5E-xmc"/>
                     <constraint firstItem="536" firstAttribute="centerX" secondItem="372" secondAttribute="centerX" id="Ehq-jy-PI4"/>
                     <constraint firstItem="536" firstAttribute="top" secondItem="372" secondAttribute="top" constant="13" id="JrV-Uy-cZ9"/>
                     <constraint firstItem="NCH-1b-IOC" firstAttribute="top" secondItem="d7S-IH-QXS" secondAttribute="bottom" constant="55" id="KF4-BT-Oas"/>
                     <constraint firstAttribute="trailing" secondItem="vOY-xu-Fok" secondAttribute="trailing" id="Lar-bV-Urm"/>
                     <constraint firstAttribute="trailing" secondItem="Mg5-IU-RdT" secondAttribute="trailing" constant="87" id="R7E-by-7e5"/>
-                    <constraint firstItem="aye-38-2Ps" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="Xe2-2g-DHn"/>
-                    <constraint firstItem="Loy-sH-nVK" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="43" id="YXY-LP-MUi"/>
                     <constraint firstItem="Uh5-xD-EZg" firstAttribute="top" secondItem="YzY-jE-0lY" secondAttribute="bottom" constant="30" id="Z1g-4w-FPg"/>
-                    <constraint firstItem="8NC-cu-ePY" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="ZcN-x5-G9m"/>
+                    <constraint firstItem="YzY-jE-0lY" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="NCH-1b-IOC" secondAttribute="trailing" constant="8" symbolic="YES" id="bGE-SU-UJK"/>
                     <constraint firstItem="vOY-xu-Fok" firstAttribute="top" secondItem="536" secondAttribute="bottom" constant="9" id="hEW-bd-bpv"/>
                     <constraint firstItem="sK4-r0-QWv" firstAttribute="top" secondItem="NCH-1b-IOC" secondAttribute="bottom" constant="69" id="hfs-5l-Jhp"/>
-                    <constraint firstItem="d7S-IH-QXS" firstAttribute="top" secondItem="vOY-xu-Fok" secondAttribute="bottom" constant="57" id="iBq-gr-CD3"/>
                     <constraint firstItem="NCH-1b-IOC" firstAttribute="leading" secondItem="sK4-r0-QWv" secondAttribute="leading" id="jnj-7H-eeZ"/>
                     <constraint firstAttribute="trailing" secondItem="Uh5-xD-EZg" secondAttribute="trailing" constant="87" id="mLo-yd-Xwn"/>
                     <constraint firstItem="dvO-gW-Pom" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="trailing" constant="52" id="mhH-HI-tou"/>
                     <constraint firstItem="YzY-jE-0lY" firstAttribute="top" secondItem="dvO-gW-Pom" secondAttribute="bottom" constant="15" id="nKt-np-C0U"/>
                     <constraint firstItem="Mg5-IU-RdT" firstAttribute="top" secondItem="sK4-r0-QWv" secondAttribute="bottom" constant="19" id="nd8-GR-UyC"/>
-                    <constraint firstItem="m17-75-doC" firstAttribute="top" secondItem="Loy-sH-nVK" secondAttribute="bottom" constant="20" id="nhn-0L-1SZ"/>
+                    <constraint firstItem="Uh5-xD-EZg" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sK4-r0-QWv" secondAttribute="trailing" constant="8" symbolic="YES" id="oR7-HA-Ipv"/>
                     <constraint firstAttribute="trailing" secondItem="Uh5-xD-EZg" secondAttribute="trailing" constant="87" id="orn-k6-hhb"/>
-                    <constraint firstItem="8NC-cu-ePY" firstAttribute="leading" secondItem="372" secondAttribute="leading" constant="65" id="ovf-Kq-x0w"/>
                     <constraint firstAttribute="trailing" secondItem="YzY-jE-0lY" secondAttribute="trailing" constant="86" id="vbE-hQ-yGx"/>
                     <constraint firstItem="NCH-1b-IOC" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="leading" id="zA3-IL-wu1"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-918" y="-222.5"/>
+            <point key="canvasLocation" x="-1083" y="-274"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
@@ -929,20 +930,21 @@
                 <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
                 <outlet property="upgradeProgressIndicator" destination="Mg5-IU-RdT" id="2BU-jV-o6G"/>
-                <outlet property="versionTextView" destination="KPx-Qc-dSx" id="Zig-1O-55H"/>
-                <outlet property="vesionTextField" destination="YzY-jE-0lY" id="ap7-Tk-Wor"/>
+                <outlet property="versionTextView" destination="KPx-Qc-dSx" id="dCe-HM-i5D"/>
                 <outlet property="window" destination="371" id="532"/>
+                <outlet property="zoom_in" destination="aye-38-2Ps" id="zud-ue-zwa"/>
+                <outlet property="zoom_out" destination="8NC-cu-ePY" id="gpP-Uh-uks"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
     </objects>
     <resources>
-        <image name="circle" width="24" height="24"/>
-        <image name="down" width="8" height="6"/>
-        <image name="left" width="7" height="8"/>
-        <image name="right" width="7" height="8"/>
-        <image name="up" width="8" height="7"/>
-        <image name="zoom-out" width="18" height="18"/>
-        <image name="zoom_plus" width="18" height="18"/>
+        <image name="arrow-down-filling" width="32" height="32"/>
+        <image name="arrow-left-filling" width="32" height="32"/>
+        <image name="arrow-right-filling" width="32" height="32"/>
+        <image name="arrow-up-filling" width="32" height="32"/>
+        <image name="home-filling" width="32" height="32"/>
+        <image name="zoom-in" width="32" height="32"/>
+        <image name="zoom-out" width="32" height="32"/>
     </resources>
 </document>

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "zoom-out (1)-1.png",
+      "filename" : "arrow-up-filling_blue.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "zoom-out (1).png",
+      "filename" : "arrow-up-filling_blue-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "zoom-out (1)-2.png",
+      "filename" : "arrow-up-filling_blue-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

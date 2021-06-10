@@ -31,11 +31,19 @@
 		[uvcController panTilt:UVC_PAN_TILT_RIGHT];
 	}else if (sender == leftPanTiltButton) {
 		[uvcController panTilt:UVC_PAN_TILT_LEFT];
+	} else if (sender == zoom_in){
+		[uvcController setRelativeZoomControl:1];
+	} else if (sender == zoom_out){
+		[uvcController setRelativeZoomControl:0xFF];
 	}
 }
 
 - (void)mouseUp:(NSEvent *)event sender:(nonnull id)sender{
-	[uvcController panTilt:UVC_PAN_TILT_CANCEL];
+	if (sender == zoom_in || sender == zoom_out){
+	   [uvcController setRelativeZoomControl:0];
+   } else {
+	   [uvcController panTilt:UVC_PAN_TILT_CANCEL];
+   }
 }
 
 - (IBAction)zoom_minus:(id)sender {
@@ -44,11 +52,18 @@
 	}
 }
 
+
+- (IBAction)homeResetAction:(id)sender {
+	[uvcController resetPanTilt];
+	[uvcController setZoom:0];
+}
+
 - (IBAction)zoom_plus:(id)sender {
 	if (uvcController.zoom < uvcController.maxZoom){
 		[uvcController setZoom:uvcController.zoom + 1];
 	}
 }
+
 
 
 - (void) controlElementChanged:(id)sender{
@@ -115,6 +130,7 @@
 }
 
 - (void) awakeFromNib	{
+	NSLog(@"awakeFromNib");
 	//	populate the camera pop-up button
 	[self populateCamPopUpButton];
 	[subMediaTypePUB removeAllItems];
@@ -126,6 +142,9 @@
 	downPanTiltButton.delegate = self;
 	rightPanTiltButton.delegate = self;
 	leftPanTiltButton.delegate = self;
+	zoom_in.delegate = self;
+	zoom_out.delegate = self;
+	
 //	backgroudView
 	backgroudView.wantsLayer = true;///设置背景颜色
 
@@ -134,12 +153,17 @@
 //	mainView.layer.backgroundColor = [NSColor whiteColor].CGColor;
 }
 - (void) populateCamPopUpButton	{
+	NSLog(@"populateCamPopUpButton");
 	[camPUB removeAllItems];
 	
 	NSArray		*devicesMenuItems = [vidSrc arrayOfSourceMenuItems];
-	for (NSMenuItem *itemPtr in devicesMenuItems)
+	for (NSMenuItem *itemPtr in devicesMenuItems){
 		[[camPUB menu] addItem:itemPtr];
-	
+	}
+	if (devicesMenuItems.count == 0) {
+		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:@"选择摄像头" action:nil keyEquivalent:@""];
+		[[camPUB menu] addItem:newItem];
+	}
 	[camPUB selectItemAtIndex:0];
 }
 
@@ -194,15 +218,18 @@
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
-	//	start the displaylink
-//	CVDisplayLinkStart(displayLink);
-    NSMenuItem        *selectedItem = [camPUB selectedItem];
-    [self handleSelectedCamera:selectedItem];
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processAddDeviceEventWithNotification:) name:AVCaptureDeviceWasConnectedNotification object:nil];
-     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRemoveDeviceEventWithNotification:) name:AVCaptureDeviceWasDisconnectedNotification object:nil];
+	NSLog(@"applicationDidFinishLaunching");
+
+	dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 300 * NSEC_PER_MSEC);
+
+	dispatch_after(time, dispatch_get_main_queue(), ^{
+		NSLog(@" waited at lease three seconds");
+		NSMenuItem        *selectedItem = [camPUB selectedItem];
+		[self handleSelectedCamera:selectedItem];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processAddDeviceEventWithNotification:) name:AVCaptureDeviceWasConnectedNotification object:nil];
+		 
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processRemoveDeviceEventWithNotification:) name:AVCaptureDeviceWasDisconnectedNotification object:nil];
+	});
 }
 
 - (void)processAddDeviceEventWithNotification:(NSNotification *)noti{
@@ -210,12 +237,6 @@
     AVCaptureDevice *device = noti.object;
     NSLog(@"processAddDeviceEventWithNotification %@", device);
     NSLog(@"processAddDeviceEventWithNotification %@", device.activeFormat.mediaType);
-    if (@available(macOS 10.15, *)) {
-        NSLog(@"processAddDeviceEventWithNotification %@", device.deviceType);
-    } else {
-        // Fallback on earlier versions
-    }
-    
     if (![device.activeFormat.mediaType isEqualToString:@"vide"]){
         // Fallback on earlier versions
         return;
@@ -266,7 +287,7 @@
         [versionTextView setString:@""];
     } else    {
         //[uvcController _autoDetectProcessingUnitID];
-//        [uvcController openSettingsWindow];
+        [uvcController openSettingsWindow];
         
         if ([uvcController zoomSupported])    {
             [zoomElement setMin:(int)[uvcController minZoom]];

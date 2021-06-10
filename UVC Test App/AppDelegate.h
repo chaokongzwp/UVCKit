@@ -27,7 +27,9 @@
 	__weak IBOutlet UVCButton *leftPanTiltButton;
 	
 	IBOutlet VVUVCUIElement *zoomElement;
+	__weak IBOutlet UVCButton *zoom_in;
 	
+	__weak IBOutlet UVCButton *zoom_out;
 	__weak IBOutlet NSView *mainView;
 	__weak IBOutlet NSPopUpButton *dimensionPUB;
 	__weak IBOutlet NSPopUpButton *subMediaTypePUB;
@@ -36,7 +38,8 @@
 	NSTimer *checkDeviceChange;
 
     
-    __unsafe_unretained IBOutlet NSTextView *versionTextView;
+	__unsafe_unretained IBOutlet NSTextView *versionTextView;
+	
     
     __weak IBOutlet NSTextField *firmwareFileTextfield;
     
