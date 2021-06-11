@@ -695,7 +695,7 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8NC-cu-ePY" userLabel="zoom-out" customClass="UVCButton">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8NC-cu-ePY" userLabel="zoom-in" customClass="UVCButton">
                                 <rect key="frame" x="20" y="11" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-in" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="XAt-MD-Zes">
@@ -719,7 +719,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aye-38-2Ps" userLabel="zoom-in" customClass="UVCButton">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aye-38-2Ps" userLabel="zoom-out" customClass="UVCButton">
                                 <rect key="frame" x="111" y="11" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="zoom-out" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Szl-gc-PGD">
@@ -932,8 +932,8 @@
                 <outlet property="upgradeProgressIndicator" destination="Mg5-IU-RdT" id="2BU-jV-o6G"/>
                 <outlet property="versionTextView" destination="KPx-Qc-dSx" id="dCe-HM-i5D"/>
                 <outlet property="window" destination="371" id="532"/>
-                <outlet property="zoom_in" destination="aye-38-2Ps" id="zud-ue-zwa"/>
-                <outlet property="zoom_out" destination="8NC-cu-ePY" id="gpP-Uh-uks"/>
+                <outlet property="zoom_in" destination="8NC-cu-ePY" id="DTg-0j-mL0"/>
+                <outlet property="zoom_out" destination="aye-38-2Ps" id="aS0-TA-iMm"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>

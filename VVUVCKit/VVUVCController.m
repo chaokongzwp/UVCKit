@@ -1119,15 +1119,26 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom{
 	BOOL			returnMe = NO;
 	UInt8 bytes[3];
-	
-	bytes[0] = bZoom;
-	bytes[1] = 0;
+
 	if (bZoom == 0) {
 		bytes[2] = 0;
 	}else{
-		bytes[2] = 7;
+		uvc_control_info_t controlInfo;
+		
+		controlInfo.unit = UVC_INPUT_TERMINAL_ID;
+		controlInfo.selector = UVC_CT_ZOOM_RELATIVE_CONTROL;
+		controlInfo.intendedSize = 3;
+		UInt8 *returnData = nil;
+		[self _requestValType:UVC_GET_MAX forControl:&controlInfo returnVal:(void**)&returnData];
+		NSLog(@"setRelativeZoomControl GET_MAX %x %x %x", returnData[0], returnData[1], returnData[2]);
+		bytes[2] = returnData[2];
+		free(returnData);
+		returnData = nil;
 	}
 	
+	bytes[0] = bZoom;
+	bytes[1] = 0;
+	NSLog(@"setRelativeZoomControl bytes %x %x %x", bytes[0], bytes[1], bytes[2]);
 	//NSLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
@@ -1146,7 +1157,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 
 - (void) _populateAllParams	{
-	
 	[self _populateParam:&scanningMode];
 	[self _populateParam:&autoExposureMode];
 	[self _populateParam:&autoExposurePriority];

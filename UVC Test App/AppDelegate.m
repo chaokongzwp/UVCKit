@@ -3,75 +3,56 @@
 #import "UVCUtils.h"
 
 
-@implementation AppDelegate 
-
-- (IBAction)leftPTZAction:(id)sender {
-	[uvcController panTilt:UVC_PAN_TILT_LEFT];
-}
-
-- (IBAction)rightPTZAction:(id)sender {
-	[uvcController panTilt:UVC_PAN_TILT_RIGHT];
-}
-
-- (IBAction)upPTZAction:(id)sender {
-	[uvcController panTilt:UVC_PAN_TILT_UP];
-}
-
-- (IBAction)downPTZAction:(id)sender {
-	[uvcController panTilt:UVC_PAN_TILT_DOWN];
-}
-
-
+@implementation AppDelegate
 - (void)mouseDown:(NSEvent *)event sender:(nonnull id)sender{
 	if (sender == upPanTiltButton) {
+		[upPanTiltButton setImage:[NSImage imageNamed:@"arrow-up-filling_blue"]];
 		[uvcController panTilt:UVC_PAN_TILT_UP];
 	} else if (sender == downPanTiltButton) {
+		[downPanTiltButton setImage:[NSImage imageNamed:@"arrow-down-filling_blue"]];
 		[uvcController panTilt:UVC_PAN_TILT_DOWN];
 	}else if (sender == rightPanTiltButton) {
+		[rightPanTiltButton setImage:[NSImage imageNamed:@"arrow-right-filling_blue"]];
 		[uvcController panTilt:UVC_PAN_TILT_RIGHT];
 	}else if (sender == leftPanTiltButton) {
+		[leftPanTiltButton setImage:[NSImage imageNamed:@"arrow-left-filling_blue"]];
 		[uvcController panTilt:UVC_PAN_TILT_LEFT];
 	} else if (sender == zoom_in){
+		[zoom_in setImage:[NSImage imageNamed:@"zoom-in_blue"]];
 		[uvcController setRelativeZoomControl:1];
 	} else if (sender == zoom_out){
+		[zoom_out setImage:[NSImage imageNamed:@"zoom-out_blue"]];
 		[uvcController setRelativeZoomControl:0xFF];
 	}
 }
 
 - (void)mouseUp:(NSEvent *)event sender:(nonnull id)sender{
 	if (sender == zoom_in || sender == zoom_out){
-	   [uvcController setRelativeZoomControl:0];
-   } else {
-	   [uvcController panTilt:UVC_PAN_TILT_CANCEL];
-   }
-}
-
-- (IBAction)zoom_minus:(id)sender {
-	if (uvcController.zoom > uvcController.minZoom){
-		[uvcController setZoom:uvcController.zoom - 1];
+		[uvcController setRelativeZoomControl:0];
+	} else {
+		[uvcController panTilt:UVC_PAN_TILT_CANCEL];
 	}
+	
+	if (sender == upPanTiltButton) {
+		[upPanTiltButton setImage:[NSImage imageNamed:@"arrow-up-filling"]];
+	} else if (sender == downPanTiltButton) {
+		[downPanTiltButton setImage:[NSImage imageNamed:@"arrow-down-filling"]];
+	}else if (sender == rightPanTiltButton) {
+		[rightPanTiltButton setImage:[NSImage imageNamed:@"arrow-right-filling"]];
+	}else if (sender == leftPanTiltButton) {
+		[leftPanTiltButton setImage:[NSImage imageNamed:@"arrow-left-filling"]];
+	} else if (sender == zoom_in){
+		[zoom_in setImage:[NSImage imageNamed:@"zoom-in"]];
+	} else if (sender == zoom_out){
+		[zoom_out setImage:[NSImage imageNamed:@"zoom-out"]];
+	}
+	
 }
-
 
 - (IBAction)homeResetAction:(id)sender {
 	[uvcController resetPanTilt];
 	[uvcController setZoom:0];
 }
-
-- (IBAction)zoom_plus:(id)sender {
-	if (uvcController.zoom < uvcController.maxZoom){
-		[uvcController setZoom:uvcController.zoom + 1];
-	}
-}
-
-
-
-- (void) controlElementChanged:(id)sender{
-	if (sender == zoomElement){
-		[uvcController setZoom:[sender val]];
-	}
-}
-
 
 
 - (id) init	{
@@ -287,14 +268,12 @@
         [versionTextView setString:@""];
     } else    {
         //[uvcController _autoDetectProcessingUnitID];
-        [uvcController openSettingsWindow];
+//        [uvcController openSettingsWindow];
         
         if ([uvcController zoomSupported])    {
-            [zoomElement setMin:(int)[uvcController minZoom]];
-            [zoomElement setMax:(int)[uvcController maxZoom]];
-            [zoomElement setVal:(int)[uvcController zoom]];
+			[uvcController resetPanTilt];
+			[uvcController setZoom:0];
         }
-        [zoomElement setEnabled:[uvcController zoomSupported]];
         [versionTextView setString:[uvcController getExtensionVersion]];
     }
     subMediaTypesInfo= [vidSrc getMediaSubTypes];

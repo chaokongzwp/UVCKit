@@ -8,7 +8,7 @@
 
 
 
-@interface AppDelegate : NSObject <NSApplicationDelegate,AVCaptureVideoSourceDelegate, VVUVCUIElementDelegate, UVCMouseDelegate>	{
+@interface AppDelegate : NSObject <NSApplicationDelegate,AVCaptureVideoSourceDelegate, UVCMouseDelegate>	{
 	CVDisplayLinkRef			displayLink;
 	NSOpenGLContext				*sharedContext;
 	NSOpenGLPixelFormat			*pixelFormat;
@@ -27,9 +27,9 @@
 	__weak IBOutlet UVCButton *leftPanTiltButton;
 	
 	IBOutlet VVUVCUIElement *zoomElement;
-	__weak IBOutlet UVCButton *zoom_in;
-	
+
 	__weak IBOutlet UVCButton *zoom_out;
+	__weak IBOutlet UVCButton *zoom_in;
 	__weak IBOutlet NSView *mainView;
 	__weak IBOutlet NSPopUpButton *dimensionPUB;
 	__weak IBOutlet NSPopUpButton *subMediaTypePUB;
