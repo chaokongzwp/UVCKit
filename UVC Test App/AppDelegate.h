@@ -20,12 +20,10 @@
 	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
 	
 	__weak IBOutlet UVCButton *rightPanTiltButton;
-	
 	__weak IBOutlet UVCButton *upPanTiltButton;
-	
 	__weak IBOutlet UVCButton *downPanTiltButton;
 	__weak IBOutlet UVCButton *leftPanTiltButton;
-	
+    __weak IBOutlet NSButton *upgradeButton;
     __weak IBOutlet UVCButton *resetHomeButton;
     __weak IBOutlet UVCButton *zoom_out;
 	__weak IBOutlet UVCButton *zoom_in;

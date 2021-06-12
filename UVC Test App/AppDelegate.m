@@ -19,6 +19,10 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 
 @implementation AppDelegate
 - (void)mouseDown:(NSEvent *)event sender:(nonnull id)sender{
+    if ([self isInUpdating]) {
+        return;
+    }
+    
 	if (sender == upPanTiltButton) {
 		[upPanTiltButton setImage:[NSImage imageNamed:@"arrow-up-filling_blue"]];
 		[uvcController panTilt:UVC_PAN_TILT_UP];
@@ -39,16 +43,19 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		[uvcController setRelativeZoomControl:0xFF];
     } else if (resetHomeButton == sender) {
 //        [resetHomeButton setImage:[NSImage imageNamed:@""]];
-        [uvcController resetPanTilt];
-        [uvcController setZoom:0];
     }
 }
 
 - (void)mouseUp:(NSEvent *)event sender:(nonnull id)sender{
+    if ([self isInUpdating]) {
+        return;
+    }
+    
 	if (sender == zoom_in || sender == zoom_out){
 		[uvcController setRelativeZoomControl:0];
 	} else if (resetHomeButton == sender) {
-        // do nothing
+        [uvcController resetPanTilt];
+        [uvcController setZoom:0];
     } else {
 		[uvcController panTilt:UVC_PAN_TILT_CANCEL];
 	}
@@ -79,50 +86,13 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		pixelFormat = nil;
 		vidSrc = nil;
 		uvcController = nil;
-    
-		//	generate the GL display mask for all displays
-//		CGError					cgErr = kCGErrorSuccess;
-//		CGDirectDisplayID		dspys[10];
-//		CGDisplayCount			count = 0;
-//		GLuint					glDisplayMask = 0;
-//		cgErr = CGGetActiveDisplayList(10,dspys,&count);
-//		if (cgErr == kCGErrorSuccess)	{
-//			int					i;
-//			for (i=0;i<count;++i)
-//				glDisplayMask = glDisplayMask | CGDisplayIDToOpenGLDisplayMask(dspys[i]);
-//		}
-//		//	create a GL pixel format based on desired properties + GL display mask
-//		NSOpenGLPixelFormatAttribute		attrs[] = {
-//			NSOpenGLPFAAccelerated,
-//			NSOpenGLPFAScreenMask,glDisplayMask,
-//			NSOpenGLPFANoRecovery,
-//			NSOpenGLPFAAllowOfflineRenderers,
-//			0};
-//		pixelFormat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attrs];
-//		//	make the shared GL context.  everybody shares this, so we can share GL resources.
-//		sharedContext = [[NSOpenGLContext alloc]
-//			initWithFormat:pixelFormat
-//			shareContext:nil];
-//		//	make the CV texture cache (off the shared context)
-//		CVReturn			cvErr = kCVReturnSuccess;
-//		cvErr = CVOpenGLTextureCacheCreate(NULL, NULL, [sharedContext CGLContextObj], [pixelFormat CGLPixelFormatObj], NULL, &_textureCache);
-//		if (cvErr != kCVReturnSuccess)
-//			NSLog(@"\t\tERR %d- unable to create CVOpenGLTextureCache in %s",cvErr,__func__);
-//		//	make a displaylink, which will drive rendering
-//		cvErr = CVDisplayLinkCreateWithOpenGLDisplayMask(glDisplayMask, &displayLink);
-//		if (cvErr)	{
-//			NSLog(@"\t\terr %d creating display link in %s",cvErr,__func__);
-//			displayLink = NULL;
-//		}
-//		else
-//			CVDisplayLinkSetOutputCallback(displayLink, displayLinkCallback, (__bridge void * _Nullable)(self));
-//		//	make the video source (which needs the CV texture cache)
+
 		vidSrc = [[AVCaptureVideoSource alloc] init];
 		[vidSrc setDelegate:self];
 		
 		return self;
 	}
-//	[self release];
+
 	return nil;
 }
 
@@ -219,12 +189,12 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 //    NSLog(@"getNextStepValue updateState %lu doubleValue %f", (unsigned long)self.updateState, upgradeProgressIndicator.doubleValue);
     switch (self.updateState) {
         case UVCUpdateStateStart:
-            max = 10;
-            delta = 0.5;
+            max = 8;
+            delta = 0.4;
             break;
         
         case UVCUpdateStateDownloadBinFileSuccess:
-            max = 80;
+            max = 78;
             delta = 0.2;
             break;
             
@@ -289,28 +259,43 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [UVCUtils showAlert:errMsg title:@"异常提示" window:mainView.window completionHandler:nil];
 }
 
+- (void)setAllButtonState:(BOOL)enable{
+    dimensionPUB.enabled = enable;
+    subMediaTypePUB.enabled = enable;
+    leftPanTiltButton.enabled = enable;
+    rightPanTiltButton.enabled = enable;
+    upPanTiltButton.enabled = enable;
+    downPanTiltButton.enabled = enable;
+    zoom_in.enabled = enable;
+    zoom_out.enabled = enable;
+    camPUB.enabled = enable;
+    resetHomeButton.enabled = enable;
+    upgradeButton.enabled = enable;
+}
+
 - (void)setUpdateState:(UVCUpdateState)updateState{
     _updateState = updateState;
     NSLog(@"setUpdateState %lu", (unsigned long)updateState);
-    
+    [self setAllButtonState:NO];
     switch (updateState) {
         case UVCUpdateStateStart:
-            [versionTextView setString:@"更新中，请勿插入任何usb设备，请勿关闭摄像头！"];
+            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！"];
             break;
         
         case UVCUpdateStateDownloadBinFileSuccess:
-            [versionTextView setString:@"更新中，请勿插入任何usb设备，请勿关闭摄像头！\n1. bin文件传输成功，升级中...."];
+            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功，升级中...."];
             break;
             
         case UVCUpdateStateRestarting:
-            [versionTextView setString:@"更新中，请勿插入任何usb设备，请勿关闭摄像头！\n1. bin文件传输成功 \n2.升级成功，重启中..."];
+            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功 \n2.升级成功，设备重启中..."];
             break;
             
         case UVCUpdateStateSuccess:
-            [versionTextView setString:@"更新中，请勿插入任何usb设备，请勿关闭摄像头！\n1. bin文件传输成功 \n2.更新文件成功\n3.版本更新成功"];
+            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功 \n2.更新文件成功\n3.版本升级成功"];
             break;
         
         default:
+            [self setAllButtonState:YES];
             break;
     }
 }
@@ -347,21 +332,25 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
         return;
     }
     
+    if ([self.updateDeviceId isEqualToString:device.uniqueID]) {
+        self.updateState = UVCUpdateStateSuccess;
+        [self reloadDeviceWithId:self.updateDeviceId];
+        return;
+    }
+    
     NSMenuItem        *newItem = [[NSMenuItem alloc] initWithTitle:device.localizedName action:nil keyEquivalent:@""];
     [newItem setRepresentedObject:device.uniqueID];
     [[camPUB menu] addItem:newItem];
-    
-    if ([self.updateDeviceId isEqualToString:device.uniqueID]) {
-        self.updateState = UVCUpdateStateSuccess;
-        [camPUB selectItemAtIndex:camPUB.numberOfItems -1];
-        [self handleSelectedCamera:newItem];
-    }
 }
 
 - (void)processRemoveDeviceEventWithNotification:(NSNotification *)noti{
     NSLog(@"processRemoveDeviceEventWithNotification %@", noti);
     
     AVCaptureDevice *device = noti.object;
+    if ([device.uniqueID isEqualToString:self.updateDeviceId]) {
+        return;
+    }
+    
 //    NSInteger selectIndex = camPUB.indexOfSelectedItem;
     BOOL isFind = NO;
     
@@ -384,6 +373,25 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     }
 }
 
+
+- (void)reloadDeviceWithId:(NSString *)deviceId{
+    [vidSrc loadDeviceWithUniqueID:deviceId];
+    uvcController = [[VVUVCController alloc] initWithDeviceIDString:deviceId];
+    if (uvcController==nil){
+        NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+        [versionTextView setString:@""];
+    } else    {
+        if ([uvcController zoomSupported])    {
+            [uvcController resetPanTilt];
+            [uvcController setZoom:0];
+        }
+        [versionTextView setString:[uvcController getExtensionVersion]];
+    }
+    subMediaTypesInfo= [vidSrc getMediaSubTypes];
+    [self updateSubMediaTypesPopUpButton];
+    [vidSrc setPreviewLayer:backgroudView];
+}
+
 - (void)handleSelectedCamera:(NSMenuItem *)selectedItem{
     if (selectedItem == nil)
         return;
@@ -391,22 +399,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     if (repObj == nil || [[vidSrc currentDeivceId] isEqualToString:repObj])
         return;
     
-    [vidSrc loadDeviceWithUniqueID:[selectedItem representedObject]];
-    uvcController = [[VVUVCController alloc] initWithDeviceIDString:repObj];
-    if (uvcController==nil){
-        NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
-        [versionTextView setString:@""];
-    } else    {
-        if ([uvcController zoomSupported])    {
-			[uvcController resetPanTilt];
-			[uvcController setZoom:0];
-        }
-        [versionTextView setString:[uvcController getExtensionVersion]];
-    }
-    subMediaTypesInfo= [vidSrc getMediaSubTypes];
-    [self updateSubMediaTypesPopUpButton];
-    
-    [vidSrc setPreviewLayer:backgroudView];
+    [self reloadDeviceWithId:repObj];
 }
 
 - (IBAction) camPUBUsed:(id)sender	{
@@ -501,7 +494,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
                 } else {
                     self.updateState = UVCUpdateStateNone;
                     self.updateDeviceId = nil;
-                    [UVCUtils showAlert:@"启动更新模式失败！！" title:@"异常提示" window:mainView.window completionHandler:nil];
+                    [UVCUtils showAlert:@"启动升级模式失败！！" title:@"异常提示" window:mainView.window completionHandler:nil];
                 }
                 
                 break;
