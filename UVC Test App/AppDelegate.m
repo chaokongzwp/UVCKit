@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		[zoom_out setImage:[NSImage imageNamed:@"zoom-out_blue"]];
 		[uvcController setRelativeZoomControl:0xFF];
     } else if (resetHomeButton == sender) {
-//        [resetHomeButton setImage:[NSImage imageNamed:@""]];
+        [resetHomeButton setImage:[NSImage imageNamed:@"home-filling_blue"]];
     }
 }
 
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	} else if (sender == zoom_out){
 		[zoom_out setImage:[NSImage imageNamed:@"zoom-out"]];
 	}  else if (resetHomeButton == sender) {
-//        [resetHomeButton setImage:[NSImage imageNamed:@""]];
+        [resetHomeButton setImage:[NSImage imageNamed:@"home-filling"]];
     }
 	
 }
