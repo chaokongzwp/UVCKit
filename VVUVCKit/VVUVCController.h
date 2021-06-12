@@ -441,7 +441,7 @@ This is probably the only class you'll have to work with in this framework.  The
 
 - (NSString *)getExtensionVersion;
 
--(void)setUpdateMode;
+- (BOOL)setUpdateMode;
 
 - (BOOL)resetPanTilt;
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom;

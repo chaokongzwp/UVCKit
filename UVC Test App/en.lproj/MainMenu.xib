@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -653,7 +653,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="703"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="876" height="703"/>
             <value key="maxSize" type="size" width="876" height="703"/>
             <value key="minFullScreenContentSize" type="size" width="876" height="703"/>
@@ -727,16 +727,13 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                             </button>
-                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8FE-Da-i8G">
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8FE-Da-i8G" customClass="UVCButton">
                                 <rect key="frame" x="65" y="107" width="32" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="home-filling" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyUpOrDown" inset="2" id="rSY-z6-teq">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
-                                <connections>
-                                    <action selector="homeResetAction:" target="494" id="ajc-kb-z8h"/>
-                                </connections>
                             </button>
                         </subviews>
                     </view>
@@ -926,6 +923,7 @@
                 <outlet property="glView" destination="550" id="555"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
                 <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>
+                <outlet property="resetHomeButton" destination="8FE-Da-i8G" id="0bp-gd-2K9"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
                 <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
@@ -939,12 +937,12 @@
         <customObject id="420" customClass="NSFontManager"/>
     </objects>
     <resources>
-        <image name="arrow-down-filling" width="32" height="32"/>
-        <image name="arrow-left-filling" width="32" height="32"/>
-        <image name="arrow-right-filling" width="32" height="32"/>
-        <image name="arrow-up-filling" width="32" height="32"/>
-        <image name="home-filling" width="32" height="32"/>
-        <image name="zoom-in" width="32" height="32"/>
-        <image name="zoom-out" width="32" height="32"/>
+        <image name="arrow-down-filling" width="16" height="16"/>
+        <image name="arrow-left-filling" width="16" height="16"/>
+        <image name="arrow-right-filling" width="16" height="16"/>
+        <image name="arrow-up-filling" width="16" height="16"/>
+        <image name="home-filling" width="16" height="16"/>
+        <image name="zoom-in" width="16" height="16"/>
+        <image name="zoom-out" width="16" height="16"/>
     </resources>
 </document>

@@ -903,7 +903,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	kern_return_t kr = (*interface)->ControlRequest( interface, 0, controlRequest );
 	if( kr != kIOReturnSuccess ) {
 		kr = (*interface)->USBInterfaceClose(interface);
-		//NSLog( @"CameraControl Error: Control request failed: %08x", kr );
+		NSLog( @"CameraControl Error: Control request failed: %08x", kr );
 		return NO;
 	}
 	/*
@@ -1005,7 +1005,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return version;
 }
 
--(void)setUpdateMode{
+-(BOOL)setUpdateMode{
 	uint16 len = [self getExtensionLen];
 	int	   returnMe = 0;
 	NSString *version = nil;
@@ -1048,6 +1048,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
 	}
 	free(ret);
+    
+    return returnMe>0;
 }
 
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{

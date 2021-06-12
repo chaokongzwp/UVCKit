@@ -26,9 +26,8 @@
 	__weak IBOutlet UVCButton *downPanTiltButton;
 	__weak IBOutlet UVCButton *leftPanTiltButton;
 	
-	IBOutlet VVUVCUIElement *zoomElement;
-
-	__weak IBOutlet UVCButton *zoom_out;
+    __weak IBOutlet UVCButton *resetHomeButton;
+    __weak IBOutlet UVCButton *zoom_out;
 	__weak IBOutlet UVCButton *zoom_in;
 	__weak IBOutlet NSView *mainView;
 	__weak IBOutlet NSPopUpButton *dimensionPUB;
