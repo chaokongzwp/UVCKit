@@ -126,7 +126,7 @@
 		4B985CF7266CD02E00D8CA52 /* UVCUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCUtils.m; sourceTree = "<group>"; };
 		960A01BE19D88DD4000A8627 /* APPLE_LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APPLE_LICENSE; sourceTree = "<group>"; };
 		9627739619D56BE5001EDD16 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
-		9627739C19D56C69001EDD16 /* UVC Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "UVC Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9627739C19D56C69001EDD16 /* UsbCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UsbCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		962773A019D56C69001EDD16 /* UVC Test App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UVC Test App-Info.plist"; sourceTree = "<group>"; };
 		962773A219D56C69001EDD16 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		962773A419D56C69001EDD16 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -291,7 +291,7 @@
 			isa = PBXGroup;
 			children = (
 				96C2712E19D5695B00705982 /* VVUVCKit.framework */,
-				9627739C19D56C69001EDD16 /* UVC Test App.app */,
+				9627739C19D56C69001EDD16 /* UsbCamera.app */,
 				96CCFE5F19D6BFAD000B1B2C /* USBBusProber.framework */,
 			);
 			name = Products;
@@ -463,9 +463,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		9627739B19D56C69001EDD16 /* UVC Test App */ = {
+		9627739B19D56C69001EDD16 /* UsbCamera */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 962773B019D56C69001EDD16 /* Build configuration list for PBXNativeTarget "UVC Test App" */;
+			buildConfigurationList = 962773B019D56C69001EDD16 /* Build configuration list for PBXNativeTarget "UsbCamera" */;
 			buildPhases = (
 				9627739819D56C69001EDD16 /* Sources */,
 				9627739919D56C69001EDD16 /* Frameworks */,
@@ -477,9 +477,9 @@
 			dependencies = (
 				962773B419D56C82001EDD16 /* PBXTargetDependency */,
 			);
-			name = "UVC Test App";
+			name = UsbCamera;
 			productName = "UVC Test App";
-			productReference = 9627739C19D56C69001EDD16 /* UVC Test App.app */;
+			productReference = 9627739C19D56C69001EDD16 /* UsbCamera.app */;
 			productType = "com.apple.product-type.application";
 		};
 		96C2712D19D5695B00705982 /* VVUVCKit */ = {
@@ -551,7 +551,7 @@
 			targets = (
 				96CCFE5E19D6BFAD000B1B2C /* USBBusProber */,
 				96C2712D19D5695B00705982 /* VVUVCKit */,
-				9627739B19D56C69001EDD16 /* UVC Test App */,
+				9627739B19D56C69001EDD16 /* UsbCamera */,
 			);
 		};
 /* End PBXProject section */
@@ -703,7 +703,9 @@
 		962773B119D56C69001EDD16 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
@@ -719,7 +721,9 @@
 		962773B219D56C69001EDD16 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "UVC Test App/UVC Test App-Prefix.pch";
@@ -867,7 +871,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		962773B019D56C69001EDD16 /* Build configuration list for PBXNativeTarget "UVC Test App" */ = {
+		962773B019D56C69001EDD16 /* Build configuration list for PBXNativeTarget "UsbCamera" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				962773B119D56C69001EDD16 /* Debug */,
