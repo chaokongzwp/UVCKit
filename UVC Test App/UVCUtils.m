@@ -3,7 +3,7 @@
 //  UVC Test App
 //
 //  Created by 张伟平 on 2021/6/6.
-//  Copyright © 2021 Vidvox. All rights reserved.
+//  Copyright © 2021 Chingan. All rights reserved.
 //
 
 #import "UVCUtils.h"

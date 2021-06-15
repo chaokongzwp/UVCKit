@@ -1,9 +1,9 @@
 //
 //  main.m
-//  UVC Test App
+//  UsbCamera
 //
-//  Created by bagheera on 9/26/14.
-//  Copyright (c) 2014 Vidvox. All rights reserved.
+//  Created by chaokong on 05/11/21.
+//  Copyright (c) 2021 Chingan. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>

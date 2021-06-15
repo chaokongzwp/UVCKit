@@ -19,6 +19,7 @@ extern CVOpenGLTextureCacheRef		_textureCache;
 @property (assign, nonatomic) int32_t height;
 @property (copy, nonatomic)  NSString *subMediaType;
 
+- (NSString *)alias;
 - (NSString *)formatDesc;
 @end
 

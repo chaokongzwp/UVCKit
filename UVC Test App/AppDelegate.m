@@ -169,14 +169,14 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	for (int i = 0; i < returnMe.count;i++){
 		NSMenuItem *item = returnMe[i];
 		[[subMediaTypePUB menu] addItem:item];
-		if ([[item title] isEqualToString:activeFormat.subMediaType]) {
+		if ([[item title] isEqualToString:activeFormat.alias]) {
 			selectItem = i;
 		}
 	}
 	
 	[subMediaTypePUB selectItemAtIndex:selectItem];
 	
-	[self updateDimensionPopUpButton:activeFormat.subMediaType];
+	[self updateDimensionPopUpButton:activeFormat.alias];
 }
 
 - (BOOL)isInUpdating{
@@ -503,6 +503,18 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     }];
 }
 
+- (BOOL)isSameFormat:(UVCCaptureDeviceFormat *)format{
+	UVCCaptureDeviceFormat *current = [vidSrc activeFormatInfo];
+	
+	if ([current.subMediaType isEqualToString:format.subMediaType]
+		&& (current.height == format.height)
+		&& (current.width == format.width)) {
+		return YES;
+	}
+	
+	return NO;
+}
+
 
 - (IBAction)subMediaType:(id)sender {
 	NSMenuItem		*selectedItem = [sender selectedItem];
@@ -510,6 +522,10 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		return;
 	
 	UVCCaptureDeviceFormat *format = [self updateDimensionPopUpButton:selectedItem.title];
+	
+	if ([self isSameFormat:format]) {
+		return;
+	}
 	
 	[vidSrc updateDeviceFormat:format];
 	[vidSrc setPreviewLayer:backgroudView];
@@ -520,8 +536,13 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	if (selectedItem == nil)
 		return;
 	UVCCaptureDeviceFormat *repObj = [selectedItem representedObject];
-	if (repObj == nil)
+	if (repObj == nil){
 		return;
+	}
+	
+	if ([self isSameFormat:repObj]) {
+		return;
+	}
 	
 	[vidSrc updateDeviceFormat:repObj];
 	[vidSrc setPreviewLayer:backgroudView];

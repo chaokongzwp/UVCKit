@@ -712,7 +712,7 @@
 				INFOPLIST_FILE = "UVC Test App/UVC Test App-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.UsbCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -730,7 +730,7 @@
 				INFOPLIST_FILE = "UVC Test App/UVC Test App-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.UsbCamera;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -805,7 +805,7 @@
 				INFOPLIST_FILE = "VVUVCKit/VVUVCKit-Info.plist";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.VVUVCKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -823,7 +823,7 @@
 				INFOPLIST_FILE = "VVUVCKit/VVUVCKit-Info.plist";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.VVUVCKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -845,7 +845,7 @@
 				);
 				INFOPLIST_FILE = "USBBusProber/USBBusProber-Info.plist";
 				INSTALL_PATH = "@rpath";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.USBBusProber;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -862,7 +862,7 @@
 				GCC_PREFIX_HEADER = "USBBusProber/USBBusProber-Prefix.pch";
 				INFOPLIST_FILE = "USBBusProber/USBBusProber-Info.plist";
 				INSTALL_PATH = "@rpath";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Vidvox.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.USBBusProber;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
