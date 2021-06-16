@@ -1,20 +1,21 @@
 
 #import "VVUVCController.h"
 #import "VVUVCUIController.h"
+#import "UVCUtils.h"
 
 
 
 
-//#define NSLogParam(n,p) NSLog(@"%@, (%ld)-[%ld]-(%ld), %ld",n,p.min,p.val,p.max,p.def)
-#define NSLogParam(n,p)	{														\
+//#define NSXLogParam(n,p) NSXLog(@"%@, (%ld)-[%ld]-(%ld), %ld",n,p.min,p.val,p.max,p.def)
+#define NSXLogParam(n,p)	{														\
 	if (p.supported)	{														\
 		if (p.ctrlInfo->isRelative)											\
-			NSLog(@"%@, supported but relative!",n);							\
+			NSXLog(@"%@, supported but relative!",n);							\
 		else																	\
-			NSLog(@"%@, (%ld)-[%ld]-(%ld), %ld",n,p.min,p.val,p.max,p.def);		\
+			NSXLog(@"%@, (%ld)-[%ld]-(%ld), %ld",n,p.min,p.val,p.max,p.def);		\
 	}																			\
 	else	{																	\
-		NSLog(@"%@ is unsupported",n);											\
+		NSXLog(@"%@ is unsupported",n);											\
 	}																			\
 }
 /*		these values are used to signify whether the uvc_control_info struct affects a hardware parameter (like focus), 
@@ -328,7 +329,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 /*
 - (id) initWithQTCaptureDevice:(QTCaptureDevice *)dev	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	if (dev != nil)	{
 		return [self initWithDeviceIDString:[dev uniqueID]];
 	}
@@ -337,17 +338,18 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 */
 - (id) initWithDeviceIDString:(NSString *)n	{
-	//NSLog(@"%s ... %@",__func__,n);
+	//NSXLog(@"%s ... %@",__func__,n);
 	if (n != nil)	{
 		unsigned int locationID = 0;
 		sscanf([n UTF8String], "0x%8x",&locationID);
 		if (locationID) return [self initWithLocationID:locationID];
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
+
 - (id) initWithLocationID:(UInt32)locationID {
-	NSLog(@"%s ... %d, %X",__func__,(unsigned int)locationID,(unsigned int)locationID);
+	NSXLog(@"%s ... %d, %X",__func__,(unsigned int)locationID,(unsigned int)locationID);
 	self = [super init];
 	if (self!=nil) {
 		//	technically i don't need to set these here- they're calculated below from the BusProber, but default values are good, m'kay?
@@ -365,10 +367,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSMutableArray	*devices = [prober devicesArray];
 		for (BusProbeDevice *devicePtr in devices)	{
 			if ([devicePtr locationID] == locationID)	{
-				NSLog(@"\t\tfound device %@",[devicePtr deviceName]);
+				NSXLog(@"\t\tfound device %@",[devicePtr deviceName]);
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
-				NSLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
-				NSLog(@"\t\tdevice dict is %@",tmpDict);
+				NSXLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
+				NSXLog(@"\t\tdevice dict is %@",tmpDict);
 				//[tmpDict writeToFile:[@"~/Desktop/tmpOut.plist" stringByExpandingTildeInPath] atomically:YES];
 				
 				
@@ -401,9 +403,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 										for (NSDictionary *inputTerminalChild in inputTerminalChildren)	{
 											NSString		*terminalIDString = [inputTerminalChild objectForKey:@"Terminal ID"];
 											if (terminalIDString != nil)	{
-												//NSLog(@"\t\tterminalIDString is %@",terminalIDString);
+												//NSXLog(@"\t\tterminalIDString is %@",terminalIDString);
 												inputTerminalID = (int)[terminalIDString integerValue];
-												//NSLog(@"\t\tverifying: inputTerminalID now %d",inputTerminalID);
+												//NSXLog(@"\t\tverifying: inputTerminalID now %d",inputTerminalID);
 												
 												//	...i can break because i found the terminal ID
 												break;
@@ -425,9 +427,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 										for (NSDictionary *processingUnitChild in processingUnitChildren)	{
 											NSString		*unitIDString = [processingUnitChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSLog(@"\t\tunitIDString is %@",unitIDString);
+												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												processingUnitID = (int)[unitIDString integerValue];
-												//NSLog(@"\t\tverifying: processingUnitID now %d",processingUnitID);
+												//NSXLog(@"\t\tverifying: processingUnitID now %d",processingUnitID);
 												
 												//	...i can break because i found the unit ID
 												break;
@@ -450,9 +452,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 										for (NSDictionary *extensionUnitChild in extensionUnitChildren)	{
 											NSString		*unitIDString = [extensionUnitChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSLog(@"\t\tunitIDString is %@",unitIDString);
+												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												extensionUnitID = (int)[unitIDString integerValue];
-												//NSLog(@"\t\tverifying: extensionUnitID now %d",extensionUnitID);
+												//NSXLog(@"\t\tverifying: extensionUnitID now %d",extensionUnitID);
 												
 												//	...i can break because i found the unit ID
 												break;
@@ -474,9 +476,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 										for (NSDictionary *outputTerminalChild in outputTerminalChildren)	{
 											NSString		*unitIDString = [outputTerminalChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSLog(@"\t\tunitIDString is %@",unitIDString);
+												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												outputTerminalID = (int)[unitIDString integerValue];
-												//NSLog(@"\t\tverifying: outputTerminalID now %d",outputTerminalID);
+												//NSXLog(@"\t\tverifying: outputTerminalID now %d",outputTerminalID);
 												
 												//	...i can break because i found the unit ID
 												break;
@@ -503,7 +505,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			}
 		}
 		if (prober != nil)	{
-			[prober release];
+//			[prober release];
 			prober = nil;
 		}
 		
@@ -526,7 +528,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			
 			kr = IOCreatePlugInInterfaceForService( camera, kIOUSBDeviceUserClientTypeID, kIOCFPlugInInterfaceID, &plugInInterface, &score );
 			if( (kIOReturnSuccess != kr) || !plugInInterface ) {
-				NSLog( @"CameraControl Error: IOCreatePlugInInterfaceForService returned 0x%08x.", kr );
+				NSXLog( @"CameraControl Error: IOCreatePlugInInterfaceForService returned 0x%08x.", kr );
 				if (plugInInterface!=NULL)	{
 					IODestroyPlugInInterface(plugInInterface);
 					plugInInterface = NULL;
@@ -537,7 +539,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 				HRESULT					res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID), (LPVOID*) &deviceInterface );
 				(*plugInInterface)->Release(plugInInterface);
 				if( res || deviceInterface == NULL ) {
-					NSLog( @"CameraControl Error: QueryInterface returned %d.\n", (int)res );
+					NSXLog( @"CameraControl Error: QueryInterface returned %d.\n", (int)res );
 					//	clean up the plugin interface
 					if (plugInInterface!=NULL)	{
 						IODestroyPlugInInterface(plugInInterface);
@@ -576,14 +578,14 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		if (successfullInit)
 			return self;
 		//	else i couldn't successfully init myself, something went wrong/i couldn't connect: release self and return nil;
-		NSLog(@"\t\tERR: couldn't create VVUVCController with locationID %d, %X",(unsigned int)locationID,(unsigned int)locationID);
-		[self release];
+		NSXLog(@"\t\tERR: couldn't create VVUVCController with locationID %d, %X",(unsigned int)locationID,(unsigned int)locationID);
+//		[self release];
 		return nil;
 	}
 	return self;
 }
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface {
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	io_iterator_t					interfaceIterator;
 	IOUSBFindInterfaceRequest		interfaceRequest;
 	
@@ -613,7 +615,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		//	Release the ioDeviceObj object after getting the plug-in
 		kr = IOObjectRelease(ioDeviceObj);
 		if( (kr != kIOReturnSuccess) || !ioPlugin ) {
-			NSLog( @"CameraControl Error: Unable to create a plug-in (%08x)\n", kr );
+			NSXLog( @"CameraControl Error: Unable to create a plug-in (%08x)\n", kr );
 			return NULL;
 		}
 		
@@ -624,7 +626,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		(*ioPlugin)->Release(ioPlugin);
 		
 		if (result || !controlInterface) {
-			NSLog( @"CameraControl Error: Couldn’t create a control interface for the interface (%08x)", (int) result );
+			NSXLog( @"CameraControl Error: Couldn’t create a control interface for the interface (%08x)", (int) result );
 			return NULL;
 		}
 		
@@ -670,17 +672,17 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateAllParams];
 	
 	//	create the nib from my class name
-	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
+//	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
 	//	unpack the nib, instantiating the object
-	[theNib instantiateWithOwner:self topLevelObjects:&nibTopLevelObjects];
+//	[theNib instantiateWithOwner:self topLevelObjects:&nibTopLevelObjects];
 	//	retain the array of top-level objects (they have to be explicitly freed later)
-	[nibTopLevelObjects retain];
+//	[nibTopLevelObjects retain];
 	
 	if (uiCtrlr != nil)
 		[uiCtrlr _pushCameraControlStateToUI];
 }
 - (void) dealloc {
-	//NSLog(@"%s ... %p",__func__,self);
+	//NSXLog(@"%s ... %p",__func__,self);
 	[self closeSettingsWindow];
 	
 	if( interface ) {
@@ -690,15 +692,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	//	free this (i retained it explicitly earlier)
 	if (nibTopLevelObjects != nil)	{
-		[nibTopLevelObjects release];
+//		[nibTopLevelObjects release];
 		nibTopLevelObjects = nil;
 	}
 	//	release the nib
 	if (theNib != nil)	{
-		[theNib release];
+//		[theNib release];
 		theNib = nil;
 	}
-	[super dealloc];
+//	[super dealloc];
 }
 
 
@@ -736,8 +738,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return returnMe;
 }
 - (void) loadSnapshot:(NSDictionary *)s	{
-	//NSLog(@"%s",__func__);
-	//NSLog(@"\t\t%@",s);
+	//NSXLog(@"%s",__func__);
+	//NSXLog(@"\t\t%@",s);
 	if (s == nil)
 		return;
 	
@@ -746,7 +748,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	//	if i have to repopulate the params, do so now!
 	if (needsToRepopulate)	{
-		//NSLog(@"\t\trepopulating params in %s, input/processing ID changed!",__func__);
+		//NSXLog(@"\t\trepopulating params in %s, input/processing ID changed!",__func__);
 		[self _populateAllParams];
 	}
 	
@@ -870,7 +872,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	if (uiCtrlr != nil)
 		[uiCtrlr _pushCameraControlStateToUI];
 	
-	//NSLog(@"\t\t%s - FINISHED",__func__);
+	//NSXLog(@"\t\t%s - FINISHED",__func__);
 }
 
 
@@ -881,13 +883,13 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 //	this method gets called by _setData and _getDataFor
 - (BOOL) _sendControlRequest:(IOUSBDevRequest *)controlRequest {
-	NSLog(@"%s",__func__);
-//	NSLog(@"\t\tindex=%d",controlRequest->wIndex);
-//	NSLog(@"\t\trequestType=%0x",controlRequest->bmRequestType);
-//	NSLog(@"\t\trequest=%0x",controlRequest->bRequest);
-	NSLog(@"\t\t bmRequestType 0x%0X bRequest 0x%X wValue 0x%X wIndex 0x%X wLength 0x%X", controlRequest->bmRequestType, controlRequest->bRequest,controlRequest->wValue,controlRequest->wIndex,controlRequest->wLength);
+	NSXLog(@"%s",__func__);
+//	NSXLog(@"\t\tindex=%d",controlRequest->wIndex);
+//	NSXLog(@"\t\trequestType=%0x",controlRequest->bmRequestType);
+//	NSXLog(@"\t\trequest=%0x",controlRequest->bRequest);
+	NSXLog(@"\t\t bmRequestType 0x%0X bRequest 0x%X wValue 0x%X wIndex 0x%X wLength 0x%X", controlRequest->bmRequestType, controlRequest->bRequest,controlRequest->wValue,controlRequest->wIndex,controlRequest->wLength);
 	if( !interface ){
-		NSLog( @"CameraControl Error: No interface to send request" );
+		NSXLog( @"CameraControl Error: No interface to send request" );
 		return NO;
 	}
 	/*
@@ -895,7 +897,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//the endpoints in the interface descriptor to be instantiated
 	kern_return_t kr = (*interface)->USBInterfaceOpen(interface);
 	if (kr != kIOReturnSuccess)	{
-		NSLog( @"CameraControl Error: Unable to open interface (%08x)\n", kr );
+		NSXLog( @"CameraControl Error: Unable to open interface (%08x)\n", kr );
 		return NO;
 	}
 	kr = (*interface)->ControlRequest( interface, 0, &controlRequest );
@@ -903,7 +905,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	kern_return_t kr = (*interface)->ControlRequest( interface, 0, controlRequest );
 	if( kr != kIOReturnSuccess ) {
 		kr = (*interface)->USBInterfaceClose(interface);
-		NSLog( @"CameraControl Error: Control request failed: %08x", kr );
+		NSXLog( @"CameraControl Error: Control request failed: %08x", kr );
 		return NO;
 	}
 	/*
@@ -914,15 +916,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 
 - (int)getExtensionLen{
-	//NSLog(@"%s ... 0x%X",__func__,requestType);
+	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_GET_LEN;
 	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
-	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
-	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
 	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
 	//controlRequest.wIndex = (512 | interfaceNumber);
@@ -945,10 +947,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	if (returnMe <= 0)	{
 		controlRequest.pData = nil;
 	} else {
-		NSLog(@"%d", *((short int *)ret));
+		NSXLog(@"%d", *((short int *)ret));
 		UInt8 data[2];
 		memcpy(data, ret, 2);
-		NSLog(@"%x %x", data[0], data[1]);
+		NSXLog(@"%x %x", data[0], data[1]);
 		returnMe = *((short int *)ret);
 	}
 	
@@ -960,16 +962,16 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 - (NSString *)getExtensionVersion{
 	uint16 len = [self getExtensionLen];
-	//NSLog(@"%s ... 0x%X",__func__,requestType);
+	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	NSString *version = nil;
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_GET_CUR;
 	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
-	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
-	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
 	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
 	//controlRequest.wIndex = (512 | interfaceNumber);
@@ -996,13 +998,13 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
 		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
 		NSString *authorized = ret->AuthorizedStated?@"\nAuthorized":@"";
-		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
+		NSXLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
 		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
 	}
 	
 	free(ret);
 	ret = nil;
-	return version;
+	return version?:@"";
 }
 
 -(BOOL)setUpdateMode{
@@ -1013,9 +1015,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
 	controlRequest.wValue = (extensionUnitID << 8) | 0x00;
-	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
-	NSLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((0x08 <<8) | interfaceNumber);
 	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
 	//controlRequest.wIndex = (512 | interfaceNumber);
@@ -1044,7 +1046,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSString *time = [NSString stringWithFormat:@"Time : %d-%d-%d \n", ret->dwCamDate[0]<<8|ret->dwCamDate[1], ret->dwCamDate[2], ret->dwCamDate[3]];
 		NSString *productVer = [NSString stringWithUTF8String:(char *)ret->ProductVer];
 		NSString *authorized = ret->AuthorizedStated?@"\nAuthorized":@"";
-		NSLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
+		NSXLog(@"\n%@%@%@%@",cameraVer, time, productVer, authorized);
 		version = [NSString stringWithFormat:@"%@%@%@%@",cameraVer,time,productVer,authorized];
 	}
 	free(ret);
@@ -1053,17 +1055,17 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{
-	//NSLog(@"%s ... 0x%X",__func__,requestType);
+	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = requestType;
 	controlRequest.wValue = (ctrl->selector << 8) | 0x00;
-	//NSLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
+	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
+	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	controlRequest.wIndex = (ctrl->unit==UVC_INPUT_TERMINAL_ID) ? inputTerminalID : processingUnitID;
 	
-	NSLog(@"inputTerminalID %x, processingUnitID %x, unit %x", inputTerminalID, processingUnitID, ctrl->unit);
+	NSXLog(@"inputTerminalID %x, processingUnitID %x, unit %x", inputTerminalID, processingUnitID, ctrl->unit);
 	controlRequest.wIndex = ((controlRequest.wIndex<<8) | interfaceNumber);
 	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
 	//controlRequest.wIndex = (512 | interfaceNumber);
@@ -1092,11 +1094,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return returnMe;
 }
 - (BOOL) _setBytes:(void *)bytes sized:(int)size toControl:(const uvc_control_info_t *)ctrl	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	BOOL			returnMe = NO;
 	long			tmpLong = 0x00000000;
 	memcpy(&tmpLong,bytes,size);
-	//NSLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
+	//NSXLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
@@ -1132,7 +1134,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		controlInfo.intendedSize = 3;
 		UInt8 *returnData = nil;
 		[self _requestValType:UVC_GET_MAX forControl:&controlInfo returnVal:(void**)&returnData];
-		NSLog(@"setRelativeZoomControl GET_MAX %x %x %x", returnData[0], returnData[1], returnData[2]);
+		NSXLog(@"setRelativeZoomControl GET_MAX %x %x %x", returnData[0], returnData[1], returnData[2]);
 		bytes[2] = returnData[2];
 		free(returnData);
 		returnData = nil;
@@ -1140,8 +1142,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	bytes[0] = bZoom;
 	bytes[1] = 0;
-	NSLog(@"setRelativeZoomControl bytes %x %x %x", bytes[0], bytes[1], bytes[2]);
-	//NSLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
+	NSXLog(@"setRelativeZoomControl bytes %x %x %x", bytes[0], bytes[1], bytes[2]);
+	//NSXLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
@@ -1188,44 +1190,44 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	[self _populateParam:&whiteBalance];
 
-	NSLog(@"\t\t*******************");
-	NSLog(@"\t\t (min) - [val] - (max), def");
-	NSLog(@"\t\t*******************");
-	NSLogParam(@"\t\t scanning",scanningMode);
-	NSLogParam(@"\t\t auto exp mode",autoExposureMode);
-	NSLogParam(@"\t\t auto exp priority",autoExposurePriority);
-	NSLogParam(@"\t\t exposure time",exposureTime);
-	NSLogParam(@"\t\t iris",iris);
-	NSLogParam(@"\t\t auto focus",autoFocus);
-	NSLogParam(@"\t\t focus",focus);
-	NSLogParam(@"\t\t zoom",zoom);
-	NSLogParam(@"\t\t pan/tilt (abs)",panTilt);
-//	NSLogParam(@"\t\t pan/tilt (rel)",panTiltRel);
-	NSLogParam(@"\t\t roll (abs)",roll);
-	NSLogParam(@"\t\t roll (rel)",rollRel);
+	NSXLog(@"\t\t*******************");
+	NSXLog(@"\t\t (min) - [val] - (max), def");
+	NSXLog(@"\t\t*******************");
+	NSXLogParam(@"\t\t scanning",scanningMode);
+	NSXLogParam(@"\t\t auto exp mode",autoExposureMode);
+	NSXLogParam(@"\t\t auto exp priority",autoExposurePriority);
+	NSXLogParam(@"\t\t exposure time",exposureTime);
+	NSXLogParam(@"\t\t iris",iris);
+	NSXLogParam(@"\t\t auto focus",autoFocus);
+	NSXLogParam(@"\t\t focus",focus);
+	NSXLogParam(@"\t\t zoom",zoom);
+	NSXLogParam(@"\t\t pan/tilt (abs)",panTilt);
+//	NSXLogParam(@"\t\t pan/tilt (rel)",panTiltRel);
+	NSXLogParam(@"\t\t roll (abs)",roll);
+	NSXLogParam(@"\t\t roll (rel)",rollRel);
 	
-	NSLogParam(@"\t\t backlight",backlight);
-	NSLogParam(@"\t\t bright",bright);
-	NSLogParam(@"\t\t contrast",contrast);
-	NSLogParam(@"\t\t gain",gain);
-	NSLogParam(@"\t\t power",powerLine);
-	NSLogParam(@"\t\t auto hue",autoHue);
-	NSLogParam(@"\t\t hue",hue);
-	NSLogParam(@"\t\t sat",saturation);
-	NSLogParam(@"\t\t sharp",sharpness);
-	NSLogParam(@"\t\t gamma",gamma);
-	NSLogParam(@"\t\t auto wb",autoWhiteBalance);
-	NSLogParam(@"\t\t wb",whiteBalance);
-	NSLog(@"\t\t*******************");
+	NSXLogParam(@"\t\t backlight",backlight);
+	NSXLogParam(@"\t\t bright",bright);
+	NSXLogParam(@"\t\t contrast",contrast);
+	NSXLogParam(@"\t\t gain",gain);
+	NSXLogParam(@"\t\t power",powerLine);
+	NSXLogParam(@"\t\t auto hue",autoHue);
+	NSXLogParam(@"\t\t hue",hue);
+	NSXLogParam(@"\t\t sat",saturation);
+	NSXLogParam(@"\t\t sharp",sharpness);
+	NSXLogParam(@"\t\t gamma",gamma);
+	NSXLogParam(@"\t\t auto wb",autoWhiteBalance);
+	NSXLogParam(@"\t\t wb",whiteBalance);
+	NSXLog(@"\t\t*******************");
 
 }
 
 
 - (void)getRelativePanTiltInfo:(RelativePanTiltInfo *)param {
-	//NSLog(@"%s ... %p",__func__,param);
+	//NSXLog(@"%s ... %p",__func__,param);
 	/*
 	if (param == &panTilt || param == &roll)	{
-		NSLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
+		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	*/
@@ -1238,7 +1240,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSLog(@"\t\terr: couldn't get info %s",__func__);
+		//NSXLog(@"\t\terr: couldn't get info %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	tmpLong = 0x00000000;
@@ -1249,7 +1251,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//	make sure the param can be get and set- otherwise, disable the param!
 	BOOL canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
-		//NSLog(@"\t\terr: can't get or set %s",__func__);
+		//NSXLog(@"\t\terr: can't get or set %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	
@@ -1259,7 +1261,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//	get the current val (which is definitely supported)
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSLog(@"\t\terr: couldn't get current val in %s",__func__);
+		//NSXLog(@"\t\terr: couldn't get current val in %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	param->pan_direction = bytesPtr[0];
@@ -1320,23 +1322,23 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		param->resolution_tilt_speed = bytesPtr[3];
 		free(bytesPtr);
 		bytesPtr = nil;
-		//NSLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
+		//NSXLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
 		//if (param->actualSize != bytesRead)
-		//	NSLog(@"******* ERR: bytes read on default don't match bytes read on val!");
+		//	NSXLog(@"******* ERR: bytes read on default don't match bytes read on val!");
 	}
 	
 	return;
 	DISABLED_PARAM:
-	//NSLog(@"\t\tDISABLED_PARAM %s",__func__);
+	//NSXLog(@"\t\tDISABLED_PARAM %s",__func__);
 	param->supported = NO;
 	//param->ctrlInfo = nil;
 }
 
 - (void) _populateParam:(uvc_param *)param	{
-	//NSLog(@"%s ... %p",__func__,param);
+	//NSXLog(@"%s ... %p",__func__,param);
 	/*
 	if (param == &panTilt || param == &roll)	{
-		NSLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
+		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	*/
@@ -1349,7 +1351,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSLog(@"\t\terr: couldn't get info %s",__func__);
+		//NSXLog(@"\t\terr: couldn't get info %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	tmpLong = 0x00000000;
@@ -1360,7 +1362,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//	make sure the param can be get and set- otherwise, disable the param!
 	BOOL			canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
-		//NSLog(@"\t\terr: can't get or set %s",__func__);
+		//NSXLog(@"\t\terr: can't get or set %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	
@@ -1378,7 +1380,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	else if (paramSize == 4)
 		valSizeMask = 0xFFFFFFFF;
 	else if (paramSize > 4)	{
-		//NSLog(@"\t\terr: paramSize is %d, must be handled differently! %s",paramSize,__func__);
+		//NSXLog(@"\t\terr: paramSize is %d, must be handled differently! %s",paramSize,__func__);
 		goto DISABLED_PARAM;
 	}
 	//	figure out how far i have to shift the bits to find the "negative" bit if the value is signed!
@@ -1386,14 +1388,14 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//	calculate the mask to reveal the sign, and the mask to remove the sign from the value!
 	unsigned long		maskToRevealSign = (param->ctrlInfo->isSigned) ? (0x0001 << shiftToGetSignBit) : (0x0000);
 	unsigned long		maskToRemoveSign = maskToRevealSign-1;
-	//NSLog(@"\t\tshift to get sign bit is %d",shiftToGetSignBit);
-	//NSLog(@"\t\tmask to reveal sign is %ld",maskToRevealSign);
-	//NSLog(@"\t\tmask to remove sign is %ld",maskToRemoveSign);
+	//NSXLog(@"\t\tshift to get sign bit is %d",shiftToGetSignBit);
+	//NSXLog(@"\t\tmask to reveal sign is %ld",maskToRevealSign);
+	//NSXLog(@"\t\tmask to remove sign is %ld",maskToRemoveSign);
 	
 	//	get the current val (which is definitely supported)
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSLog(@"\t\terr: couldn't get current val in %s",__func__);
+		//NSXLog(@"\t\terr: couldn't get current val in %s",__func__);
 		goto DISABLED_PARAM;
 	}
 	tmpLong = 0x00000000;
@@ -1401,10 +1403,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	free(bytesPtr);
 	bytesPtr = nil;
 	param->val = (tmpLong & valSizeMask & maskToRemoveSign);
-	//NSLog(@"\t\traw val is %ld, refined val is %ld",tmpLong,param->val);
+	//NSXLog(@"\t\traw val is %ld, refined val is %ld",tmpLong,param->val);
 	param->actualSize = bytesRead;
 	//if (param->actualSize != param->ctrlInfo->intendedSize)
-	//	NSLog(@"\t\t****** err: actual size doesn't match intended size!");
+	//	NSXLog(@"\t\t****** err: actual size doesn't match intended size!");
 	if ((tmpLong & maskToRevealSign) != 0)
 		param->val = param->val * -1;
 	
@@ -1421,9 +1423,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->min = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->min = -((~tmpLong & valSizeMask) + 1);
-		//NSLog(@"\t\traw min is %ld, refined min is %ld",tmpLong,param->min);
+		//NSXLog(@"\t\traw min is %ld, refined min is %ld",tmpLong,param->min);
 		//if (param->actualSize != bytesRead)
-		//	NSLog(@"******* ERR: bytes read on min don't match bytes read on val!");
+		//	NSXLog(@"******* ERR: bytes read on min don't match bytes read on val!");
 	}
 	//	max
 	if (param->ctrlInfo->hasMax)	{
@@ -1438,9 +1440,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->max = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->max = -((~tmpLong & valSizeMask) + 1);
-		//NSLog(@"\t\traw max is %ld, refined max is %ld",tmpLong,param->max);
+		//NSXLog(@"\t\traw max is %ld, refined max is %ld",tmpLong,param->max);
 		//if (param->actualSize != bytesRead)
-		//	NSLog(@"******* ERR: bytes read on max don't match bytes read on val!");
+		//	NSXLog(@"******* ERR: bytes read on max don't match bytes read on val!");
 	}
 	//	default
 	if (param->ctrlInfo->hasDef)	{
@@ -1455,14 +1457,14 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->def = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->def = -((~tmpLong & valSizeMask) + 1);
-		//NSLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
+		//NSXLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
 		//if (param->actualSize != bytesRead)
-		//	NSLog(@"******* ERR: bytes read on default don't match bytes read on val!");
+		//	NSXLog(@"******* ERR: bytes read on default don't match bytes read on val!");
 	}
 	
 	return;
 	DISABLED_PARAM:
-	//NSLog(@"\t\tDISABLED_PARAM %s",__func__);
+	//NSXLog(@"\t\tDISABLED_PARAM %s",__func__);
 	param->supported = NO;
 	param->min = -1;
 	param->max = -1;
@@ -1472,12 +1474,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//param->ctrlInfo = nil;
 }
 - (BOOL) _pushParamToDevice:(uvc_param *)param	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	if (param == nil)
 		return NO;
 	/*
 	if (param == &panTilt || param == &roll)	{
-		NSLog(@"\t\terr: pan/tilt and roll temporarily disabled!");
+		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled!");
 		return;
 	}
 	*/
@@ -1491,12 +1493,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	int			valToSend = 0x0000;
 	//	if the val may be signed, i may have to assemble the value to be sent manually
 	if (param->ctrlInfo->isSigned)	{
-		//NSLog(@"\t\traw val is %ld",param->val);
+		//NSXLog(@"\t\traw val is %ld",param->val);
 		valToSend = (int)labs(param->val);
-		//NSLog(@"\t\tabs val is %d",valToSend);
+		//NSXLog(@"\t\tabs val is %d",valToSend);
 		if (param->val < 0)
 			valToSend = (~valToSend + 1);
-		//NSLog(@"\t\tactual val to send is %d",valToSend);
+		//NSXLog(@"\t\tactual val to send is %d",valToSend);
 	}
 	//	else the control isn't signed, i can just send it out as-is and it'll be fine
 	else
@@ -1507,10 +1509,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	bzero(bytesToSend,paramSize);
 	memcpy(bytesToSend,&valToSend,paramSize);
 	returnMe = [self _setBytes:bytesToSend sized:paramSize toControl:param->ctrlInfo];
-	//NSLog(@"\t\tstraight bytes output as int: %ld",*((long *)bytesToSend));
+	//NSXLog(@"\t\tstraight bytes output as int: %ld",*((long *)bytesToSend));
 	free(bytesToSend);
 	bytesToSend = nil;
-	//NSLog(@"\t\t%s - FINISHED",__func__);
+	//NSXLog(@"\t\t%s - FINISHED",__func__);
 	return returnMe;
 }
 
@@ -1525,7 +1527,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	data[2]=tiltDirection;
 	data[3]=tiltSpeed;
 	
-	NSLog(@"DATA 0x%0x 0x%0x 0x%0x 0x%0x", data[0], data[1], data[2], data[3]);
+	NSXLog(@"DATA 0x%0x 0x%0x 0x%0x 0x%0x", data[0], data[1], data[2], data[3]);
 	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
 }
 
@@ -1537,10 +1539,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) _resetParamToDefault:(uvc_param *)param	{
-	//NSLog(@"%s ... %p",__func__,param);
+	//NSXLog(@"%s ... %p",__func__,param);
 	/*
 	if (param == &panTilt || param == &roll)	{
-		NSLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
+		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
 		return;
 	}
 	*/
@@ -1555,7 +1557,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 
 - (void) resetParamsToDefaults	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	[self _resetParamToDefault:&scanningMode];
 	[self _resetParamToDefault:&autoExposureMode];
 	[self _resetParamToDefault:&autoExposurePriority];
@@ -1583,11 +1585,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&whiteBalance];
 }
 - (void) openSettingsWindow	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	[settingsWindow makeKeyAndOrderFront:nil];
 }
 - (void) closeSettingsWindow	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	[settingsWindow orderOut:nil];
 }
 
@@ -1733,7 +1735,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return iris.max;
 }
 - (void) setAutoFocus:(BOOL)n	{
-	//NSLog(@"%s ... %ld",__func__,n);
+	//NSXLog(@"%s ... %ld",__func__,n);
 	//BOOL			changed = (autoFocus.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoFocus.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoFocus];
@@ -1772,7 +1774,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!focus.supported) ? 0 : focus.max;
 }
 - (void) setZoom:(long)n	{
-	NSLog(@"set zoom %ld", n);
+	NSXLog(@"set zoom %ld", n);
 	[self setVal:n forParam:&zoom];
 }
 - (long) zoom	{

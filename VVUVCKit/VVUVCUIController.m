@@ -12,7 +12,7 @@
 	if (self = [super init])	{
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
 - (void) awakeFromNib	{
@@ -31,9 +31,6 @@
 	[sharpElement setTitle:@"Sharpness"];
 	[gammaElement setTitle:@"Gamma"];
 	[wbElement setTitle:@"White Balance"];
-}
-- (void) dealloc	{
-	[super dealloc];
 }
 
 

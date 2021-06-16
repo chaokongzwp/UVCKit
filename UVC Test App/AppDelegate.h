@@ -19,6 +19,7 @@
 	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras
 	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
 	
+	__weak IBOutlet NSMenuItem *logMenu;
 	__weak IBOutlet UVCButton *rightPanTiltButton;
 	__weak IBOutlet UVCButton *upPanTiltButton;
 	__weak IBOutlet UVCButton *downPanTiltButton;

@@ -33,7 +33,7 @@
 		[valField setFont:[NSFont systemFontOfSize:9]];
 		NSNumberFormatter	*formatter = [[NSNumberFormatter alloc] init];
 		[valField setFormatter:formatter];
-		[formatter release];
+//		[formatter release];
 		[valField setTarget:self];
 		[valField setAction:@selector(uiItemUsed:)];
 		
@@ -42,21 +42,21 @@
 		[self _resizeContents];
 		return self;
 	}
-	[self release];
+//	[self release];
 	return nil;
 }
 - (void) dealloc	{
 	if (valSlider != nil)	{
 		[valSlider removeFromSuperview];
-		[valSlider release];
+//		[valSlider release];
 		valSlider = nil;
 	}
 	if (valField != nil)	{
 		[valField removeFromSuperview];
-		[valField release];
+//		[valField release];
 		valField = nil;
 	}
-	[super dealloc];
+//	[super dealloc];
 }
 
 
@@ -110,7 +110,7 @@
 }
 
 
-@synthesize delegate;
+//@synthesize delegate;
 - (void) setVal:(int)n	{
 	//NSLog(@"%s ... %@, %d",__func__,[self title],n);
 	val = n;

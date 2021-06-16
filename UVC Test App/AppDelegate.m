@@ -1,6 +1,5 @@
 #import "AppDelegate.h"
-
-#import "UVCUtils.h"
+#import <VVUVCKit/UVCUtils.h>
 
 typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     UVCUpdateStateNone = 0,
@@ -9,6 +8,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     UVCUpdateStateRestarting = 3,
     UVCUpdateStateSuccess = 4
 };
+
 
 
 @interface AppDelegate()
@@ -78,9 +78,22 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	
 }
 
+- (IBAction)saveLogAction:(id)sender {
+	if ([logMenu.title isEqualToString:@"Save Log"]) {
+		[UVCUtils openLog];
+		[UVCUtils showAlert:[UVCUtils logPath] title:@"Log存储路径" window:mainView.window completionHandler:nil];
+		logMenu.title = @"Close Log";
+	} else {
+		logMenu.title = @"Save Log";
+		[UVCUtils closeLog];
+	}
+}
 
 - (id) init	{
 	if (self = [super init])	{
+		if ([UVCUtils isLogOn]){
+			[UVCUtils openLog];
+		}
 		displayLink = nil;
 		sharedContext = nil;
 		pixelFormat = nil;
@@ -97,7 +110,12 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (void) awakeFromNib	{
-	NSLog(@"awakeFromNib");
+	NSXLog(@"awakeFromNib");
+	if ([UVCUtils isLogOn]){
+		logMenu.title = @"Close Log";
+	} else {
+		logMenu.title = @"Save Log";
+	}
 	//	populate the camera pop-up button
 	[self populateCamPopUpButton];
 	[subMediaTypePUB removeAllItems];
@@ -115,8 +133,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	backgroudView.wantsLayer = true;///设置背景颜色
 	backgroudView.layer.backgroundColor = [NSColor blackColor].CGColor;
 }
+
 - (void) populateCamPopUpButton	{
-	NSLog(@"populateCamPopUpButton");
+	NSXLog(@"populateCamPopUpButton");
 	[camPUB removeAllItems];
 	
 	NSArray		*devicesMenuItems = [vidSrc arrayOfSourceMenuItems];
@@ -186,7 +205,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 - (void)getNextStepValue{
     int max = 0;
     float delta = 0;
-//    NSLog(@"getNextStepValue updateState %lu doubleValue %f", (unsigned long)self.updateState, upgradeProgressIndicator.doubleValue);
+//    NSXLog(@"getNextStepValue updateState %lu doubleValue %f", (unsigned long)self.updateState, upgradeProgressIndicator.doubleValue);
     switch (self.updateState) {
         case UVCUpdateStateStart:
             max = 8;
@@ -234,11 +253,11 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
-	NSLog(@"applicationDidFinishLaunching");
+	NSXLog(@"applicationDidFinishLaunching");
 	dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC);
 
 	dispatch_after(time, dispatch_get_main_queue(), ^{
-		NSLog(@" waited at lease three seconds");
+		NSXLog(@" waited at lease three seconds");
 		NSMenuItem        *selectedItem = [camPUB selectedItem];
 		[self handleSelectedCamera:selectedItem];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processAddDeviceEventWithNotification:) name:AVCaptureDeviceWasConnectedNotification object:nil];
@@ -275,7 +294,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 
 - (void)setUpdateState:(UVCUpdateState)updateState{
     _updateState = updateState;
-    NSLog(@"setUpdateState %lu", (unsigned long)updateState);
+    NSXLog(@"setUpdateState %lu", (unsigned long)updateState);
     [self setAllButtonState:NO];
     switch (updateState) {
         case UVCUpdateStateStart:
@@ -301,7 +320,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 -(void)deviceMounted:(NSNotification *)noti{
-    NSLog(@"deviceMounted %@", noti);
+    NSXLog(@"deviceMounted %@", noti);
     if (self.updateDeviceId && self.updateState == UVCUpdateStateStart) {
         NSURL *dir = noti.userInfo[NSWorkspaceVolumeURLKey];
         if ([self copyFile:firmwareFileTextfield.stringValue toTargetDir:dir.path]) {
@@ -316,17 +335,17 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 -(void)deviceUnmounted:(NSNotification *)noti{
-    NSLog(@"deviceUnmounted %@", noti);
+    NSXLog(@"deviceUnmounted %@", noti);
     if (self.updateDeviceId && self.updateState == UVCUpdateStateDownloadBinFileSuccess) {
         self.updateState = UVCUpdateStateRestarting;
     }
 }
 
 - (void)processAddDeviceEventWithNotification:(NSNotification *)noti{
-    NSLog(@"processAddDeviceEventWithNotification %@", noti);
+    NSXLog(@"processAddDeviceEventWithNotification %@", noti);
     AVCaptureDevice *device = noti.object;
-    NSLog(@"processAddDeviceEventWithNotification %@", device);
-    NSLog(@"processAddDeviceEventWithNotification %@", device.activeFormat.mediaType);
+    NSXLog(@"processAddDeviceEventWithNotification %@", device);
+    NSXLog(@"processAddDeviceEventWithNotification %@", device.activeFormat.mediaType);
     if (![device.activeFormat.mediaType isEqualToString:@"vide"]){
         // Fallback on earlier versions
         return;
@@ -344,7 +363,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (void)processRemoveDeviceEventWithNotification:(NSNotification *)noti{
-    NSLog(@"processRemoveDeviceEventWithNotification %@", noti);
+    NSXLog(@"processRemoveDeviceEventWithNotification %@", noti);
     
     AVCaptureDevice *device = noti.object;
     if ([device.uniqueID isEqualToString:self.updateDeviceId]) {
@@ -378,7 +397,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [vidSrc loadDeviceWithUniqueID:deviceId];
     uvcController = [[VVUVCController alloc] initWithDeviceIDString:deviceId];
     if (uvcController==nil){
-        NSLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+        NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
         [versionTextView setString:@""];
     } else    {
         if ([uvcController zoomSupported])    {
@@ -403,7 +422,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (IBAction) camPUBUsed:(id)sender	{
-	//NSLog(@"%s",__func__);
+	//NSXLog(@"%s",__func__);
 	NSMenuItem		*selectedItem = [sender selectedItem];
     [self handleSelectedCamera:selectedItem];
 }
@@ -414,12 +433,12 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [panel setCanChooseFiles:NO];//是否能选择文件file
     [panel setCanChooseDirectories:YES];//是否能打开文件夹
     [panel setAllowsMultipleSelection:NO];//是否允许多选file
-    panel.allowedFileTypes =@[@"bin"];
+    panel.allowedFileTypes =@[@"bin", @"img"];
 
     [panel beginWithCompletionHandler:^(NSModalResponse result) {
         if (result == NSModalResponseOK) {
             for (NSURL *url in [panel URLs]) {
-                NSLog(@"--->%@",url.path);
+                NSXLog(@"--->%@",url.path);
                 handle(url.path);
                 break;
             }
@@ -428,19 +447,19 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (BOOL)copyFile:(NSString *)file toTargetDir:(NSString *)dir{
-    NSLog(@"copyFile %@ to %@", file, dir);
+    NSXLog(@"copyFile %@ to %@", file, dir);
     dir = [dir stringByAppendingString:@"/fw.bin"];
     NSFileManager *fm = [NSFileManager defaultManager];
     NSError *err = nil;
     if ([fm fileExistsAtPath:dir]){
         if (![fm removeItemAtPath:dir error:&err]){
-            NSLog(@"removeItemAtPath %@ fail %@", dir, err);
+            NSXLog(@"removeItemAtPath %@ fail %@", dir, err);
             return NO;
         }
     }
     
     if (![fm copyItemAtPath:file toPath:dir error:&err]){
-        NSLog(@"copyFile %@ to %@ fail %@", file, dir,err);
+        NSXLog(@"copyFile %@ to %@ fail %@", file, dir,err);
         return NO;
     }
     return YES;
@@ -454,9 +473,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     BOOL isYES = [fm createDirectoryAtPath:createDirPath withIntermediateDirectories:YES attributes:nil error:&err];
        
     if (isYES) {
-        NSLog(@"创建 [%@] 成功", dir);
+        NSXLog(@"创建 [%@] 成功", dir);
     } else {
-        NSLog(@"创建 [%@] 失败 [%@]", dir, err);
+        NSXLog(@"创建 [%@] 失败 [%@]", dir, err);
     }
     
     return isYES;
@@ -476,12 +495,12 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [panel beginWithCompletionHandler:^(NSModalResponse result) {
         if (result == NSModalResponseOK) {
             for (NSURL *url in [panel URLs]) {
-                NSLog(@"--->%@",url.path);
+                NSXLog(@"--->%@",url.path);
                 NSFileManager *fm = [NSFileManager defaultManager];
                 // YES 存在   NO 不存在
                 BOOL isYES = [fm fileExistsAtPath:url.path];
                 [firmwareFileTextfield setStringValue:url.path];
-                NSLog(@"%d", isYES);
+                NSXLog(@"%d", isYES);
                 self.updateDeviceId = [vidSrc currentDeivceId];
                 if([uvcController setUpdateMode]){
                     self.updateState = UVCUpdateStateStart;
@@ -527,7 +546,8 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		return;
 	}
 	
-	[vidSrc updateDeviceFormat:format];
+//	[vidSrc updateDeviceFormat:format];
+	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:format];
 	[vidSrc setPreviewLayer:backgroudView];
 }
 
@@ -544,7 +564,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		return;
 	}
 	
-	[vidSrc updateDeviceFormat:repObj];
+	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
 	[vidSrc setPreviewLayer:backgroudView];
 }
 
@@ -562,6 +582,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 - (NSOpenGLContext *) sharedContext	{
 	return sharedContext;
 }
+
 - (NSOpenGLPixelFormat *) pixelFormat	{
 	return pixelFormat;
 }
@@ -571,7 +592,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 #pragma mark --------------------- AVCaptureVideoSourceDelegate
 /*------------------------------------*/
 - (void) listOfStaticSourcesUpdated:(id)videoSource	{
-	NSLog(@"%s",__func__);
+	NSXLog(@"%s",__func__);
 }
 @end
 

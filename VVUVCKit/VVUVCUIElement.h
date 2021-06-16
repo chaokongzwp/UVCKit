@@ -28,7 +28,7 @@
 
 - (void) uiItemUsed:(id)sender;
 
-@property (assign,readwrite) id delegate;
+//@property (assign,readwrite) id delegate;
 @property (assign,readwrite) int val;
 @property (assign,readwrite) int min;
 @property (assign,readwrite) int max;

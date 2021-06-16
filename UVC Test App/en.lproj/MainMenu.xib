@@ -643,6 +643,12 @@
                                     <action selector="showHelp:" target="-1" id="493"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Save Log" id="hlH-ER-kM7" userLabel="Save Log">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="saveLogAction:" target="494" id="Ich-3b-aZo"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -826,7 +832,7 @@
                         <rect key="frame" x="392" y="120" width="398" height="100"/>
                         <clipView key="contentView" drawsBackground="NO" id="c6d-eN-Bjp">
                             <rect key="frame" x="2" y="2" width="394" height="96"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="KPx-Qc-dSx">
                                     <rect key="frame" x="0.0" y="0.0" width="394" height="96"/>
@@ -922,6 +928,7 @@
                 <outlet property="firmwareFileTextfield" destination="sK4-r0-QWv" id="60p-Lw-4al"/>
                 <outlet property="glView" destination="550" id="555"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
+                <outlet property="logMenu" destination="hlH-ER-kM7" id="C72-M5-Xuw"/>
                 <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>
                 <outlet property="resetHomeButton" destination="8FE-Da-i8G" id="0bp-gd-2K9"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
