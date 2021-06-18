@@ -92,6 +92,7 @@ static NSString *path = nil;
 		}
 		
 		NSFileHandle *fileHandler = [NSFileHandle fileHandleForWritingAtPath:path];
+		[fileHandler seekToEndOfFile];
 		[logLock lock];
 		NSArray *tmp = cacheLog;
 		cacheLog = [NSMutableArray array];

@@ -433,7 +433,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [panel setCanChooseFiles:NO];//是否能选择文件file
     [panel setCanChooseDirectories:YES];//是否能打开文件夹
     [panel setAllowsMultipleSelection:NO];//是否允许多选file
-    panel.allowedFileTypes =@[@"bin", @"img"];
+    panel.allowedFileTypes =@[@"bin"];
 
     [panel beginWithCompletionHandler:^(NSModalResponse result) {
         if (result == NSModalResponseOK) {
@@ -490,7 +490,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     [panel setCanChooseFiles:YES];//是否能选择文件file
     [panel setCanChooseDirectories:NO];//是否能打开文件夹
     [panel setAllowsMultipleSelection:NO];//是否允许多选file
-    panel.allowedFileTypes =@[@"bin"];
+    panel.allowedFileTypes =@[@"bin", @"img"];
 
     [panel beginWithCompletionHandler:^(NSModalResponse result) {
         if (result == NSModalResponseOK) {
@@ -541,7 +541,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		return;
 	
 	UVCCaptureDeviceFormat *format = [self updateDimensionPopUpButton:selectedItem.title];
-	
 	if ([self isSameFormat:format]) {
 		return;
 	}
@@ -566,6 +565,22 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
 	[vidSrc setPreviewLayer:backgroudView];
+	
+//	NSString *currentId = [vidSrc currentDeivceId];
+//	NSString *defaultDeviceId = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo].uniqueID;
+//	if ([defaultDeviceId isEqualToString:currentId]) {
+//		[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
+//		[vidSrc setPreviewLayer:backgroudView];
+//	} else {
+//		[vidSrc loadDeviceWithUniqueID:defaultDeviceId format:nil];
+//		dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 3000 * NSEC_PER_MSEC);
+//
+//		dispatch_after(time, dispatch_get_main_queue(), ^{
+//			NSLog(@"%@ %@", [vidSrc currentDeivceId], defaultDeviceId);
+//			[vidSrc loadDeviceWithUniqueID:currentId format:repObj];
+//			[vidSrc setPreviewLayer:backgroudView];
+//		});
+//	}
 }
 
 - (void) renderCallback	{

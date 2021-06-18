@@ -30,6 +30,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 @interface AVCaptureVideoSource()
 @property (nonatomic, strong) NSMutableDictionary<UVCCaptureDeviceFormat *, AVCaptureDeviceFormat
 *> *formatMap;
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *preLayer;
 @end
 
 
@@ -129,9 +130,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		return;
 	}
 	
-	
 	NSXLog(@"updateDeviceFormat %@ %@", uvcFormat.subMediaType, uvcFormat.formatDesc);
-	
 	AVCaptureDevice		*propDevice = propDeviceInput.device;
 	for (AVCaptureDeviceFormat *format in propDevice.formats) {
 		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
@@ -197,9 +196,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	}
 }
 
-
 - (void)setPreviewLayer:(NSView *)view{
-	AVCaptureVideoPreviewLayer *preLayer = [AVCaptureVideoPreviewLayer layerWithSession: propSession];
+	AVCaptureVideoPreviewLayer *preLayer = [AVCaptureVideoPreviewLayer layerWithSession:propSession];
 	preLayer.frame = view.bounds;
 	preLayer.videoGravity = AVLayerVideoGravityResizeAspect;
 	[view.layer addSublayer:preLayer];
@@ -209,7 +207,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	[self loadDeviceWithUniqueID:n format:nil];
 }
 
-- (void)setFormat:(UVCCaptureDeviceFormat *)uvcFormat device:(AVCaptureDevice *)propDevice{
+- (AVCaptureDeviceFormat *)setFormat:(UVCCaptureDeviceFormat *)uvcFormat device:(AVCaptureDevice *)propDevice{
+	__block AVCaptureDeviceFormat *format = nil;
 	if (uvcFormat){
 		[propDevice.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(obj.formatDescription);
@@ -226,12 +225,14 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 				if (err) {
 					NSXLog(@"setFormat %@ uvcFormat %@ %@", err, uvcFormat.alias, uvcFormat.formatDesc);
 				}
+				
+				format = obj;
 				return;
 			}
 		}];
 	}
 
-	__block AVCaptureDeviceFormat *format = nil;
+	
 	NSError	*err = nil;
 	FourCharCode codeType=CMFormatDescriptionGetMediaSubType(propDevice.activeFormat.formatDescription);
 	if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange == codeType) {
@@ -242,10 +243,15 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 				format = obj;
 			}
 		}];
-		[propDevice lockForConfiguration:&err];
-		[propDevice setActiveFormat:format];
-		[propDevice unlockForConfiguration];
+		
+		if (format) {
+			[propDevice lockForConfiguration:&err];
+			[propDevice setActiveFormat:format];
+			[propDevice unlockForConfiguration];
+		}
 	}
+	
+	return format;
 }
 
 - (void) loadDeviceWithUniqueID:(NSString *)n format:(UVCCaptureDeviceFormat *)uvcFormat{
@@ -312,7 +318,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 }
 
 - (void) start	{
-	//NSXLog(@"%s ... %@",__func__,self);
+	NSXLog(@"");
     [propLock lock];
 	if (!propRunning)	{
 		[self _start];
@@ -326,7 +332,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 }
 
 - (void) stop	{
-	//NSXLog(@"%s ... %@",__func__,self);
+	NSXLog(@"");
     [propLock lock];
 	if (propRunning)	{
 		[self _stop];
@@ -343,6 +349,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 #pragma mark --------------------- backend
 /*------------------------------------*/
 - (void) _start	{
+	NSXLog(@"");
 }
 
 - (void) _stop	{
@@ -365,25 +372,28 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 #pragma mark --------------------- AVCaptureVideoDataOutputSampleBufferDelegate protocol (and AVCaptureFileOutputDelegate, too- some protocols share these methods)
 /*------------------------------------*/
 - (void)captureOutput:(AVCaptureOutput *)o didDropSampleBuffer:(CMSampleBufferRef)b fromConnection:(AVCaptureConnection *)c	{
-	NSXLog(@"%s",__func__);
+	NSXLog(@"");
 }
 
 - (void)captureOutput:(AVCaptureOutput *)o didOutputSampleBuffer:(CMSampleBufferRef)b fromConnection:(AVCaptureConnection *)c	{
 	//NSXLog(@"%s",__func__);
-	
 	CMFormatDescriptionRef		portFormatDesc = CMSampleBufferGetFormatDescription(b);
 	FourCharCode code= CMFormatDescriptionGetMediaSubType(portFormatDesc);
-	NSXLog(@"\t\t\tthe FourCharCode for the media subtype is %s",FourCC2Str(code));
+	NSXLog(@"media subtype is %s",FourCC2Str(code));
 	CMVideoDimensions		vidDims = CMVideoFormatDescriptionGetDimensions(portFormatDesc);
-	NSXLog(@"\t\t\tport size is %d x %d",vidDims.width,vidDims.height);
+	NSXLog(@"size is %d x %d",vidDims.width,vidDims.height);
 	
 	//	if this came from a connection belonging to the data output
 	//VVBuffer				*newBuffer = nil;
-	//CMBlockBufferRef		blockBufferRef = CMSampleBufferGetDataBuffer(b)
+	CMBlockBufferRef		blockBufferRef = CMSampleBufferGetDataBuffer(b);
+	if (blockBufferRef) {
+		
+	}
+	
 	CVImageBufferRef		imgBufferRef = CMSampleBufferGetImageBuffer(b);
 	if (imgBufferRef != NULL)	{
 		CGSize		imgBufferSize = CVImageBufferGetDisplaySize(imgBufferRef);
-		NSXLog(@"\t\timg buffer size is %f %f",imgBufferSize.height, imgBufferSize.width);
+		NSXLog(@"img buffer size is %f %f",imgBufferSize.height, imgBufferSize.width);
 //		CVOpenGLTextureRef		cvTexRef = NULL;
 //		CVReturn				err = kCVReturnSuccess;
 //
