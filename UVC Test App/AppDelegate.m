@@ -252,6 +252,11 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     });
 }
 
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender{
+	return YES;
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
 	NSXLog(@"applicationDidFinishLaunching");
 	dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC);
@@ -583,25 +588,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 //	}
 }
 
-- (void) renderCallback	{
-	CVOpenGLTextureRef		newTex = [vidSrc safelyGetRetainedTextureRef];
-	if (newTex == nil)
-		return;
-	
-	[glView drawTextureRef:newTex];
-	
-	CVOpenGLTextureRelease(newTex);
-	newTex = nil;
-}
-
-- (NSOpenGLContext *) sharedContext	{
-	return sharedContext;
-}
-
-- (NSOpenGLPixelFormat *) pixelFormat	{
-	return pixelFormat;
-}
-
 
 /*===================================================================================*/
 #pragma mark --------------------- AVCaptureVideoSourceDelegate
@@ -610,21 +596,4 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	NSXLog(@"%s",__func__);
 }
 @end
-
-
-
-
-CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, 
-	const CVTimeStamp *inNow, 
-	const CVTimeStamp *inOutputTime, 
-	CVOptionFlags flagsIn, 
-	CVOptionFlags *flagsOut, 
-	void *displayLinkContext)
-{
-	@autoreleasepool {
-		[(__bridge AppDelegate *)displayLinkContext renderCallback];
-	}
-	
-	return kCVReturnSuccess;
-}
 

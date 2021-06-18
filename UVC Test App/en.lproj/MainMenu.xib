@@ -762,7 +762,7 @@
                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="vOY-xu-Fok">
                         <rect key="frame" x="0.0" y="312" width="876" height="349"/>
                         <subviews>
-                            <openGLView wantsLayer="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550" customClass="CVGLView">
+                            <openGLView wantsLayer="YES" useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" translatesAutoresizingMaskIntoConstraints="NO" id="550">
                                 <rect key="frame" x="7" y="0.0" width="862" height="349"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="862" id="9nZ-Bf-QDS"/>
@@ -832,7 +832,7 @@
                         <rect key="frame" x="392" y="120" width="398" height="100"/>
                         <clipView key="contentView" drawsBackground="NO" id="c6d-eN-Bjp">
                             <rect key="frame" x="2" y="2" width="394" height="96"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="KPx-Qc-dSx">
                                     <rect key="frame" x="0.0" y="0.0" width="394" height="96"/>
@@ -917,7 +917,7 @@
                     <constraint firstItem="NCH-1b-IOC" firstAttribute="leading" secondItem="d7S-IH-QXS" secondAttribute="leading" id="zA3-IL-wu1"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="-1083" y="-274"/>
+            <point key="canvasLocation" x="-1370" y="-287"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
@@ -926,7 +926,7 @@
                 <outlet property="dimensionPUB" destination="dvO-gW-Pom" id="1Ot-NI-lnL"/>
                 <outlet property="downPanTiltButton" destination="31v-TC-uGf" id="4Ax-eX-EwV"/>
                 <outlet property="firmwareFileTextfield" destination="sK4-r0-QWv" id="60p-Lw-4al"/>
-                <outlet property="glView" destination="550" id="555"/>
+                <outlet property="glView" destination="550" id="a8v-Oz-1EH"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
                 <outlet property="logMenu" destination="hlH-ER-kM7" id="C72-M5-Xuw"/>
                 <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>

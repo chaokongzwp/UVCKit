@@ -7,6 +7,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 
 
 
+
 @implementation UVCCaptureDeviceFormat
 - (NSString *)formatDesc{
 	return [NSString stringWithFormat:@"%d * %d", self.width, self.height];
@@ -31,6 +32,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 @property (nonatomic, strong) NSMutableDictionary<UVCCaptureDeviceFormat *, AVCaptureDeviceFormat
 *> *formatMap;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *preLayer;
+@property (nonatomic, strong) AVCaptureDeviceFormat *currentFormat;
 @end
 
 
@@ -110,7 +112,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		return nil;
 	}
 	
-	AVCaptureDeviceFormat *format = propDeviceInput.device.activeFormat;
+	AVCaptureDeviceFormat *format = self.currentFormat;
 	FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
 	NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
 	UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
@@ -147,9 +149,9 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 				NSError				*err = nil;
                 [propLock lock];
 				NSXLog(@"formats %@", propDevice.formats);
-				[propDevice lockForConfiguration:&err];
-				[propDevice setActiveFormat:format];
-				[propDevice unlockForConfiguration];
+//				[propDevice lockForConfiguration:&err];
+//				[propDevice setActiveFormat:format];
+//				[propDevice unlockForConfiguration];
 				
 				NSMutableDictionary *videoSettings = [NSMutableDictionary new];
 				[videoSettings setValue:@(codeType) forKey:(NSString *)kCVPixelBufferPixelFormatTypeKey];
@@ -207,8 +209,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	[self loadDeviceWithUniqueID:n format:nil];
 }
 
-- (AVCaptureDeviceFormat *)setFormat:(UVCCaptureDeviceFormat *)uvcFormat device:(AVCaptureDevice *)propDevice{
-	__block AVCaptureDeviceFormat *format = nil;
+- (void)setFormat:(UVCCaptureDeviceFormat *)uvcFormat device:(AVCaptureDevice *)propDevice{
+//	__block AVCaptureDeviceFormat *format = nil;
 	if (uvcFormat){
 		[propDevice.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(obj.formatDescription);
@@ -218,40 +220,40 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 			if ([codeTypeStr isEqualToString:uvcFormat.subMediaType]
 				&& dimensions.height == uvcFormat.height
 				&& dimensions.width == uvcFormat.width) {
-				NSError	*err = nil;
-				[propDevice lockForConfiguration:&err];
-				[propDevice setActiveFormat:obj];
-				[propDevice unlockForConfiguration];
-				if (err) {
-					NSXLog(@"setFormat %@ uvcFormat %@ %@", err, uvcFormat.alias, uvcFormat.formatDesc);
-				}
+//				NSError	*err = nil;
+//				[propDevice lockForConfiguration:&err];
+//				[propDevice setActiveFormat:obj];
+//				[propDevice unlockForConfiguration];
+//				if (err) {
+//					NSXLog(@"setFormat %@ uvcFormat %@ %@", err, uvcFormat.alias, uvcFormat.formatDesc);
+//				}
 				
-				format = obj;
+				self.currentFormat = obj;
 				return;
 			}
 		}];
 	}
+}
 
-	
-	NSError	*err = nil;
-	FourCharCode codeType=CMFormatDescriptionGetMediaSubType(propDevice.activeFormat.formatDescription);
-	if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange == codeType) {
-		
-		[propDevice.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(propDevice.activeFormat.formatDescription);
-			if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange != codeType) {
-				format = obj;
-			}
-		}];
-		
-		if (format) {
-			[propDevice lockForConfiguration:&err];
-			[propDevice setActiveFormat:format];
-			[propDevice unlockForConfiguration];
-		}
+- (AVCaptureDeviceFormat *)currentFormat{
+	if (_currentFormat) {
+		return _currentFormat;
 	}
 	
-	return format;
+	
+	FourCharCode codeType = CMFormatDescriptionGetMediaSubType(propDeviceInput.device.activeFormat.formatDescription);
+	if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange == codeType) {
+		[propDeviceInput.device.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(obj.formatDescription);
+			if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange != codeType) {
+				_currentFormat = obj;
+			}
+		}];
+	} else {
+		_currentFormat = propDeviceInput.device.activeFormat;
+	}
+	
+	return _currentFormat;
 }
 
 - (void) loadDeviceWithUniqueID:(NSString *)n format:(UVCCaptureDeviceFormat *)uvcFormat{
@@ -284,12 +286,13 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		}
 		
 		if (!bail)	{
-//			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
-//			[propOutput setSampleBufferDelegate:self queue:propQueue];
+			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+			[propOutput setSampleBufferDelegate:self queue:propQueue];
 			[self setFormat:uvcFormat device:propDevice];
 			NSXLog(@"formatDescription %@", propDevice.activeFormat.formatDescription);
-			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(propDevice.activeFormat.formatDescription);
-			CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(propDevice.activeFormat.formatDescription);
+			NSXLog(@"self.currentFormat %@", self.currentFormat);
+			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(self.currentFormat.formatDescription);
+			CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(self.currentFormat.formatDescription);
 			
 			NSMutableDictionary *videoSettings = [NSMutableDictionary new];
 			[videoSettings setValue:@(codeType) forKey:(NSString *)kCVPixelBufferPixelFormatTypeKey];
@@ -365,6 +368,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		propOutput = nil;
 		propSession = nil;
 	}
+	
+	self.currentFormat = nil;
 }
 
 

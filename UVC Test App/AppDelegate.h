@@ -17,8 +17,9 @@
 	VVUVCController				*uvcController;	//	this is the example of how to use this class.  ironic that it's such a small part of the demo app.
 	
 	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras
-	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
+//	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
 	
+	__weak IBOutlet NSOpenGLView *glView;
 	__weak IBOutlet NSMenuItem *logMenu;
 	__weak IBOutlet UVCButton *rightPanTiltButton;
 	__weak IBOutlet UVCButton *upPanTiltButton;
