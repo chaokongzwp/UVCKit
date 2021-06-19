@@ -552,6 +552,20 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	
 //	[vidSrc updateDeviceFormat:format];
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:format];
+//	[vidSrc setPreviewLayer:backgroudView];
+	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
+	if (uvcController==nil){
+		NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+		[versionTextView setString:@""];
+	} else    {
+		if ([uvcController zoomSupported])    {
+			[uvcController resetPanTilt];
+			[uvcController setZoom:0];
+		}
+		[versionTextView setString:[uvcController getExtensionVersion]];
+	}
+	subMediaTypesInfo= [vidSrc getMediaSubTypes];
+	[self updateSubMediaTypesPopUpButton];
 	[vidSrc setPreviewLayer:backgroudView];
 }
 
@@ -569,6 +583,20 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	}
 	
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
+	[vidSrc setPreviewLayer:backgroudView];
+	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
+	if (uvcController==nil){
+		NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+		[versionTextView setString:@""];
+	} else    {
+		if ([uvcController zoomSupported])    {
+			[uvcController resetPanTilt];
+			[uvcController setZoom:0];
+		}
+		[versionTextView setString:[uvcController getExtensionVersion]];
+	}
+	subMediaTypesInfo= [vidSrc getMediaSubTypes];
+	[self updateSubMediaTypesPopUpButton];
 	[vidSrc setPreviewLayer:backgroudView];
 	
 //	NSString *currentId = [vidSrc currentDeivceId];
