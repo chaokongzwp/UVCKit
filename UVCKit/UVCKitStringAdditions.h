@@ -1,6 +1,6 @@
 #import <Cocoa/Cocoa.h>
 
-@interface NSString (VVUVCKitStringAdditions)
+@interface NSString (UVCKitStringAdditions)
 
 - (BOOL) containsString:(NSString *)n;
 

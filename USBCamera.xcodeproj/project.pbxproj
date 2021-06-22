@@ -20,7 +20,7 @@
 		962773AC19D56C69001EDD16 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 962773AB19D56C69001EDD16 /* AppDelegate.m */; };
 		962773AF19D56C69001EDD16 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 962773AD19D56C69001EDD16 /* MainMenu.xib */; };
 		962773B719D56C98001EDD16 /* UVCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 96C2712E19D5695B00705982 /* UVCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		962773BA19D56D27001EDD16 /* AVCaptureVideoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 962773B919D56D27001EDD16 /* AVCaptureVideoSource.m */; };
+		962773BA19D56D27001EDD16 /* UVCCaptureVideoSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 962773B919D56D27001EDD16 /* UVCCaptureVideoSource.m */; };
 		962773BC19D5C35C001EDD16 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BB19D5C35C001EDD16 /* AVFoundation.framework */; };
 		962773BE19D5C360001EDD16 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BD19D5C360001EDD16 /* CoreVideo.framework */; };
 		962773C019D5C3BD001EDD16 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BF19D5C3BD001EDD16 /* CoreMedia.framework */; };
@@ -28,18 +28,18 @@
 		964271D419D6C47200ED8E01 /* UVCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2712E19D5695B00705982 /* UVCKit.framework */; };
 		964271D819D6D2E100ED8E01 /* USBVendors.txt in Resources */ = {isa = PBXBuildFile; fileRef = 964271D719D6D2E100ED8E01 /* USBVendors.txt */; };
 		968065CD19D72A1B00CF045A /* USBBusProber.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CCFE5F19D6BFAD000B1B2C /* USBBusProber.framework */; };
-		968065D419D73AA600CF045A /* VVUVCKitStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 968065D219D73AA600CF045A /* VVUVCKitStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		968065D519D73AA600CF045A /* VVUVCKitStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968065D319D73AA600CF045A /* VVUVCKitStringAdditions.m */; };
+		968065D419D73AA600CF045A /* UVCKitStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 968065D219D73AA600CF045A /* UVCKitStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		968065D519D73AA600CF045A /* UVCKitStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968065D319D73AA600CF045A /* UVCKitStringAdditions.m */; };
 		969BC95D19D5ED4F00477BE7 /* UVCKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2713E19D5695B00705982 /* UVCKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		96C2713219D5695B00705982 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2713119D5695B00705982 /* Cocoa.framework */; };
 		96C2713C19D5695B00705982 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 96C2713A19D5695B00705982 /* InfoPlist.strings */; };
-		96C2714819D5698F00705982 /* VVUVCController.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714619D5698F00705982 /* VVUVCController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		96C2714919D5698F00705982 /* VVUVCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714719D5698F00705982 /* VVUVCController.m */; };
-		96C2714C19D569C400705982 /* VVUVCUIController.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714A19D569C400705982 /* VVUVCUIController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		96C2714D19D569C400705982 /* VVUVCUIController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714B19D569C400705982 /* VVUVCUIController.m */; };
-		96C2715019D569DC00705982 /* VVUVCUIElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714E19D569DC00705982 /* VVUVCUIElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		96C2715119D569DC00705982 /* VVUVCUIElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714F19D569DC00705982 /* VVUVCUIElement.m */; };
-		96C2715319D56AE200705982 /* VVUVCController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96C2715219D56AE200705982 /* VVUVCController.xib */; };
+		96C2714819D5698F00705982 /* UVCController.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714619D5698F00705982 /* UVCController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		96C2714919D5698F00705982 /* UVCController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714719D5698F00705982 /* UVCController.m */; };
+		96C2714C19D569C400705982 /* UVCUIController.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714A19D569C400705982 /* UVCUIController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		96C2714D19D569C400705982 /* UVCUIController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714B19D569C400705982 /* UVCUIController.m */; };
+		96C2715019D569DC00705982 /* UVCUIElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 96C2714E19D569DC00705982 /* UVCUIElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		96C2715119D569DC00705982 /* UVCUIElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C2714F19D569DC00705982 /* UVCUIElement.m */; };
+		96C2715319D56AE200705982 /* UVCController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96C2715219D56AE200705982 /* UVCController.xib */; };
 		96CCFE6019D6BFAD000B1B2C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2713119D5695B00705982 /* Cocoa.framework */; };
 		96CCFE6619D6BFAD000B1B2C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 96CCFE6419D6BFAD000B1B2C /* InfoPlist.strings */; };
 		96CCFE8619D6BFEF000B1B2C /* DescriptorDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 96CCFE6E19D6BFEF000B1B2C /* DescriptorDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -135,30 +135,30 @@
 		962773AA19D56C69001EDD16 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		962773AB19D56C69001EDD16 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		962773AE19D56C69001EDD16 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		962773B819D56D27001EDD16 /* AVCaptureVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVCaptureVideoSource.h; sourceTree = "<group>"; };
-		962773B919D56D27001EDD16 /* AVCaptureVideoSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVCaptureVideoSource.m; sourceTree = "<group>"; };
+		962773B819D56D27001EDD16 /* UVCCaptureVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCCaptureVideoSource.h; sourceTree = "<group>"; };
+		962773B919D56D27001EDD16 /* UVCCaptureVideoSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCCaptureVideoSource.m; sourceTree = "<group>"; };
 		962773BB19D5C35C001EDD16 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		962773BD19D5C360001EDD16 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		962773BF19D5C3BD001EDD16 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		964271D719D6D2E100ED8E01 /* USBVendors.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = USBVendors.txt; sourceTree = "<group>"; };
-		968065D219D73AA600CF045A /* VVUVCKitStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVUVCKitStringAdditions.h; sourceTree = "<group>"; };
-		968065D319D73AA600CF045A /* VVUVCKitStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVUVCKitStringAdditions.m; sourceTree = "<group>"; };
+		968065D219D73AA600CF045A /* UVCKitStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCKitStringAdditions.h; sourceTree = "<group>"; };
+		968065D319D73AA600CF045A /* UVCKitStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCKitStringAdditions.m; sourceTree = "<group>"; };
 		96C2712E19D5695B00705982 /* UVCKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UVCKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96C2713119D5695B00705982 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		96C2713419D5695B00705982 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		96C2713519D5695B00705982 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		96C2713619D5695B00705982 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		96C2713919D5695B00705982 /* UVCKit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UVCKit-Info.plist"; sourceTree = "<group>"; };
+		96C2713919D5695B00705982 /* USBCamera-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "USBCamera-Info.plist"; sourceTree = "<group>"; };
 		96C2713B19D5695B00705982 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		96C2713D19D5695B00705982 /* UVCKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UVCKit-Prefix.pch"; sourceTree = "<group>"; };
+		96C2713D19D5695B00705982 /* USBCamera-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "USBCamera-Prefix.pch"; sourceTree = "<group>"; };
 		96C2713E19D5695B00705982 /* UVCKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCKit.h; sourceTree = "<group>"; };
-		96C2714619D5698F00705982 /* VVUVCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVUVCController.h; sourceTree = "<group>"; };
-		96C2714719D5698F00705982 /* VVUVCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVUVCController.m; sourceTree = "<group>"; };
-		96C2714A19D569C400705982 /* VVUVCUIController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVUVCUIController.h; sourceTree = "<group>"; };
-		96C2714B19D569C400705982 /* VVUVCUIController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVUVCUIController.m; sourceTree = "<group>"; };
-		96C2714E19D569DC00705982 /* VVUVCUIElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVUVCUIElement.h; sourceTree = "<group>"; };
-		96C2714F19D569DC00705982 /* VVUVCUIElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVUVCUIElement.m; sourceTree = "<group>"; };
-		96C2715219D56AE200705982 /* VVUVCController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VVUVCController.xib; sourceTree = "<group>"; };
+		96C2714619D5698F00705982 /* UVCController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCController.h; sourceTree = "<group>"; };
+		96C2714719D5698F00705982 /* UVCController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCController.m; sourceTree = "<group>"; };
+		96C2714A19D569C400705982 /* UVCUIController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCUIController.h; sourceTree = "<group>"; };
+		96C2714B19D569C400705982 /* UVCUIController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCUIController.m; sourceTree = "<group>"; };
+		96C2714E19D569DC00705982 /* UVCUIElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCUIElement.h; sourceTree = "<group>"; };
+		96C2714F19D569DC00705982 /* UVCUIElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCUIElement.m; sourceTree = "<group>"; };
+		96C2715219D56AE200705982 /* UVCController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UVCController.xib; sourceTree = "<group>"; };
 		96CCFE5F19D6BFAD000B1B2C /* USBBusProber.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = USBBusProber.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		96CCFE6319D6BFAD000B1B2C /* USBBusProber-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "USBBusProber-Info.plist"; sourceTree = "<group>"; };
 		96CCFE6519D6BFAD000B1B2C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -249,8 +249,8 @@
 				962773AB19D56C69001EDD16 /* AppDelegate.m */,
 				962773AD19D56C69001EDD16 /* MainMenu.xib */,
 				9627739F19D56C69001EDD16 /* Supporting Files */,
-				962773B819D56D27001EDD16 /* AVCaptureVideoSource.h */,
-				962773B919D56D27001EDD16 /* AVCaptureVideoSource.m */,
+				962773B819D56D27001EDD16 /* UVCCaptureVideoSource.h */,
+				962773B919D56D27001EDD16 /* UVCCaptureVideoSource.m */,
 				4B4E1C00264412AD005A857A /* IMAGE.xcassets */,
 				4B92806C264A693A00C06688 /* UVCButton.h */,
 				4B92806D264A693A00C06688 /* UVCButton.m */,
@@ -320,16 +320,16 @@
 				4BE74C0E2679CAEB00801FEA /* UVCUtils.h */,
 				4BE74C0F2679CAEB00801FEA /* UVCUtils.m */,
 				96C2713E19D5695B00705982 /* UVCKit.h */,
-				96C2715219D56AE200705982 /* VVUVCController.xib */,
+				96C2715219D56AE200705982 /* UVCController.xib */,
 				96C2713819D5695B00705982 /* Supporting Files */,
-				96C2714619D5698F00705982 /* VVUVCController.h */,
-				96C2714719D5698F00705982 /* VVUVCController.m */,
-				96C2714A19D569C400705982 /* VVUVCUIController.h */,
-				96C2714B19D569C400705982 /* VVUVCUIController.m */,
-				96C2714E19D569DC00705982 /* VVUVCUIElement.h */,
-				96C2714F19D569DC00705982 /* VVUVCUIElement.m */,
-				968065D219D73AA600CF045A /* VVUVCKitStringAdditions.h */,
-				968065D319D73AA600CF045A /* VVUVCKitStringAdditions.m */,
+				96C2714619D5698F00705982 /* UVCController.h */,
+				96C2714719D5698F00705982 /* UVCController.m */,
+				96C2714A19D569C400705982 /* UVCUIController.h */,
+				96C2714B19D569C400705982 /* UVCUIController.m */,
+				96C2714E19D569DC00705982 /* UVCUIElement.h */,
+				96C2714F19D569DC00705982 /* UVCUIElement.m */,
+				968065D219D73AA600CF045A /* UVCKitStringAdditions.h */,
+				968065D319D73AA600CF045A /* UVCKitStringAdditions.m */,
 			);
 			path = UVCKit;
 			sourceTree = "<group>";
@@ -337,9 +337,9 @@
 		96C2713819D5695B00705982 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				96C2713919D5695B00705982 /* UVCKit-Info.plist */,
+				96C2713919D5695B00705982 /* USBCamera-Info.plist */,
 				96C2713A19D5695B00705982 /* InfoPlist.strings */,
-				96C2713D19D5695B00705982 /* UVCKit-Prefix.pch */,
+				96C2713D19D5695B00705982 /* USBCamera-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -420,12 +420,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96C2714819D5698F00705982 /* VVUVCController.h in Headers */,
-				96C2714C19D569C400705982 /* VVUVCUIController.h in Headers */,
-				96C2715019D569DC00705982 /* VVUVCUIElement.h in Headers */,
+				96C2714819D5698F00705982 /* UVCController.h in Headers */,
+				96C2714C19D569C400705982 /* UVCUIController.h in Headers */,
+				96C2715019D569DC00705982 /* UVCUIElement.h in Headers */,
 				969BC95D19D5ED4F00477BE7 /* UVCKit.h in Headers */,
 				4BE74C102679CAEB00801FEA /* UVCUtils.h in Headers */,
-				968065D419D73AA600CF045A /* VVUVCKitStringAdditions.h in Headers */,
+				968065D419D73AA600CF045A /* UVCKitStringAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,7 +533,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 96C2712819D5695B00705982 /* Build configuration list for PBXProject "UVCKit" */;
+			buildConfigurationList = 96C2712819D5695B00705982 /* Build configuration list for PBXProject "USBCamera" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -570,7 +570,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C2713C19D5695B00705982 /* InfoPlist.strings in Resources */,
-				96C2715319D56AE200705982 /* VVUVCController.xib in Resources */,
+				96C2715319D56AE200705982 /* UVCController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +594,7 @@
 				962773A519D56C69001EDD16 /* main.m in Sources */,
 				4B92806E264A693A00C06688 /* UVCButton.m in Sources */,
 				962773AC19D56C69001EDD16 /* AppDelegate.m in Sources */,
-				962773BA19D56D27001EDD16 /* AVCaptureVideoSource.m in Sources */,
+				962773BA19D56D27001EDD16 /* UVCCaptureVideoSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,10 +603,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE74C112679CAEB00801FEA /* UVCUtils.m in Sources */,
-				96C2714919D5698F00705982 /* VVUVCController.m in Sources */,
-				96C2714D19D569C400705982 /* VVUVCUIController.m in Sources */,
-				96C2715119D569DC00705982 /* VVUVCUIElement.m in Sources */,
-				968065D519D73AA600CF045A /* VVUVCKitStringAdditions.m in Sources */,
+				96C2714919D5698F00705982 /* UVCController.m in Sources */,
+				96C2714D19D569C400705982 /* UVCUIController.m in Sources */,
+				96C2715119D569DC00705982 /* UVCUIElement.m in Sources */,
+				968065D519D73AA600CF045A /* UVCKitStringAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -798,8 +798,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "UVCKit/UVCKit-Prefix.pch";
-				INFOPLIST_FILE = "UVCKit/UVCKit-Info.plist";
+				GCC_PREFIX_HEADER = "UVCKit/USBCamera-Prefix.pch";
+				INFOPLIST_FILE = "UVCKit/USBCamera-Info.plist";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.UVCKit;
@@ -817,8 +817,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "UVCKit/UVCKit-Prefix.pch";
-				INFOPLIST_FILE = "UVCKit/UVCKit-Info.plist";
+				GCC_PREFIX_HEADER = "UVCKit/USBCamera-Prefix.pch";
+				INFOPLIST_FILE = "UVCKit/USBCamera-Info.plist";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.Chingan.UVCKit;
@@ -878,7 +878,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		96C2712819D5695B00705982 /* Build configuration list for PBXProject "UVCKit" */ = {
+		96C2712819D5695B00705982 /* Build configuration list for PBXProject "USBCamera" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				96C2714119D5695B00705982 /* Debug */,

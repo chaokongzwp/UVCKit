@@ -1,6 +1,6 @@
 
-#import "VVUVCController.h"
-#import "VVUVCUIController.h"
+#import "UVCController.h"
+#import "UVCUIController.h"
 #import "UVCUtils.h"
 
 
@@ -18,6 +18,7 @@
 		NSXLog(@"%@ is unsupported",n);											\
 	}																			\
 }
+
 /*		these values are used to signify whether the uvc_control_info struct affects a hardware parameter (like focus), 
 which is one block of "function calls", or whether it affects a software parameter (like brightness), which is in another 
 block of "function calls".  one block is the "input terminal", the other block is the "processing unit".  the actual 
@@ -26,15 +27,8 @@ VVUVCControl class contain the actual per-camera addresses of these blocks)- the
 #define UVC_INPUT_TERMINAL_ID 0x01
 #define UVC_PROCESSING_UNIT_ID 0x02		//	other cams i've used so far
 
-
-
-
 /*	IMPORTANT: ALL THESE DEFINES WERE TAKEN FROM THE USB SPECIFICATION:
 	http://www.usb.org/developers/docs/devclass_docs/USB_Video_Class_1_1_090711.zip			*/
-
-
-
-
 #define UVC_CONTROL_INTERFACE_CLASS 0x0E
 #define UVC_CONTROL_INTERFACE_SUBCLASS 0x01
 
@@ -123,11 +117,7 @@ uvc_control_info_t	_whiteBalanceAutoTempCtrl;
 uvc_control_info_t	_whiteBalanceTempCtrl;
 
 
-
-
-@implementation VVUVCController
-
-
+@implementation UVCController
 + (void) load	{
 	_scanCtrl.unit = UVC_INPUT_TERMINAL_ID;
 	_scanCtrl.selector = UVC_CT_SCANNING_MODE_CONTROL;
@@ -341,7 +331,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (id) initWithLocationID:(UInt32)locationID {
-	NSXLog(@"%s ... %d, %X",__func__,(unsigned int)locationID,(unsigned int)locationID);
+	NSXLog(@"%d, %X",(unsigned int)locationID,(unsigned int)locationID);
 	self = [super init];
 	if (self!=nil) {
 		//	technically i don't need to set these here- they're calculated below from the BusProber, but default values are good, m'kay?
@@ -358,10 +348,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		NSMutableArray	*devices = [prober devicesArray];
 		for (BusProbeDevice *devicePtr in devices)	{
 			if ([devicePtr locationID] == locationID)	{
-				NSXLog(@"\t\tfound device %@",[devicePtr deviceName]);
+				NSXLog(@"found device %@",[devicePtr deviceName]);
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
-				NSXLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
-				NSXLog(@"\t\tdevice dict is %@",tmpDict);
+				NSXLog(@"top-level keys are %@",[tmpDict allKeys]);
+				NSXLog(@"device dict is %@",tmpDict);
 				NSDictionary		*topLevelNodeDataDict = (tmpDict==nil) ? nil : [tmpDict objectForKey:@"nodeData"];
 				//	from the node data dict, get the 'children' array
 				NSArray				*topLevelNodeChildren = (topLevelNodeDataDict==nil) ? nil : [topLevelNodeDataDict objectForKey:@"children"];
@@ -381,23 +371,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								for (NSDictionary *videoControlChild in videoControlChildren)	{
 									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
 									if ([controlChildName containsString:@"VDC (Control) Input Terminal"])	{
-										
-										//	get the 'children' array from the control child dict
 										NSArray			*inputTerminalChildren = [videoControlChild objectForKey:@"children"];
-										//	run through the children- each child is a dict, look for the child with a string at the key "Terminal ID"
 										for (NSDictionary *inputTerminalChild in inputTerminalChildren)	{
 											NSString		*terminalIDString = [inputTerminalChild objectForKey:@"Terminal ID"];
 											if (terminalIDString != nil)	{
-												//NSXLog(@"\t\tterminalIDString is %@",terminalIDString);
 												inputTerminalID = (int)[terminalIDString integerValue];
-												//NSXLog(@"\t\tverifying: inputTerminalID now %d",inputTerminalID);
-												
-												//	...i can break because i found the terminal ID
 												break;
 											}
 										}
 										
-										//	...i can break because i found the input terminal dict
 										break;
 									}
 								}
@@ -405,23 +387,14 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								for (NSDictionary *videoControlChild in videoControlChildren)	{
 									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
 									if ([controlChildName containsString:@"VDC (Control) Processing Unit"])	{
-										
-										//	get the 'children' array from the control child dict
 										NSArray			*processingUnitChildren = [videoControlChild objectForKey:@"children"];
-										//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
 										for (NSDictionary *processingUnitChild in processingUnitChildren)	{
 											NSString		*unitIDString = [processingUnitChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												processingUnitID = (int)[unitIDString integerValue];
-												//NSXLog(@"\t\tverifying: processingUnitID now %d",processingUnitID);
-												
-												//	...i can break because i found the unit ID
 												break;
 											}
 										}
-										
-										//	...i can break because i found the processing unit dict
 										break;
 									}
 								}
@@ -430,23 +403,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								for (NSDictionary *videoControlChild in videoControlChildren)	{
 									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
 									if ([controlChildName containsString:@"VDC (Control) Extension Unit"])	{
-										
-										//	get the 'children' array from the control child dict
 										NSArray			*extensionUnitChildren = [videoControlChild objectForKey:@"children"];
-										//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
 										for (NSDictionary *extensionUnitChild in extensionUnitChildren)	{
 											NSString		*unitIDString = [extensionUnitChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												extensionUnitID = (int)[unitIDString integerValue];
-												//NSXLog(@"\t\tverifying: extensionUnitID now %d",extensionUnitID);
-												
-												//	...i can break because i found the unit ID
 												break;
 											}
 										}
-										
-										//	...i can break because i found the processing unit dict
+
 										break;
 									}
 								}
@@ -454,40 +419,25 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								for (NSDictionary *videoControlChild in videoControlChildren)	{
 									NSString		*controlChildName = [videoControlChild objectForKey:@"nodeName"];
 									if ([controlChildName containsString:@"VDC (Control) Output Terminal"])	{
-										
-										//	get the 'children' array from the control child dict
 										NSArray			*outputTerminalChildren = [videoControlChild objectForKey:@"children"];
 										//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
 										for (NSDictionary *outputTerminalChild in outputTerminalChildren)	{
 											NSString		*unitIDString = [outputTerminalChild objectForKey:@"Unit ID:"];
 											if (unitIDString != nil)	{
-												//NSXLog(@"\t\tunitIDString is %@",unitIDString);
 												outputTerminalID = (int)[unitIDString integerValue];
-												//NSXLog(@"\t\tverifying: outputTerminalID now %d",outputTerminalID);
-												
-												//	...i can break because i found the unit ID
 												break;
 											}
 										}
-										
-										//	...i can break because i found the processing unit dict
 										break;
 									}
 								}
-								
-								//	...i can break because i found the video/control dict
-//								break;
 							} else if ([configChildName containsString:@"Video/Streaming"]){
 								NSArray			*videoStreamingChildren = [configDescriptorChild objectForKey:@"children"];
-								//	run through the children- each child is a dict, look for the dict with a "nodeName" that contains the string "VDC (Control) Input Terminal"
 								for (NSDictionary *videoStreamingChild in videoStreamingChildren)	{
-//									NSLog(@"Streaming Name %@", videoStreamingChild[@"nodeName"]);
-//									NSLog(@"videoStreamingChild %@", videoStreamingChild);
 									NSString		*nodeName = [videoStreamingChild objectForKey:@"nodeName"];
 									NSArray			*children = [videoStreamingChild objectForKey:@"children"];
 									NSString *formatGuid = nil;
 									NSNumber *formatIndex = nil;
-									//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
 									for (NSDictionary *videoStreamingChild in children)	{
 										if (formatGuid == nil) {
 											formatGuid = [videoStreamingChild objectForKey:@"Format GUID:"];
@@ -519,16 +469,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								}
 							}
 						}
-						//	...i can break because i found the configuration descriptor dict
+						
 						break;
 					}
 				}
 				
-				
-				
 				break;
 			}
 		}
+		
 		if (prober != nil)	{
 			prober = nil;
 		}
@@ -556,9 +505,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 					plugInInterface = NULL;
 					break;
 				}
-			}
-			else	{
-				HRESULT					res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID), (LPVOID*) &deviceInterface );
+			} else {
+				HRESULT	res = (*plugInInterface)->QueryInterface(plugInInterface, CFUUIDGetUUIDBytes(kIOUSBDeviceInterfaceID), (LPVOID*) &deviceInterface );
 				(*plugInInterface)->Release(plugInInterface);
 				if( res || deviceInterface == NULL ) {
 					NSXLog( @"CameraControl Error: QueryInterface returned %d.\n", (int)res );
@@ -568,8 +516,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 						plugInInterface = NULL;
 						break;
 					}
-				}
-				else	{
+				} else {
 					UInt32 currentLocationID = 0;
 					(*deviceInterface)->GetLocationID(deviceInterface, &currentLocationID);
 					//	if this is the USB device i was looking for...
@@ -599,7 +546,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		if (successfullInit)
 			return self;
 		//	else i couldn't successfully init myself, something went wrong/i couldn't connect: release self and return nil;
-		NSXLog(@"\t\tERR: couldn't create VVUVCController with locationID %d, %X",(unsigned int)locationID,(unsigned int)locationID);
+		NSXLog(@"ERR: couldn't create UVCController with locationID %d, %X",(unsigned int)locationID,(unsigned int)locationID);
 		return nil;
 	}
 	return self;
@@ -862,9 +809,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 /*===================================================================================*/
 #pragma mark --------------------- backend
 /*------------------------------------*/
-//	this method gets called by _setData and _getDataFor
 - (BOOL) _sendControlRequest:(IOUSBDevRequest *)controlRequest {
-	NSXLog(@"%s",__func__);
 	NSString *dataStr = @"";
 	for (int i = 0; i < controlRequest->wLength; i++) {
 		dataStr = [dataStr stringByAppendingFormat:@"0x%X ", ((UInt8 *)controlRequest->pData)[i]];
@@ -927,7 +872,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 - (NSString *)getExtensionVersion{
 	uint16 len = [self getExtensionLen];
-	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	NSString *version = nil;
 	IOUSBDevRequest		controlRequest;
@@ -1013,7 +957,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{
-	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );

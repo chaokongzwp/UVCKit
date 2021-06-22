@@ -1,4 +1,4 @@
-#import "AVCaptureVideoSource.h"
+#import "UVCCaptureVideoSource.h"
 #import "UVCUtils.h"
 
 
@@ -21,49 +21,36 @@
 		return @"NV12";
 	}
 
-	
 	return _subMediaType;
 }
 @end
 
 
-@interface AVCaptureVideoSource()
-@property (nonatomic, strong) NSMutableDictionary<UVCCaptureDeviceFormat *, AVCaptureDeviceFormat
-*> *formatMap;
+@interface UVCCaptureVideoSource()
+@property (nonatomic, strong) NSMutableDictionary<UVCCaptureDeviceFormat *, AVCaptureDeviceFormat*> *formatMap;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *preLayer;
 @property (nonatomic, strong) AVCaptureDeviceFormat *currentFormat;
 @end
 
 
-@implementation AVCaptureVideoSource
-
-
+@implementation UVCCaptureVideoSource
 - (id) init	{
 	if (self = [super init])	{
 		propLock = [NSRecursiveLock new];
-		propDelegate = nil;
 		propRunning = NO;
 		propDeviceInput = nil;
 		propSession = nil;
 		propOutput = nil;
 		propQueue = nil;
-		propTexture = nil;
 		self.formatMap = [NSMutableDictionary dictionary];
 		return self;
 	}
-//	[self release];
+
 	return nil;
 }
+
 - (void) dealloc	{
 	[self stop];
-	
-    [propLock lock];
-	if (propTexture != nil)	{
-		CVOpenGLTextureRelease(propTexture);
-		propTexture = nil;
-	}
-    [propLock unlock];
-//	[super dealloc];
 }
 
 
@@ -71,7 +58,6 @@
 #pragma mark --------------------- control messages
 /*------------------------------------*/
 #define FourCC2Str(fourcc) (const char[]){*(((char*)&fourcc)+3), *(((char*)&fourcc)+2), *(((char*)&fourcc)+1), *(((char*)&fourcc)+0),0}
-
 - (NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> *)getMediaSubTypes {
 	if (propDeviceInput == nil){
 		return nil;
@@ -201,7 +187,6 @@
 }
 
 - (void)setFormat:(UVCCaptureDeviceFormat *)uvcFormat device:(AVCaptureDevice *)propDevice{
-//	__block AVCaptureDeviceFormat *format = nil;
 	if (uvcFormat){
 		[propDevice.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(obj.formatDescription);
@@ -233,7 +218,7 @@
 		[self stop];
 	}
 		
-	if (n==nil) {
+	if (n == nil) {
 		return;
 	}
 	
@@ -243,17 +228,17 @@
 	AVCaptureDevice		*propDevice = [AVCaptureDevice deviceWithUniqueID:n];
 	NSXLog(@"formats %@", propDevice.activeFormat);
 	
-	propDeviceInput = (propDevice==nil) ? nil : [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
+	propDeviceInput = (propDevice == nil) ? nil : [[AVCaptureDeviceInput alloc] initWithDevice:propDevice error:&err];
 	if (propDeviceInput != nil)	{
 		propSession = [[AVCaptureSession alloc] init];
 		propOutput = [[AVCaptureVideoDataOutput alloc] init];
 		
 		if (![propSession canAddInput:propDeviceInput])	{
-			NSXLog(@"\t\tproblem adding propDeviceInput in %s",__func__);
+			NSXLog(@"problem adding propDeviceInput");
 			bail = YES;
 		}
 		if (![propSession canAddOutput:propOutput])	{
-			NSXLog(@"\t\tproblem adding propOutput in %s",__func__);
+			NSXLog(@"problem adding propOutput");
 			bail = YES;
 		}
 		
@@ -298,9 +283,8 @@
 	if (!propRunning)	{
 		[self _start];
 		propRunning = YES;
-	}
-    else{
-		NSXLog(@"\t\tERR: starting something that wasn't stopped, %s",__func__);
+	} else{
+		NSXLog(@"ERR: starting something that wasn't stopped");
     }
 	
     [propLock unlock];
@@ -313,7 +297,7 @@
 		[self _stop];
 		propRunning = NO;
 	} else {
-		NSXLog(@"\t\tERR: stopping something that wasn't running, %s",__func__);
+		NSXLog(@"ERR: stopping something that wasn't running");
     }
 	
     [propLock unlock];
@@ -343,7 +327,6 @@
 	
 	self.currentFormat = nil;
 }
-
 
 /*===================================================================================*/
 #pragma mark --------------------- AVCaptureVideoDataOutputSampleBufferDelegate protocol (and AVCaptureFileOutputDelegate, too- some protocols share these methods)
@@ -378,8 +361,6 @@
 /*===================================================================================*/
 #pragma mark --------------------- key-val-ish
 /*------------------------------------*/
-
-
 - (BOOL) running	{
 	BOOL		returnMe;
     [propLock lock];
@@ -388,16 +369,12 @@
 	return returnMe;
 }
 
-- (void) setDelegate:(id<AVCaptureVideoSourceDelegate>)n	{
-    [propLock lock];
-	propDelegate = n;
-    [propLock unlock];
-}
-
 - (NSArray *) arrayOfSourceMenuItems	{
 	NSArray		*devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
-	if (devices==nil || [devices count]<1)
+	if (devices == nil || [devices count] < 1){
 		return nil;
+	}
+	
 	NSMutableArray		*returnMe = [NSMutableArray arrayWithCapacity:0];
 	for (AVCaptureDevice *devicePtr in devices)	{
 		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:[devicePtr localizedName] action:nil keyEquivalent:@""];
@@ -405,17 +382,7 @@
 		[newItem setRepresentedObject:uniqueID];
 		[returnMe addObject:newItem];
 	}
-	return returnMe;
-}
-
-- (CVOpenGLTextureRef) safelyGetRetainedTextureRef	{
-	CVOpenGLTextureRef		returnMe = NULL;
-    [propLock lock];
-	if (propTexture != nil)	{
-		returnMe = propTexture;
-		CVOpenGLTextureRetain(returnMe);
-	}
-    [propLock unlock];
+	
 	return returnMe;
 }
 @end

@@ -1,6 +1,6 @@
-#import "VVUVCKitStringAdditions.h"
+#import "UVCKitStringAdditions.h"
 
-@implementation NSString (VVUVCKitStringAdditions)
+@implementation NSString (UVCKitStringAdditions)
 
 - (BOOL) containsString:(NSString *)n	{
 	BOOL		returnMe = NO;

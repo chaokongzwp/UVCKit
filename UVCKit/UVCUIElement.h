@@ -10,7 +10,7 @@
 
 
 
-@interface VVUVCUIElement : NSBox {
+@interface UVCUIElement : NSBox {
 	IBOutlet id		delegate;
 
 	BOOL			enabled;

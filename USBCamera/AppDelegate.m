@@ -1,6 +1,6 @@
 #import "AppDelegate.h"
 #import <UVCKit/UVCUtils.h>
-#import <UVCKit/VVUVCUIController.h>
+#import <UVCKit/UVCUIController.h>
 
 typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     UVCUpdateStateNone = 0,
@@ -98,15 +98,11 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		if ([UVCUtils isLogOn]){
 			[UVCUtils openLog];
 		}
-		displayLink = nil;
-		sharedContext = nil;
-		pixelFormat = nil;
+
 		vidSrc = nil;
 		uvcController = nil;
 
-		vidSrc = [[AVCaptureVideoSource alloc] init];
-		[vidSrc setDelegate:self];
-		
+		vidSrc = [[UVCCaptureVideoSource alloc] init];
 		return self;
 	}
 
@@ -429,9 +425,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 - (void)reloadDeviceWithId:(NSString *)deviceId{
     [vidSrc loadDeviceWithUniqueID:deviceId];
 	[uvcController closeSettingsWindow];
-    uvcController = [[VVUVCController alloc] initWithDeviceIDString:deviceId];
+    uvcController = [[UVCController alloc] initWithDeviceIDString:deviceId];
     if (uvcController==nil){
-        NSXLog(@"Couldn't create VVUVCController");
+        NSXLog(@"Couldn't create UVCController");
         [versionTextView setString:@""];
     } else    {
         if ([uvcController zoomSupported]) {
@@ -439,7 +435,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
             [uvcController setZoom:0];
         }
 		
-		[VVUVCUIController updateController:uvcController];
+		[UVCUIController updateController:uvcController];
 		[uvcController closeSettingsWindow];
     }
 	
@@ -556,7 +552,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	return NO;
 }
 
-
 - (IBAction)subMediaType:(id)sender {
 	NSMenuItem		*selectedItem = [sender selectedItem];
 	if (selectedItem == nil)
@@ -568,9 +563,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	}
 	
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:format];
-	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
+	uvcController = [[UVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
 	if (uvcController==nil){
-		NSXLog(@"Couldn't create VVUVCController");
+		NSXLog(@"Couldn't create UVCController");
 		[versionTextView setString:@""];
 	} else    {
 		if ([uvcController zoomSupported])    {
@@ -598,9 +593,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
 	[vidSrc setPreviewLayer:backgroudView];
-	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
+	uvcController = [[UVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
 	if (uvcController==nil){
-		NSXLog(@"Couldn't create VVUVCController");
+		NSXLog(@"Couldn't create UVCController");
 		[versionTextView setString:@""];
 	} else    {
 		if ([uvcController zoomSupported])    {
@@ -611,13 +606,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	subMediaTypesInfo= [vidSrc getMediaSubTypes];
 	[self updateSubMediaTypesPopUpButton];
 	[vidSrc setPreviewLayer:backgroudView];
-}
-
-
-/*===================================================================================*/
-#pragma mark --------------------- AVCaptureVideoSourceDelegate
-/*------------------------------------*/
-- (void) listOfStaticSourcesUpdated:(id)videoSource	{
 }
 @end
 

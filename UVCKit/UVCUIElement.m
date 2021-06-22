@@ -1,11 +1,9 @@
-#import "VVUVCUIElement.h"
+#import "UVCUIElement.h"
 
 
 
 
-@implementation VVUVCUIElement
-
-
+@implementation UVCUIElement
 - (id) initWithFrame:(NSRect)f	{
 	if (self = [super initWithFrame:f])	{
 		delegate = nil;

@@ -5,22 +5,10 @@
 #include <IOKit/IOCFPlugIn.h>
 #include <IOKit/usb/IOUSBLib.h>
 #import <USBBusProber/USBBusProber.h>
-#import "VVUVCKitStringAdditions.h"
+#import "UVCKitStringAdditions.h"
 
 /**
-\defgroup VVUVCController
-*/
-
-
-/*
-@protocol VVUVCControllerDelegate
-	- (void) VVUVCControllerParamsUpdated:(id)c;
-@end
-*/
-
-
-/**
-\ingroup VVUVCController
+\ingroup UVCController
 Auto-exposure modes described by the USB spec, put in a typedef/enum for convenience
 */
 typedef enum	{
@@ -131,12 +119,12 @@ struct fireware_info{
 	UInt8  AuthorizedStated;  //Device  Authorized  Stated
 } __attribute__((packed));
 
-///	An instance of VVUVCController will control the UVC params for a single USB video device.  This is probably the only class you'll have to create or work with in this framework.
+///	An instance of UVCController will control the UVC params for a single USB video device.  This is probably the only class you'll have to create or work with in this framework.
 /**
-\ingroup VVUVCController
-This is probably the only class you'll have to work with in this framework.  The basic idea is that you create a VVUVCController for an enabled USB video device, and then either tell the controller to open its settings window or interact with it programmatically.  If you're looking for a more "embedded" feel, you can remove the VVUVCController's "settingsView" from its superview and add it into your application's NSView hierarchy.
+\ingroup UVCController
+This is probably the only class you'll have to work with in this framework.  The basic idea is that you create a UVCController for an enabled USB video device, and then either tell the controller to open its settings window or interact with it programmatically.  If you're looking for a more "embedded" feel, you can remove the UVCController's "settingsView" from its superview and add it into your application's NSView hierarchy.
 */
-@interface VVUVCController : NSObject {
+@interface UVCController : NSObject {
 	IOUSBInterfaceInterface190		**interface;
 	UInt32							deviceLocationID;
 	UInt8							interfaceNumber;	//	pulled from interface on generalInit!
@@ -147,7 +135,7 @@ This is probably the only class you'll have to work with in this framework.  The
 	
 	int					extensionUnitID;
 	
-	//id					<VVUVCControllerDelegate>delegate;
+	//id					<UVCControllerDelegate>delegate;
 	uvc_param			scanningMode;
 	uvc_param			autoExposureMode;	//	mode functionality described by the type UVC_AEMode
 	uvc_param			autoExposurePriority;	//	if 1, framerate may be varied.  if 0, framerate must remain constant.
@@ -185,14 +173,14 @@ This is probably the only class you'll have to work with in this framework.  The
 	NSMutableArray<NSString *> *videoName;
 }
 
-///	Use this method to init an instance of VVUVCController from an NSString returned by the AVFoundation or QTCapture APIs as the device's unique ID.
+///	Use this method to init an instance of UVCController from an NSString returned by the AVFoundation or QTCapture APIs as the device's unique ID.
 /**
 @param n The "deviceIDString" is a string returned by QuickTime and AVFoundation as the unique ID for the USB video device.  Technically, this is a hex value with sixteen digits (16 hex digits = an unsigned 64-bit integer).  The first 8 hex digits is the USB device's "locationID", the next 4 hex digits is the device's vendor ID, and the last 4 digits are the device's product ID.  Only the locationID is needed to create the necessary USB interfaces...
 */
 - (id) initWithDeviceIDString:(NSString *)n;
-///	Use this method to init an instance of VVUVCController from the USB location ID.
+///	Use this method to init an instance of UVCController from the USB location ID.
 /**
-@param locationID The location ID of the USB device you want this instance of VVUVCController to control.
+@param locationID The location ID of the USB device you want this instance of UVCController to control.
 */
 - (id) initWithLocationID:(UInt32)locationID;
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface;

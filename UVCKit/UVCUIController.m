@@ -1,4 +1,4 @@
-#import "VVUVCUIController.h"
+#import "UVCUIController.h"
 #import "UVCUtils.h"
 
 
@@ -48,10 +48,10 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 	return tmplen / 2 + tmplen % 2;
 }
 
-static VVUVCController *device = nil;
+static UVCController *device = nil;
 
-@implementation VVUVCUIController
-+ (void)updateController:(VVUVCController *)controller{
+@implementation UVCUIController
++ (void)updateController:(UVCController *)controller{
 	device = controller;
 }
 

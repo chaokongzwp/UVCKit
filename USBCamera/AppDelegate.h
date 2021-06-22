@@ -1,19 +1,15 @@
 #import <Cocoa/Cocoa.h>
 #import <UVCKit/UVCKit.h>
 #import <USBBusProber/USBBusProber.h>
-#import "AVCaptureVideoSource.h"
-#import <UVCKit/VVUVCUIElement.h>
+#import "UVCCaptureVideoSource.h"
+#import <UVCKit/UVCUIElement.h>
 #import "UVCButton.h"
 
 
 
-@interface AppDelegate : NSObject <NSApplicationDelegate,AVCaptureVideoSourceDelegate, UVCMouseDelegate>	{
-	CVDisplayLinkRef			displayLink;
-	NSOpenGLContext				*sharedContext;
-	NSOpenGLPixelFormat			*pixelFormat;
-	
-	AVCaptureVideoSource		*vidSrc;	//	uses AVCapture API to get video from camera & play it back in the gl view
-	VVUVCController				*uvcController;	//	this is the example of how to use this class.  ironic that it's such a small part of the demo app.
+@interface AppDelegate : NSObject <NSApplicationDelegate, UVCMouseDelegate>	{
+	UVCCaptureVideoSource		*vidSrc;	//	uses AVCapture API to get video from camera & play it back in the gl view
+	UVCController				*uvcController;	//	this is the example of how to use this class.  ironic that it's such a small part of the demo app.
 	
 	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras	
 	__weak IBOutlet NSButton *startUpgrade;
