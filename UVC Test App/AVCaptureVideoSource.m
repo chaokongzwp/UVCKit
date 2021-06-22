@@ -3,11 +3,6 @@
 
 
 
-CVOpenGLTextureCacheRef		_textureCache = nil;
-
-
-
-
 @implementation UVCCaptureDeviceFormat
 - (NSString *)formatDesc{
 	return [NSString stringWithFormat:@"%d * %d", self.width, self.height];
@@ -17,11 +12,15 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	if ([self.subMediaType isEqualTo:@"yuvs"]) {
 		return @"YUY2";
 	}
-	
+
 	if ([self.subMediaType isEqualTo:@"dmb1"]) {
 		return @"MJPG";
 	}
 	
+	if ([self.subMediaType isEqualTo:@"420v"]) {
+		return @"NV12";
+	}
+
 	
 	return _subMediaType;
 }
@@ -84,10 +83,6 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	for (AVCaptureDeviceFormat *format in propDevice.formats){
 		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
 		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
-		if ([codeTypeStr isEqualToString:@"420v"]){
-			continue;
-		}
-		
 		UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
 		uvcFormat.subMediaType = codeTypeStr;
 		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
@@ -149,10 +144,6 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 				NSError				*err = nil;
                 [propLock lock];
 				NSXLog(@"formats %@", propDevice.formats);
-//				[propDevice lockForConfiguration:&err];
-//				[propDevice setActiveFormat:format];
-//				[propDevice unlockForConfiguration];
-				
 				NSMutableDictionary *videoSettings = [NSMutableDictionary new];
 				[videoSettings setValue:@(codeType) forKey:(NSString *)kCVPixelBufferPixelFormatTypeKey];
 				[videoSettings setValue:@(uvcFormat.width) forKey:(NSString *)kCVPixelBufferWidthKey];
@@ -220,14 +211,6 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 			if ([codeTypeStr isEqualToString:uvcFormat.subMediaType]
 				&& dimensions.height == uvcFormat.height
 				&& dimensions.width == uvcFormat.width) {
-//				NSError	*err = nil;
-//				[propDevice lockForConfiguration:&err];
-//				[propDevice setActiveFormat:obj];
-//				[propDevice unlockForConfiguration];
-//				if (err) {
-//					NSXLog(@"setFormat %@ uvcFormat %@ %@", err, uvcFormat.alias, uvcFormat.formatDesc);
-//				}
-				
 				self.currentFormat = obj;
 				return;
 			}
@@ -240,18 +223,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		return _currentFormat;
 	}
 	
-	
-	FourCharCode codeType = CMFormatDescriptionGetMediaSubType(propDeviceInput.device.activeFormat.formatDescription);
-	if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange == codeType) {
-		[propDeviceInput.device.formats enumerateObjectsUsingBlock:^(AVCaptureDeviceFormat * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-			FourCharCode codeType=CMFormatDescriptionGetMediaSubType(obj.formatDescription);
-			if (kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange != codeType) {
-				_currentFormat = obj;
-			}
-		}];
-	} else {
-		_currentFormat = propDeviceInput.device.activeFormat;
-	}
+	_currentFormat = propDeviceInput.device.activeFormat;
 	
 	return _currentFormat;
 }
@@ -286,8 +258,8 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 		}
 		
 		if (!bail)	{
-			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
-			[propOutput setSampleBufferDelegate:self queue:propQueue];
+//			propQueue = dispatch_queue_create([[[NSBundle mainBundle] bundleIdentifier] UTF8String], NULL);
+//			[propOutput setSampleBufferDelegate:self queue:propQueue];
 			[self setFormat:uvcFormat device:propDevice];
 			NSXLog(@"formatDescription %@", propDevice.activeFormat.formatDescription);
 			NSXLog(@"self.currentFormat %@", self.currentFormat);
@@ -399,26 +371,7 @@ CVOpenGLTextureCacheRef		_textureCache = nil;
 	if (imgBufferRef != NULL)	{
 		CGSize		imgBufferSize = CVImageBufferGetDisplaySize(imgBufferRef);
 		NSXLog(@"img buffer size is %f %f",imgBufferSize.height, imgBufferSize.width);
-//		CVOpenGLTextureRef		cvTexRef = NULL;
-//		CVReturn				err = kCVReturnSuccess;
-//
-//
-//		err = CVOpenGLTextureCacheCreateTextureFromImage(NULL,_textureCache,imgBufferRef,NULL,&cvTexRef);
-//		if (err != kCVReturnSuccess)	{
-//			NSXLog(@"\t\terr %d at CVOpenGLTextureCacheCreateTextureFromImage() in %s",err,__func__);
-//		}
-//		else	{
-//            [propLock lock];
-//			if (propTexture != nil)	{
-//				CVOpenGLTextureRelease(propTexture);
-//				propTexture = nil;
-//			}
-//			propTexture = cvTexRef;
-//			//CVOpenGLTextureRelease(cvTexRef);
-//            [propLock unlock];
-//		}
 	}
-//	CVOpenGLTextureCacheFlush(_textureCache,0);
 }
 
 

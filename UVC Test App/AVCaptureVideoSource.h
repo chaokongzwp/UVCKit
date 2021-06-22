@@ -4,17 +4,12 @@
 
 
 
-
-extern CVOpenGLTextureCacheRef		_textureCache;
-
-
-
-
 @protocol AVCaptureVideoSourceDelegate
 - (void) listOfStaticSourcesUpdated:(id)videoSource;
 @end
 
 @interface UVCCaptureDeviceFormat : NSObject
+@property (assign, nonatomic) NSUInteger index;
 @property (assign, nonatomic) int32_t width;
 @property (assign, nonatomic) int32_t height;
 @property (copy, nonatomic)  NSString *subMediaType;

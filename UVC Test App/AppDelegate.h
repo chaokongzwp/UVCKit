@@ -2,7 +2,6 @@
 #import <VVUVCKit/VVUVCKit.h>
 #import <USBBusProber/USBBusProber.h>
 #import "AVCaptureVideoSource.h"
-#import "CVGLView.h"
 #import <VVUVCKit/VVUVCUIElement.h>
 #import "UVCButton.h"
 
@@ -16,9 +15,8 @@
 	AVCaptureVideoSource		*vidSrc;	//	uses AVCapture API to get video from camera & play it back in the gl view
 	VVUVCController				*uvcController;	//	this is the example of how to use this class.  ironic that it's such a small part of the demo app.
 	
-	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras
-//	IBOutlet CVGLView			*glView;	//	the gl view used to display GL textures received from the camera
-	
+	IBOutlet NSPopUpButton		*camPUB;	//	pop-up button with the list of available cameras	
+	__weak IBOutlet NSButton *startUpgrade;
 	__weak IBOutlet NSOpenGLView *glView;
 	__weak IBOutlet NSMenuItem *logMenu;
 	__weak IBOutlet UVCButton *rightPanTiltButton;
@@ -36,26 +34,11 @@
 	NSDictionary<NSString *, NSArray<UVCCaptureDeviceFormat *> *> * subMediaTypesInfo;
 	NSTimer *checkDeviceChange;
 
-    
 	__unsafe_unretained IBOutlet NSTextView *versionTextView;
-	
-    
     __weak IBOutlet NSTextField *firmwareFileTextfield;
-    
-    
     __weak IBOutlet NSProgressIndicator *upgradeProgressIndicator;
 }
 
 - (IBAction) camPUBUsed:(id)sender;
-- (void) renderCallback;
-
 - (void) populateCamPopUpButton;
-
-- (NSOpenGLContext *) sharedContext;
-- (NSOpenGLPixelFormat *) pixelFormat;
-
 @end
-
-
-
-CVReturn displayLinkCallback(CVDisplayLinkRef displayLink, const CVTimeStamp *inNow, const CVTimeStamp *inOutputTime, CVOptionFlags flagsIn, CVOptionFlags *flagsOut, void *displayLinkContext);

@@ -182,6 +182,8 @@ This is probably the only class you'll have to work with in this framework.  The
 	IBOutlet id			uiCtrlr;	//	created & owned by the nib!
 	IBOutlet NSWindow	*settingsWindow;	//	by default, the UI is in a window (it's easiest to just open and close it)
 	IBOutlet NSView		*settingsView;	//	you can also access the view which contains the UI so you can embed it in other apps
+	
+	NSMutableArray<NSString *> *videoName;
 }
 
 ///	Use this method to init an instance of VVUVCController from an NSString returned by the AVFoundation or QTCapture APIs as the device's unique ID.

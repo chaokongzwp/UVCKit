@@ -27,13 +27,13 @@
 		[valSlider setContinuous:YES];
 		[valSlider setTarget:self];
 		[valSlider setAction:@selector(uiItemUsed:)];
+		valSlider.trackFillColor = [NSColor blueColor];
 		
 		valField = [[NSTextField alloc] initWithFrame:NSMakeRect(0,0,200,20)];
 		//[[valField cell] setControlSize:NSMiniControlSize];
 		[valField setFont:[NSFont systemFontOfSize:9]];
 		NSNumberFormatter	*formatter = [[NSNumberFormatter alloc] init];
-		[valField setFormatter:formatter];
-//		[formatter release];
+		[valField setFormatter:formatter];;
 		[valField setTarget:self];
 		[valField setAction:@selector(uiItemUsed:)];
 		
@@ -42,21 +42,18 @@
 		[self _resizeContents];
 		return self;
 	}
-//	[self release];
+
 	return nil;
 }
 - (void) dealloc	{
 	if (valSlider != nil)	{
 		[valSlider removeFromSuperview];
-//		[valSlider release];
 		valSlider = nil;
 	}
 	if (valField != nil)	{
 		[valField removeFromSuperview];
-//		[valField release];
 		valField = nil;
 	}
-//	[super dealloc];
 }
 
 

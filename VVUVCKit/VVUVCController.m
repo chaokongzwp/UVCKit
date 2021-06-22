@@ -362,6 +362,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		//processingUnitID = 3;	//	works for "FaceTime HD Camera" on gen-8 macbook pros!
 		deviceLocationID = locationID;
 		interface = NULL;
+		videoName = [NSMutableArray array];
 		
 		//	first of all, i need to harvest a couple pieces of data from the USB device- i need:
 		//		- the "Terminal ID" of the "VDC ((Control) Input Terminal" of the "Video/Control" interface in the "Configuration Descriptor"
@@ -374,9 +375,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
 				NSXLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
 				NSXLog(@"\t\tdevice dict is %@",tmpDict);
-				//[tmpDict writeToFile:[@"~/Desktop/tmpOut.plist" stringByExpandingTildeInPath] atomically:YES];
-				
-				
+//				[tmpDict writeToFile:[@"~/Desktop/tmpOut.plist" stringByExpandingTildeInPath] atomically:YES];
 				//	get the dict at the key 'nodeData'
 				NSDictionary		*topLevelNodeDataDict = (tmpDict==nil) ? nil : [tmpDict objectForKey:@"nodeData"];
 				//	from the node data dict, get the 'children' array
@@ -385,14 +384,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 				for (NSDictionary *topLevelNodeChild in topLevelNodeChildren)	{
 					NSString		*topLevelNodeChildName = [topLevelNodeChild objectForKey:@"nodeName"];
 					if ([topLevelNodeChildName containsString:@"Configuration Descriptor"])	{
-						
 						//	get the 'children' array from the top level node child dict
 						NSArray			*configDescriptorChildren = [topLevelNodeChild objectForKey:@"children"];
 						//	run through the children- each child is a dict, look for the dict with a "nodeName" that contains the string "Video/Control"
 						for (NSDictionary *configDescriptorChild in configDescriptorChildren)	{
 							NSString		*configChildName = [configDescriptorChild objectForKey:@"nodeName"];
 							if ([configChildName containsString:@"Video/Control"])	{
-								
 								//	get the 'children' array from the config descriptor child dict
 								NSArray			*videoControlChildren = [configDescriptorChild objectForKey:@"children"];
 								//	run through the children- each child is a dict, look for the dict with a "nodeName" that contains the string "VDC (Control) Input Terminal"
@@ -494,7 +491,47 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 								}
 								
 								//	...i can break because i found the video/control dict
-								break;
+//								break;
+							} else if ([configChildName containsString:@"Video/Streaming"]){
+								NSArray			*videoStreamingChildren = [configDescriptorChild objectForKey:@"children"];
+								//	run through the children- each child is a dict, look for the dict with a "nodeName" that contains the string "VDC (Control) Input Terminal"
+								for (NSDictionary *videoStreamingChild in videoStreamingChildren)	{
+//									NSLog(@"Streaming Name %@", videoStreamingChild[@"nodeName"]);
+//									NSLog(@"videoStreamingChild %@", videoStreamingChild);
+									NSString		*nodeName = [videoStreamingChild objectForKey:@"nodeName"];
+									NSArray			*children = [videoStreamingChild objectForKey:@"children"];
+									NSString *formatGuid = nil;
+									NSNumber *formatIndex = nil;
+									//	run through the children- each child is a dict, look for the child with a string at the key "Unit ID:"
+									for (NSDictionary *videoStreamingChild in children)	{
+										if (formatGuid == nil) {
+											formatGuid = [videoStreamingChild objectForKey:@"Format GUID:"];
+										}
+										
+										if (formatIndex == nil) {
+											formatIndex = [videoStreamingChild objectForKey:@"bFormatIndex:"];
+										}
+									}
+									
+									if (formatIndex) {
+										if (formatGuid != NULL){
+											NSLog(@"formatGuid %@", formatGuid);
+											if ([formatGuid isEqual:@"32595559-0000-0010-8000-00aa00389b71"]) {
+												[videoName addObject:@"YUY2"];
+											}
+											
+											if ([formatGuid isEqual:@"3231564E-0000-0010-8000-00AA00389B71"]) {
+												[videoName addObject:@"NV12"];
+											}
+										} else {
+											NSLog(@"nodeName %@", nodeName);
+											NSArray *nodeNameList = [nodeName componentsSeparatedByString:@" "];
+											if ([nodeNameList count] > 3) {
+												[videoName addObject:nodeNameList[2]];
+											}
+										}
+									}
+								}
 							}
 						}
 						//	...i can break because i found the configuration descriptor dict
@@ -675,9 +712,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateAllParams];
 	
 	//	create the nib from my class name
-//	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
+	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
 	//	unpack the nib, instantiating the object
-//	[theNib instantiateWithOwner:self topLevelObjects:&nibTopLevelObjects];
+	[theNib instantiateWithOwner:self topLevelObjects:nil];
 	//	retain the array of top-level objects (they have to be explicitly freed later)
 //	[nibTopLevelObjects retain];
 	
@@ -890,11 +927,17 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 //	NSXLog(@"\t\tindex=%d",controlRequest->wIndex);
 //	NSXLog(@"\t\trequestType=%0x",controlRequest->bmRequestType);
 //	NSXLog(@"\t\trequest=%0x",controlRequest->bRequest);
-	NSXLog(@"\t\t bmRequestType 0x%0X bRequest 0x%X wValue 0x%X wIndex 0x%X wLength 0x%X", controlRequest->bmRequestType, controlRequest->bRequest,controlRequest->wValue,controlRequest->wIndex,controlRequest->wLength);
+	NSString *dataStr = @"";
+	for (int i = 0; i < controlRequest->wLength; i++) {
+		dataStr = [dataStr stringByAppendingFormat:@"0x%X ", ((UInt8 *)controlRequest->pData)[i]];
+	}
+	NSXLog(@"bmRequestType 0x%0X bRequest 0x%X wValue 0x%X wIndex 0x%X wLength 0x%X data %@", controlRequest->bmRequestType, controlRequest->bRequest,controlRequest->wValue,controlRequest->wIndex,controlRequest->wLength, dataStr);
 	if( !interface ){
 		NSXLog( @"CameraControl Error: No interface to send request" );
 		return NO;
 	}
+	
+	
 	/*
 	//Now open the interface. This will cause the pipes associated with
 	//the endpoints in the interface descriptor to be instantiated
@@ -907,8 +950,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	*/
 	kern_return_t kr = (*interface)->ControlRequest( interface, 0, controlRequest );
 	if( kr != kIOReturnSuccess ) {
-		kr = (*interface)->USBInterfaceClose(interface);
 		NSXLog( @"CameraControl Error: Control request failed: %08x", kr );
+		kr = (*interface)->USBInterfaceClose(interface);
 		return NO;
 	}
 	/*
@@ -1056,6 +1099,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
     
     return returnMe>0;
 }
+
 
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{
 	//NSXLog(@"%s ... 0x%X",__func__,requestType);
@@ -1463,13 +1507,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//NSXLog(@"%s",__func__);
 	if (param == nil)
 		return NO;
-	/*
-	if (param == &panTilt || param == &roll)	{
-		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled!");
-		return;
-	}
-	*/
-	//int			paramSize = param->ctrlInfo->intendedSize;
+	
 	int			paramSize = param->actualSize;
 	if (paramSize <= 0)
 		return NO;
@@ -1490,6 +1528,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	else
 		valToSend = (int)param->val;
 	
+	NSLog(@"valToSend %d", valToSend);
 	//	send the val i assembled out
 	void			*bytesToSend = malloc(paramSize);
 	bzero(bytesToSend,paramSize);
@@ -1525,13 +1564,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) _resetParamToDefault:(uvc_param *)param	{
-	//NSXLog(@"%s ... %p",__func__,param);
-	/*
-	if (param == &panTilt || param == &roll)	{
-		NSXLog(@"\t\terr: pan/tilt and roll temporarily disabled! %s",__func__);
-		return;
-	}
-	*/
 	param->val = param->def;
 	[self _pushParamToDevice:param];
 }

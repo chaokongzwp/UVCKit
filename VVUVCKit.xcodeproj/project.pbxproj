@@ -24,7 +24,6 @@
 		962773BC19D5C35C001EDD16 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BB19D5C35C001EDD16 /* AVFoundation.framework */; };
 		962773BE19D5C360001EDD16 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BD19D5C360001EDD16 /* CoreVideo.framework */; };
 		962773C019D5C3BD001EDD16 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962773BF19D5C3BD001EDD16 /* CoreMedia.framework */; };
-		962773C319D5D406001EDD16 /* CVGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 962773C219D5D406001EDD16 /* CVGLView.m */; };
 		964271D319D6C46000ED8E01 /* USBBusProber.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96CCFE5F19D6BFAD000B1B2C /* USBBusProber.framework */; };
 		964271D419D6C47200ED8E01 /* VVUVCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2712E19D5695B00705982 /* VVUVCKit.framework */; };
 		964271D819D6D2E100ED8E01 /* USBVendors.txt in Resources */ = {isa = PBXBuildFile; fileRef = 964271D719D6D2E100ED8E01 /* USBVendors.txt */; };
@@ -141,8 +140,6 @@
 		962773BB19D5C35C001EDD16 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		962773BD19D5C360001EDD16 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		962773BF19D5C3BD001EDD16 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		962773C119D5D406001EDD16 /* CVGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVGLView.h; sourceTree = "<group>"; };
-		962773C219D5D406001EDD16 /* CVGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVGLView.m; sourceTree = "<group>"; };
 		964271D719D6D2E100ED8E01 /* USBVendors.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = USBVendors.txt; sourceTree = "<group>"; };
 		968065D219D73AA600CF045A /* VVUVCKitStringAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VVUVCKitStringAdditions.h; sourceTree = "<group>"; };
 		968065D319D73AA600CF045A /* VVUVCKitStringAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VVUVCKitStringAdditions.m; sourceTree = "<group>"; };
@@ -254,8 +251,6 @@
 				9627739F19D56C69001EDD16 /* Supporting Files */,
 				962773B819D56D27001EDD16 /* AVCaptureVideoSource.h */,
 				962773B919D56D27001EDD16 /* AVCaptureVideoSource.m */,
-				962773C119D5D406001EDD16 /* CVGLView.h */,
-				962773C219D5D406001EDD16 /* CVGLView.m */,
 				4B4E1C00264412AD005A857A /* IMAGE.xcassets */,
 				4B92806C264A693A00C06688 /* UVCButton.h */,
 				4B92806D264A693A00C06688 /* UVCButton.m */,
@@ -600,7 +595,6 @@
 				4B92806E264A693A00C06688 /* UVCButton.m in Sources */,
 				962773AC19D56C69001EDD16 /* AppDelegate.m in Sources */,
 				962773BA19D56D27001EDD16 /* AVCaptureVideoSource.m in Sources */,
-				962773C319D5D406001EDD16 /* CVGLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

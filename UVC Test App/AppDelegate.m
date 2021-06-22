@@ -75,7 +75,10 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	}  else if (resetHomeButton == sender) {
         [resetHomeButton setImage:[NSImage imageNamed:@"home-filling"]];
     }
-	
+}
+
+- (IBAction)otherCameraSetting:(id)sender {
+	[uvcController openSettingsWindow];
 }
 
 - (IBAction)saveLogAction:(id)sender {
@@ -108,6 +111,32 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 
 	return nil;
 }
+
+- (IBAction)versionAction:(id)sender {
+	[versionTextView setString:[uvcController getExtensionVersion]];
+}
+
+- (IBAction)startUpgradeAction:(id)sender {
+	if (firmwareFileTextfield.stringValue == nil || firmwareFileTextfield.stringValue.length == 0) {
+		return;
+	}
+	
+	if([uvcController setUpdateMode]){
+		self.updateDeviceId = [vidSrc currentDeivceId];
+		self.updateState = UVCUpdateStateStart;
+		upgradeProgressIndicator.minValue = 0;
+		upgradeProgressIndicator.maxValue = 100;
+		upgradeProgressIndicator.doubleValue = 0;
+		upgradeProgressIndicator.hidden = NO;
+		[upgradeProgressIndicator startAnimation:upgradeProgressIndicator];
+		[self updateIndicator];
+	} else {
+		self.updateState = UVCUpdateStateNone;
+		self.updateDeviceId = nil;
+		[UVCUtils showAlert:@"启动升级模式失败！！" title:@"异常提示" window:mainView.window completionHandler:nil];
+	}
+}
+
 
 - (void) awakeFromNib	{
 	NSXLog(@"awakeFromNib");
@@ -252,7 +281,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     });
 }
 
-
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender{
 	return YES;
 }
@@ -324,7 +352,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     }
 }
 
--(void)deviceMounted:(NSNotification *)noti{
+- (void)deviceMounted:(NSNotification *)noti{
     NSXLog(@"deviceMounted %@", noti);
     if (self.updateDeviceId && self.updateState == UVCUpdateStateStart) {
         NSURL *dir = noti.userInfo[NSWorkspaceVolumeURLKey];
@@ -339,7 +367,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     }
 }
 
--(void)deviceUnmounted:(NSNotification *)noti{
+- (void)deviceUnmounted:(NSNotification *)noti{
     NSXLog(@"deviceUnmounted %@", noti);
     if (self.updateDeviceId && self.updateState == UVCUpdateStateDownloadBinFileSuccess) {
         self.updateState = UVCUpdateStateRestarting;
@@ -374,8 +402,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     if ([device.uniqueID isEqualToString:self.updateDeviceId]) {
         return;
     }
-    
-//    NSInteger selectIndex = camPUB.indexOfSelectedItem;
+
     BOOL isFind = NO;
     
     NSArray<NSMenuItem *> * menuItemList = camPUB.itemArray;
@@ -404,13 +431,15 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     if (uvcController==nil){
         NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
         [versionTextView setString:@""];
+		[uvcController closeSettingsWindow];
     } else    {
-        if ([uvcController zoomSupported])    {
+        if ([uvcController zoomSupported]) {
             [uvcController resetPanTilt];
             [uvcController setZoom:0];
         }
-        [versionTextView setString:[uvcController getExtensionVersion]];
     }
+	
+	[versionTextView setString:@""];
     subMediaTypesInfo= [vidSrc getMediaSubTypes];
     [self updateSubMediaTypesPopUpButton];
     [vidSrc setPreviewLayer:backgroudView];
@@ -506,21 +535,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
                 BOOL isYES = [fm fileExistsAtPath:url.path];
                 [firmwareFileTextfield setStringValue:url.path];
                 NSXLog(@"%d", isYES);
-                self.updateDeviceId = [vidSrc currentDeivceId];
-                if([uvcController setUpdateMode]){
-                    self.updateState = UVCUpdateStateStart;
-                    upgradeProgressIndicator.minValue = 0;
-                    upgradeProgressIndicator.maxValue = 100;
-                    upgradeProgressIndicator.doubleValue = 0;
-                    upgradeProgressIndicator.hidden = NO;
-                    [upgradeProgressIndicator startAnimation:upgradeProgressIndicator];
-                    [self updateIndicator];
-                } else {
-                    self.updateState = UVCUpdateStateNone;
-                    self.updateDeviceId = nil;
-                    [UVCUtils showAlert:@"启动升级模式失败！！" title:@"异常提示" window:mainView.window completionHandler:nil];
-                }
-                
                 break;
             }
         }
@@ -550,9 +564,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 		return;
 	}
 	
-//	[vidSrc updateDeviceFormat:format];
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:format];
-//	[vidSrc setPreviewLayer:backgroudView];
 	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
 	if (uvcController==nil){
 		NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
@@ -562,7 +574,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 			[uvcController resetPanTilt];
 			[uvcController setZoom:0];
 		}
-		[versionTextView setString:[uvcController getExtensionVersion]];
 	}
 	subMediaTypesInfo= [vidSrc getMediaSubTypes];
 	[self updateSubMediaTypesPopUpButton];
@@ -593,27 +604,10 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 			[uvcController resetPanTilt];
 			[uvcController setZoom:0];
 		}
-		[versionTextView setString:[uvcController getExtensionVersion]];
 	}
 	subMediaTypesInfo= [vidSrc getMediaSubTypes];
 	[self updateSubMediaTypesPopUpButton];
 	[vidSrc setPreviewLayer:backgroudView];
-	
-//	NSString *currentId = [vidSrc currentDeivceId];
-//	NSString *defaultDeviceId = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo].uniqueID;
-//	if ([defaultDeviceId isEqualToString:currentId]) {
-//		[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:repObj];
-//		[vidSrc setPreviewLayer:backgroudView];
-//	} else {
-//		[vidSrc loadDeviceWithUniqueID:defaultDeviceId format:nil];
-//		dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 3000 * NSEC_PER_MSEC);
-//
-//		dispatch_after(time, dispatch_get_main_queue(), ^{
-//			NSLog(@"%@ %@", [vidSrc currentDeivceId], defaultDeviceId);
-//			[vidSrc loadDeviceWithUniqueID:currentId format:repObj];
-//			[vidSrc setPreviewLayer:backgroudView];
-//		});
-//	}
 }
 
 

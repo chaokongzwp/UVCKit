@@ -1,20 +1,101 @@
 #import "VVUVCUIController.h"
 #import "VVUVCController.h"
+#import "UVCUtils.h"
 
 
+BOOL checkHexStr(const char *hexStr, unsigned long len){
+	for (unsigned long i = 0 ; i < len; i++) {
+		if (hexStr[i] >= '0' && hexStr[i] <= '9') {
+			continue;
+		}
+		
+		if (hexStr[i] >= 'a' && hexStr[i] <= 'f') {
+			continue;
+		}
+		
+		return NO;
+	}
+	
+	return YES;
+}
 
+unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *outlen) {
+	const char *str = [orig lowercaseString].UTF8String;
+
+	char high = 0, low = 0;
+	unsigned long tmplen = strlen(str), cnt = 0;
+	if (tmplen > 2 && str[0] == '0' && str[1] == 'x') {
+		str = str + 2;
+		tmplen = tmplen - 2;
+	}
+	
+	if (!checkHexStr(str, tmplen)) {
+		*outlen = 0;
+		return 0;
+	}
+	
+	const char *p = str + tmplen - 1;
+	while(cnt < (tmplen / 2)){
+		low = ((*p > '9') && ((*p <= 'F') || (*p <= 'f'))) ? *p - 48 - 7 : *p - 48;
+		high = (*(--p) > '9' && ((*p <= 'F') || (*p <= 'f'))) ? *(p) - 48 - 7 : *(p) - 48;
+		outChar[cnt] = ((high & 0x0f) << 4 | (low & 0x0f));
+		p--;
+		cnt++;
+	}
+	
+	if(tmplen % 2 != 0) outChar[cnt] = ((*p > '9') && ((*p <= 'F') || (*p <= 'f'))) ? *p - 48 - 7 : *p - 48;
+	
+	if(outlen != NULL) *outlen = tmplen / 2 + tmplen % 2;
+	return tmplen / 2 + tmplen % 2;
+}
 
 @implementation VVUVCUIController
 
 
 - (id) init	{
-	//NSLog(@"%s",__func__);
 	if (self = [super init])	{
 		return self;
 	}
-//	[self release];
 	return nil;
 }
+
+- (int)one:(NSString *)one{
+	unsigned int outChar[128];
+	unsigned long outlen = 0;
+	memset(outChar, 0, 128*sizeof(int));
+	StringToHex(one, outChar, &outlen);
+	if (outlen != 1) {
+		return -1;
+	}
+	
+	return outChar[0];
+}
+
+- (int)two:(NSString *)two{
+	unsigned int outChar[256];
+	unsigned long outlen = 0;
+	memset(outChar, 0, 256*sizeof(int));
+	StringToHex(two, outChar, &outlen);
+	if (outlen != 2) {
+		return -1;
+	}
+	
+	return outChar[1]<<8|outChar[0];
+}
+
+- (int)four:(NSString *)four{
+	unsigned int outChar[1024];
+	unsigned long outlen = 0;
+	
+	memset(outChar, 0, 1024*sizeof(int));
+	StringToHex(four, outChar, &outlen);
+	if (outlen != 4) {
+		return -1;
+	}
+	
+	return outChar[3]<<24|outChar[2]<<16|outChar[1]<<8|outChar[0];
+}
+
 - (void) awakeFromNib	{
 	[expElement setTitle:@"Exposure Time"];
 	[irisElement setTitle:@"Iris"];
@@ -31,6 +112,87 @@
 	[sharpElement setTitle:@"Sharpness"];
 	[gammaElement setTitle:@"Gamma"];
 	[wbElement setTitle:@"White Balance"];
+}
+
+- (IBAction)sendCommand:(id)sender {
+	NSString *dataStr = [data stringValue];
+	
+	int					returnMe = 0;
+	IOUSBDevRequest		controlRequest;
+	returnMe = [self one:[bmRequestType stringValue]];
+	if (returnMe == -1) {
+		[UVCUtils showAlert:[NSString stringWithFormat:@"%@不满足16机制格式", [bmRequestType stringValue]] title:@"参数异常" window:mainView.window completionHandler:nil];
+		return;
+	}
+	controlRequest.bmRequestType = returnMe;
+	
+	returnMe = [self one:[bRequest stringValue]];
+	if (returnMe == -1) {
+		[UVCUtils showAlert:[NSString stringWithFormat:@"%@不满足16机制格式", [bRequest stringValue]] title:@"参数异常" window:mainView.window completionHandler:nil];
+		return;
+	}
+	controlRequest.bRequest = returnMe;
+	
+	returnMe = [self two:[wValue stringValue]];
+	if (returnMe == -1) {
+		[UVCUtils showAlert:[NSString stringWithFormat:@"%@不满足16机制格式", [wValue stringValue]] title:@"参数异常" window:mainView.window completionHandler:nil];
+		return;
+	}
+	controlRequest.wValue = returnMe;
+	
+	returnMe = [self two:[wIndex stringValue]];
+	if (returnMe == -1) {
+		[UVCUtils showAlert:[NSString stringWithFormat:@"%@不满足16机制格式", [wIndex stringValue]] title:@"参数异常" window:mainView.window completionHandler:nil];
+		return;
+	}
+	controlRequest.wIndex = returnMe;
+	
+	if ([wLength stringValue].length <= 2){
+		controlRequest.wLength = [self one:[wLength stringValue]];
+	} else {
+		controlRequest.wLength = [self two:[wLength stringValue]];
+	}
+	
+	controlRequest.wLenDone = 0;
+	UInt8 *ret = malloc(controlRequest.wLength);
+	NSArray *data = [dataStr componentsSeparatedByString:@" "];
+	bzero(ret,controlRequest.wLength);
+	if (data.count > controlRequest.wLength) {
+		[UVCUtils showAlert:@"data长度超过wLength的值" title:@"参数异常" window:mainView.window completionHandler:nil];
+		return;
+	}
+	
+	for (int i = 0; i<data.count; i++) {
+		returnMe = [self one:data[i]];
+		if (returnMe == -1) {
+			[UVCUtils showAlert:[NSString stringWithFormat:@"%@不满足16机制格式", dataStr] title:@"参数异常" window:mainView.window completionHandler:nil];
+			return;
+		}
+		*(ret + i) = returnMe;
+	}
+	controlRequest.pData = ret;
+	
+
+	if (![device _sendControlRequest:&controlRequest]) {
+		returnMe = -1;
+	}else {
+		returnMe = controlRequest.wLenDone;
+	}
+	
+	NSString *retStr = @"";
+	for (int i = 0; i < controlRequest.wLength; i++) {
+		[retStr stringByAppendingFormat:@"0x%2X ", ret[i]];
+	}
+	
+	if (returnMe <= 0)	{
+		free(ret);
+		ret = nil;
+		controlRequest.pData = nil;
+		[UVCUtils showAlert:@"请检查命令参数是否正确" title:@"请求失败" window:mainView.window completionHandler:nil];
+		return;
+	}
+	
+	[UVCUtils showAlert:retStr title:@"请求成功" window:mainView.window completionHandler:nil];
 }
 
 
@@ -141,9 +303,6 @@
 
 
 - (void) _pushCameraControlStateToUI	{
-	//NSLog(@"%s",__func__);
-	
-
 	if ([device exposureTimeSupported])	{
 		[expElement setMin:(int)[device minExposureTime]];
 		[expElement setMax:(int)[device maxExposureTime]];
@@ -336,6 +495,4 @@
 			break;
 	}
 }
-
-
 @end
