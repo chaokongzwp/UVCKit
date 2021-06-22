@@ -1,16 +1,12 @@
-#import <Foundation/Foundation.h>
+#import  <Foundation/Foundation.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
 #include <IOKit/IOMessage.h>
 #include <IOKit/IOCFPlugIn.h>
 #include <IOKit/usb/IOUSBLib.h>
-#import <USBBusProber/USBBusProber.h>
-#import "UVCKitStringAdditions.h"
+#import  <USBBusProber/USBBusProber.h>
+#import  "UVCKitStringAdditions.h"
 
-/**
-\ingroup UVCController
-Auto-exposure modes described by the USB spec, put in a typedef/enum for convenience
-*/
 typedef enum	{
 	UVC_AEMode_Undefined = 0x00,	///	undefined auto exposure mode
 	UVC_AEMode_Manual = 0x01,	///	manual exposure, manual iris
@@ -20,10 +16,6 @@ typedef enum	{
 } UVC_AEMode;
 
 
-/*		this struct contains all the info necessary to get/set vals from a video control parameter (either terminal/hardware or 
-		processing/software)- but it does not contain info about the value at all!  think of this struct as a sort of function 
-		description for the hardware which will be sent out directly via USB.  instances of this struct are populated by values 
-		from the USB specification!			*/
 typedef struct {
 	int		unit;	//	describes whether terminal/hardware or processing/software
 	int		selector;	//	the address of the "parameter" being changed- 
@@ -36,43 +28,6 @@ typedef struct {
 } uvc_control_info_t;
 
 
-/*	these variables contain enough info to send data to/get data from the implied attribute.  the 
-	variables are global to the class (the contents won't change from instance to instance), and 
-	conceptually act like function descriptions (instances of this class can pass references to these 
-	variables, which can be used to get/set values).  these are populated when the class is 
-	initialized by values described in the USB specification.  if uvc_control_info_t is a function 
-	description, these variables are essentially pointers to a bunch of different functions.		*/
-extern uvc_control_info_t	_scanCtrl;
-extern uvc_control_info_t	_autoExposureModeCtrl;
-extern uvc_control_info_t	_autoExposurePriorityCtrl;
-extern uvc_control_info_t	_exposureTimeCtrl;
-extern uvc_control_info_t	_irisCtrl;
-extern uvc_control_info_t	_autoFocusCtrl;
-extern uvc_control_info_t	_focusCtrl;
-extern uvc_control_info_t	_zoomCtrl;
-extern uvc_control_info_t	_panTiltCtrl;
-extern uvc_control_info_t	_panTiltRelCtrl;
-extern uvc_control_info_t	_rollCtrl;
-extern uvc_control_info_t	_rollRelCtrl;
-
-extern uvc_control_info_t	_backlightCtrl;
-extern uvc_control_info_t	_brightCtrl;
-extern uvc_control_info_t	_contrastCtrl;
-extern uvc_control_info_t	_gainCtrl;
-extern uvc_control_info_t	_powerLineCtrl;
-extern uvc_control_info_t	_autoHueCtrl;
-extern uvc_control_info_t	_hueCtrl;
-extern uvc_control_info_t	_saturationCtrl;
-extern uvc_control_info_t	_sharpnessCtrl;
-extern uvc_control_info_t	_gammaCtrl;
-extern uvc_control_info_t	_whiteBalanceAutoTempCtrl;
-extern uvc_control_info_t	_whiteBalanceTempCtrl;
-
-
-/*		this struct describes a parameter- it contains a pointer to the control info that describes 
-which parameter, as well as the min/max/default/current value. an instance of this struct will 
-contain the value of the parameter and the uvc_control_info_t struct necessary to communicate with 
-this parameter in a camera.		*/
 typedef struct	{
 	BOOL	supported;	//	if YES, this parameter is supported. if NO, either the camera doesn't support this parameter, or the "inputTerminalID" or "processingUnitID" of the camera is wrong!
 	long	min;	//	the paramter's actual min val
@@ -90,7 +45,6 @@ typedef enum{
 	UVC_PAN_TILT_LEFT,
 	UVC_PAN_TILT_CANCEL
 } UVC_PAN_TILT_DIRECTION;
-
 
 // relative pan tilt operations
 typedef struct {
@@ -119,23 +73,16 @@ struct fireware_info{
 	UInt8  AuthorizedStated;  //Device  Authorized  Stated
 } __attribute__((packed));
 
-///	An instance of UVCController will control the UVC params for a single USB video device.  This is probably the only class you'll have to create or work with in this framework.
-/**
-\ingroup UVCController
-This is probably the only class you'll have to work with in this framework.  The basic idea is that you create a UVCController for an enabled USB video device, and then either tell the controller to open its settings window or interact with it programmatically.  If you're looking for a more "embedded" feel, you can remove the UVCController's "settingsView" from its superview and add it into your application's NSView hierarchy.
-*/
+
 @interface UVCController : NSObject {
 	IOUSBInterfaceInterface190		**interface;
 	UInt32							deviceLocationID;
-	UInt8							interfaceNumber;	//	pulled from interface on generalInit!
-	int					inputTerminalID;	//	the "address" of the terminal unit, which handles hardware controls like aperture/focus.  if this val is wrong, the hardware controls won't be available.
-	int					processingUnitID;	//	the "address" of the processing unit, which handles software controls like contrast/hue.  if this val is wrong, the software controls won't be available.
+	UInt8							interfaceNumber;
+	int								inputTerminalID;
+	int								processingUnitID;
+	int 							outputTerminalID;
+	int								extensionUnitID;
 	
-	int 				outputTerminalID;
-	
-	int					extensionUnitID;
-	
-	//id					<UVCControllerDelegate>delegate;
 	uvc_param			scanningMode;
 	uvc_param			autoExposureMode;	//	mode functionality described by the type UVC_AEMode
 	uvc_param			autoExposurePriority;	//	if 1, framerate may be varied.  if 0, framerate must remain constant.
@@ -145,10 +92,9 @@ This is probably the only class you'll have to work with in this framework.  The
 	uvc_param			focus;
 	uvc_param			zoom;
 	uvc_param			panTilt;
-	RelativePanTiltInfo			panTiltRel;
+	RelativePanTiltInfo	panTiltRel;
 	uvc_param			roll;
 	uvc_param			rollRel;
-	
 	uvc_param			backlight;
 	uvc_param			bright;
 	uvc_param			contrast;
@@ -162,50 +108,33 @@ This is probably the only class you'll have to work with in this framework.  The
 	uvc_param			autoWhiteBalance;
 	uvc_param			whiteBalance;
 	
-	//	this class has its own .nib which contains a UI for interacting with the class that may be opened directly in a window, or accessed as an NSView instance for use in other UIs/software
 	NSNib				*theNib;
 	NSArray				*nibTopLevelObjects;
-	
-	IBOutlet id			uiCtrlr;	//	created & owned by the nib!
-	IBOutlet NSWindow	*settingsWindow;	//	by default, the UI is in a window (it's easiest to just open and close it)
-	IBOutlet NSView		*settingsView;	//	you can also access the view which contains the UI so you can embed it in other apps
-	
+	IBOutlet id			uiCtrlr;
+	IBOutlet NSWindow	*settingsWindow;
+	IBOutlet NSView		*settingsView;
 	NSMutableArray<NSString *> *videoName;
 }
 
-///	Use this method to init an instance of UVCController from an NSString returned by the AVFoundation or QTCapture APIs as the device's unique ID.
-/**
-@param n The "deviceIDString" is a string returned by QuickTime and AVFoundation as the unique ID for the USB video device.  Technically, this is a hex value with sixteen digits (16 hex digits = an unsigned 64-bit integer).  The first 8 hex digits is the USB device's "locationID", the next 4 hex digits is the device's vendor ID, and the last 4 digits are the device's product ID.  Only the locationID is needed to create the necessary USB interfaces...
-*/
 - (id) initWithDeviceIDString:(NSString *)n;
-///	Use this method to init an instance of UVCController from the USB location ID.
-/**
-@param locationID The location ID of the USB device you want this instance of UVCController to control.
-*/
 - (id) initWithLocationID:(UInt32)locationID;
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface;
 - (void) generalInit;
-
-///	Returns a mutable dict representing the current state of the video input parameters
 - (NSMutableDictionary *) createSnapshot;
-///	Loads a saved state dict created with the "createSnapshot" method
 - (void) loadSnapshot:(NSDictionary *)s;
-
 - (BOOL) _sendControlRequest:(IOUSBDevRequest *)controlRequest;
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret;
 - (BOOL) _setBytes:(void *)bytes sized:(int)size toControl:(const uvc_control_info_t *)ctrl;
-- (void) _populateAllParams;	//	populates all the uvc_param variables in this instance, loading their min/max/default vals and determining if they're supported or not
+- (void) _populateAllParams;
 - (void) _populateParam:(uvc_param *)param;
 - (BOOL) _pushParamToDevice:(uvc_param *)param;
 - (void) _resetParamToDefault:(uvc_param *)param;
-
 ///	Resets the parameters to their default values.  The default values are supplied by/stored in the device.
 - (void) resetParamsToDefaults;
 ///	Opens a window with a GUI for interacting with the camera parameters
 - (void) openSettingsWindow;
 ///	Closes the GUI window (if it's open).
 - (void) closeSettingsWindow;
-
 - (void) setInterlaced:(BOOL)n;
 - (BOOL) interlaced;
 - (BOOL) interlacedSupported;
@@ -226,7 +155,6 @@ This is probably the only class you'll have to work with in this framework.  The
 - (BOOL) autoExposurePrioritySupported;
 ///	Resets the auto exposure priority to the hardware-defined default
 - (void) resetAutoExposurePriority;
-
 ///	Sets the exposure time to the passed value
 - (void) setExposureTime:(long)n;
 ///	Gets the current exposure time value being used by the camera
@@ -283,12 +211,10 @@ This is probably the only class you'll have to work with in this framework.  The
 - (long) minZoom;
 ///	The max zoom value
 - (long) maxZoom;
-
 //	pan/tilt/roll aren't enabled
 - (BOOL) panSupported;
 - (BOOL) tiltSupported;
 - (BOOL) rollSupported;
-
 ///	Sets the backlight to the passed value
 - (void) setBacklight:(long)n;
 ///	Gets the backlight value currently being used by the camera
@@ -425,14 +351,9 @@ This is probably the only class you'll have to work with in this framework.  The
 - (long) minWhiteBalance;
 ///	The max white balance value
 - (long) maxWhiteBalance;
-
 - (BOOL) panTilt:(UVC_PAN_TILT_DIRECTION)direction;
-
 - (NSString *)getExtensionVersion;
-
 - (BOOL)setUpdateMode;
-
 - (BOOL)resetPanTilt;
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom;
-//- (BOOL)
 @end

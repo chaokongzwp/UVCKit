@@ -838,7 +838,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = 2;
 	controlRequest.wLenDone = 0;
 	
@@ -846,14 +845,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	bzero(ret,2);
 	controlRequest.pData = ret;
 	
-	//	send the request, if it wasn't successful, return -1
-	if (![self _sendControlRequest:&controlRequest])
+	if (![self _sendControlRequest:&controlRequest]){
 		returnMe = -1;
-	//	else returnMe should be the number of bytes i actually read!
-	else
+	} else {
 		returnMe = controlRequest.wLenDone;
+	}
 	
-	//	if the number of bytes i actually read was <= 0 or the request failed, free the buffer i allocated!
 	if (returnMe <= 0)	{
 		controlRequest.pData = nil;
 	} else {
@@ -880,7 +877,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = len;
 	controlRequest.wLenDone = 0;
 	
@@ -888,14 +884,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	bzero(ret,len);
 	controlRequest.pData = ret;
 	
-	//	send the request, if it wasn't successful, return -1
-	if (![self _sendControlRequest:&controlRequest])
+	if (![self _sendControlRequest:&controlRequest]){
 		returnMe = -1;
-	//	else returnMe should be the number of bytes i actually read!
-	else
+	} else {
 		returnMe = controlRequest.wLenDone;
+	}
 	
-	//	if the number of bytes i actually read was <= 0 or the request failed, free the buffer i allocated!
 	if (returnMe <= 0)	{
 		controlRequest.pData = nil;
 	} else {
@@ -923,7 +917,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = len;
 	controlRequest.wLenDone = 0;
 	
@@ -933,14 +926,12 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.pData = ret;
 	
     
-    //    send the request, if it wasn't successful, return -1
-    if (![self _sendControlRequest:&controlRequest])
-        returnMe = -1;
-    //    else returnMe should be the number of bytes i actually read!
-    else
-        returnMe = controlRequest.wLenDone;
+	if (![self _sendControlRequest:&controlRequest]){
+		returnMe = -1;
+	} else {
+		returnMe = controlRequest.wLenDone;
+	}
 	
-	//	send the request, if it wasn't successful, return -1
 	if (returnMe <= 0)	{
 		controlRequest.pData = nil;
 	} else {
@@ -966,7 +957,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	NSXLog(@"inputTerminalID %x, processingUnitID %x, unit %x", inputTerminalID, processingUnitID, ctrl->unit);
 	controlRequest.wIndex = ((controlRequest.wIndex<<8) | interfaceNumber);
-	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = (requestType==UVC_GET_INFO) ? 1 : ctrl->intendedSize;
 	controlRequest.wLenDone = 0;
 	
@@ -974,15 +964,13 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	bzero(*ret,controlRequest.wLength);
 	controlRequest.pData = *ret;
 	
-	//	send the request, if it wasn't successful, return -1
-	if (![self _sendControlRequest:&controlRequest])
+	if (![self _sendControlRequest:&controlRequest]){
 		returnMe = -1;
-	//	else returnMe should be the number of bytes i actually read!
-	else
+	} else {
 		returnMe = controlRequest.wLenDone;
+	}
 	
-	//	if the number of bytes i actually read was <= 0 or the request failed, free the buffer i allocated!
-	if (returnMe <= 0)	{
+	if (returnMe <= 0) {
 		free(*ret);
 		*ret = nil;
 		controlRequest.pData = nil;
@@ -992,11 +980,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (BOOL) _setBytes:(void *)bytes sized:(int)size toControl:(const uvc_control_info_t *)ctrl	{
-	//NSXLog(@"%s",__func__);
 	BOOL			returnMe = NO;
 	long			tmpLong = 0x00000000;
 	memcpy(&tmpLong,bytes,size);
-	//NSXLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
+
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
@@ -1010,10 +997,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return returnMe;
 }
 
-//UVC_CT_ZOOM_ABSOLUTE_CONTROL = 0x0B,
-//UVC_CT_ZOOM_RELATIVE_CONTROL = 0x0C,
-//UVC_CT_PANTILT_ABSOLUTE_CONTROL = 0x0D,
-//UVC_CT_PANTILT_RELATIVE_CONTROL = 0x0E,
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom{
 	BOOL			returnMe = NO;
 	UInt8 bytes[3];
@@ -1061,10 +1044,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateParam:&zoom];
 	[self _populateParam:&panTilt];
 	[self getRelativePanTiltInfo:&panTiltRel];
-//	[self _populateParam:&panTiltRel];
 	[self _populateParam:&roll];
 	[self _populateParam:&rollRel];
-	
 	[self _populateParam:&backlight];
 	[self _populateParam:&bright];
 	[self _populateParam:&contrast];
@@ -1075,9 +1056,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateParam:&saturation];
 	[self _populateParam:&sharpness];
 	[self _populateParam:&gamma];
-	
 	[self _populateParam:&autoWhiteBalance];
-	
 	[self _populateParam:&whiteBalance];
 
 	NSXLog(@"\t\t*******************");
@@ -1092,10 +1071,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	NSXLogParam(@"\t\t focus",focus);
 	NSXLogParam(@"\t\t zoom",zoom);
 	NSXLogParam(@"\t\t pan/tilt (abs)",panTilt);
-//	NSXLogParam(@"\t\t pan/tilt (rel)",panTiltRel);
 	NSXLogParam(@"\t\t roll (abs)",roll);
 	NSXLogParam(@"\t\t roll (rel)",rollRel);
-	
 	NSXLogParam(@"\t\t backlight",backlight);
 	NSXLogParam(@"\t\t bright",bright);
 	NSXLogParam(@"\t\t contrast",contrast);
@@ -1116,34 +1093,31 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	long			tmpLong = 0;
 	int				bytesRead = 0;
 	
-	//	do a "get info" request on the param first to check the param and make sure it can be set
-	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSXLog(@"\t\terr: couldn't get info %s",__func__);
+		NSXLog(@"err: couldn't get info");
 		goto DISABLED_PARAM;
 	}
+	
 	tmpLong = 0x00000000;
 	memcpy(&tmpLong,bytesPtr,bytesRead);
 	free(bytesPtr);
 	bytesPtr = nil;
 	
-	//	make sure the param can be get and set- otherwise, disable the param!
 	BOOL canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
-		//NSXLog(@"\t\terr: can't get or set %s",__func__);
+		NSXLog(@"err: can't get or set");
 		goto DISABLED_PARAM;
 	}
 	
-	//	if i'm here, the "get info" request was successful, and the param can be both set and retrieved!
 	param->supported = YES;
 	
-	//	get the current val (which is definitely supported)
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSXLog(@"\t\terr: couldn't get current val in %s",__func__);
+		NSXLog(@"err: couldn't get current val");
 		goto DISABLED_PARAM;
 	}
+	
 	param->pan_direction = bytesPtr[0];
 	param->current_pan_speed = bytesPtr[1];
 	param->tilt_direction = bytesPtr[2];
@@ -1151,7 +1125,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	free(bytesPtr);
 	bytesPtr = nil;
 
-	
 	//	min
 	{
 		bytesRead = [self _requestValType:UVC_GET_MIN forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
@@ -1215,8 +1188,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	long			tmpLong = 0;
 	int				bytesRead = 0;
 	
-	//	do a "get info" request on the param first to check the param and make sure it can be set
-	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
 		goto DISABLED_PARAM;
@@ -1227,39 +1198,34 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	free(bytesPtr);
 	bytesPtr = nil;
 	
-	//	make sure the param can be get and set- otherwise, disable the param!
 	BOOL			canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
-		//NSXLog(@"\t\terr: can't get or set %s",__func__);
+		NSXLog(@"err: can't get or set");
 		goto DISABLED_PARAM;
 	}
-	
-	//	if i'm here, the "get info" request was successful, and the param can be both set and retrieved!
 	
 	param->supported = YES;
 	
-	//	the size of the returned val will change, so make sure to mask out the irrelevant bits
 	int			paramSize = param->ctrlInfo->intendedSize;
 	long		valSizeMask;
-	if (paramSize == 1)
+	if (paramSize == 1) {
 		valSizeMask = 0x00FF;
-	else if (paramSize == 2)
+	} else if (paramSize == 2) {
 		valSizeMask = 0xFFFF;
-	else if (paramSize == 4)
+	} else if (paramSize == 4){
 		valSizeMask = 0xFFFFFFFF;
-	else if (paramSize > 4)	{
-		//NSXLog(@"\t\terr: paramSize is %d, must be handled differently! %s",paramSize,__func__);
+	} else if (paramSize > 4)	{
+		NSXLog(@"err: paramSize is %d, must be handled differently!",paramSize);
 		goto DISABLED_PARAM;
 	}
-	//	figure out how far i have to shift the bits to find the "negative" bit if the value is signed!
+	
 	int					shiftToGetSignBit = ((paramSize * 8) - 1);
-	//	calculate the mask to reveal the sign, and the mask to remove the sign from the value!
 	unsigned long		maskToRevealSign = (param->ctrlInfo->isSigned) ? (0x0001 << shiftToGetSignBit) : (0x0000);
 	unsigned long		maskToRemoveSign = maskToRevealSign-1;
-	//	get the current val (which is definitely supported)
+
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSXLog(@"\t\terr: couldn't get current val in %s",__func__);
+		NSXLog(@"err: couldn't get current val");
 		goto DISABLED_PARAM;
 	}
 	tmpLong = 0x00000000;
@@ -1286,6 +1252,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		else
 			param->min = -((~tmpLong & valSizeMask) + 1);
 	}
+	
 	//	max
 	if (param->ctrlInfo->hasMax)	{
 		bytesRead = [self _requestValType:UVC_GET_MAX forControl:param->ctrlInfo returnVal:&bytesPtr];
@@ -1300,6 +1267,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		else
 			param->max = -((~tmpLong & valSizeMask) + 1);
 	}
+	
 	//	default
 	if (param->ctrlInfo->hasDef)	{
 		bytesRead = [self _requestValType:UVC_GET_DEF forControl:param->ctrlInfo returnVal:&bytesPtr];
@@ -1316,49 +1284,46 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	}
 	
 	return;
+	
 	DISABLED_PARAM:
-	//NSXLog(@"\t\tDISABLED_PARAM %s",__func__);
-	param->supported = NO;
-	param->min = -1;
-	param->max = -1;
-	param->val = -1;
-	param->def = -1;
-	param->actualSize = -1;
-	//param->ctrlInfo = nil;
+		param->supported = NO;
+		param->min = -1;
+		param->max = -1;
+		param->val = -1;
+		param->def = -1;
+		param->actualSize = -1;
 }
 
 - (BOOL) _pushParamToDevice:(uvc_param *)param	{
-	//NSXLog(@"%s",__func__);
-	if (param == nil)
+	if (param == nil) {
 		return NO;
+	}
 	
 	int			paramSize = param->actualSize;
-	if (paramSize <= 0)
+	if (paramSize <= 0) {
 		return NO;
+	}
 	
 	BOOL		returnMe = NO;
-	
 	int			valToSend = 0x0000;
-	//	if the val may be signed, i may have to assemble the value to be sent manually
 	if (param->ctrlInfo->isSigned)	{
 		valToSend = (int)labs(param->val);
-		if (param->val < 0)
+		if (param->val < 0){
 			valToSend = (~valToSend + 1);
-	}
-	//	else the control isn't signed, i can just send it out as-is and it'll be fine
-	else
+		}
+	} else {
 		valToSend = (int)param->val;
+	}
 	
 	NSLog(@"valToSend %d", valToSend);
-	//	send the val i assembled out
 	void			*bytesToSend = malloc(paramSize);
 	bzero(bytesToSend,paramSize);
 	memcpy(bytesToSend,&valToSend,paramSize);
 	returnMe = [self _setBytes:bytesToSend sized:paramSize toControl:param->ctrlInfo];
-	//NSXLog(@"\t\tstraight bytes output as int: %ld",*((long *)bytesToSend));
+
 	free(bytesToSend);
 	bytesToSend = nil;
-	//NSXLog(@"\t\t%s - FINISHED",__func__);
+
 	return returnMe;
 }
 
@@ -1406,7 +1371,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self resetPanTilt];
 	[self _resetParamToDefault:&roll];
 	[self _resetParamToDefault:&rollRel];
-	
 	[self _resetParamToDefault:&backlight];
 	[self _resetParamToDefault:&bright];
 	[self _resetParamToDefault:&contrast];
@@ -1435,7 +1399,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 #pragma mark --------------------- key-val
 /*------------------------------------*/
 - (void) setInterlaced:(BOOL)n	{
-	//BOOL			changed = (scanningMode.val != ((n) ? 0x00 : 0x01)) ? YES : NO;
 	scanningMode.val = (n) ? 0x00 : 0x01;
 	[self _pushParamToDevice:&scanningMode];
 }
@@ -1457,7 +1420,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) setAutoExposureMode:(UVC_AEMode)n	{
-	//long			oldVal = autoExposureMode.val;
 	switch (n)	{
 		case UVC_AEMode_Manual:
 		case UVC_AEMode_Auto:
@@ -1469,15 +1431,17 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			break;
 	}
 	
-	if (![self _pushParamToDevice:&autoExposureMode])
+	if (![self _pushParamToDevice:&autoExposureMode]){
 		[uiCtrlr _pushCameraControlStateToUI];	//	this is meant to "reload" the UI from the existing camera state if pushing a param failed (because the auto-exposure mode isn't supported).  this does not work- i think the USB device will accept the value, even though it isn't supported (the val is changing, but the behavior is simply unsupported)
+	}
 	
 	[self _pushParamToDevice:&exposureTime];;
 }
 
 - (UVC_AEMode) autoExposureMode	{
-	if (!autoExposureMode.supported)
+	if (!autoExposureMode.supported){
 		return 0;
+	}
 	return (UVC_AEMode)autoExposureMode.val;
 }
 
@@ -1490,7 +1454,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) setAutoExposurePriority:(BOOL)n	{
-	//BOOL			changed = (autoExposurePriority.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoExposurePriority.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoExposurePriority];
 }
@@ -1512,7 +1475,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) setVal:(long)newVal forParam:(uvc_param *)p	{
-	//long		oldVal = p->val;
 	p->val = fminl(fmaxl(newVal,p->min),p->max);
 	[self _pushParamToDevice:p];
 }
@@ -1851,11 +1813,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!saturation.supported) ? 0 : saturation.val;
 }
 
-- (BOOL) saturationSupported	{
+- (BOOL) saturationSupported {
 	return saturation.supported;
 }
 
-- (void) resetSaturation	{
+- (void) resetSaturation {
 	[self _resetParamToDefault:&saturation];
 }
 
@@ -1867,7 +1829,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!saturation.supported) ? 0 : saturation.max;
 }
 
-- (void) setSharpness:(long)n	{
+- (void) setSharpness:(long)n {
 	[self setVal:n forParam:&sharpness];
 }
 
@@ -1883,7 +1845,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&sharpness];
 }
 
-- (long) minSharpness	{
+- (long) minSharpness {
 	return (!sharpness.supported) ? 0 : sharpness.min;
 }
 
@@ -1891,11 +1853,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!sharpness.supported) ? 0 : sharpness.max;
 }
 
-- (void) setGamma:(long)n	{
+- (void) setGamma:(long)n {
 	[self setVal:n forParam:&gamma];
 }
 
-- (long) gamma	{
+- (long) gamma {
 	if (!gamma.supported)
 		return 0;
 	return gamma.val;
@@ -1909,21 +1871,21 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&gamma];
 }
 
-- (long) minGamma	{
+- (long) minGamma {
 	return (!gamma.supported) ? 0 : gamma.min;
 }
 
-- (long) maxGamma	{
+- (long) maxGamma {
 	return (!gamma.supported) ? 0 : gamma.max;
 }
 
-- (void) setAutoWhiteBalance:(BOOL)n	{
+- (void) setAutoWhiteBalance:(BOOL)n {
 	//BOOL			changed = (autoWhiteBalance.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoWhiteBalance.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoWhiteBalance];
 }
 
-- (BOOL) autoWhiteBalance	{
+- (BOOL) autoWhiteBalance {
 	if (!autoWhiteBalance.supported)
 		return NO;
 	if (autoWhiteBalance.val == 1)
@@ -1931,19 +1893,19 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return NO;
 }
 
-- (BOOL) autoWhiteBalanceSupported	{
+- (BOOL) autoWhiteBalanceSupported {
 	return autoWhiteBalance.supported;
 }
 
-- (void) resetAutoWhiteBalance	{
+- (void) resetAutoWhiteBalance {
 	[self _resetParamToDefault:&autoWhiteBalance];
 }
 
-- (void) setWhiteBalance:(long)n	{
+- (void) setWhiteBalance:(long)n {
 	[self setVal:n forParam:&whiteBalance];
 }
 
-- (long) whiteBalance	{
+- (long) whiteBalance {
 	return (!whiteBalance.supported) ? 0 : whiteBalance.val;
 }
 
@@ -1951,7 +1913,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return whiteBalance.supported;
 }
 
-- (void) resetWhiteBalance	{
+- (void) resetWhiteBalance {
 	[self _resetParamToDefault:&whiteBalance];
 }
 
@@ -1959,7 +1921,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return whiteBalance.min;
 }
 
-- (long) maxWhiteBalance	{
+- (long) maxWhiteBalance {
 	return whiteBalance.max;
 }
 
@@ -1980,7 +1942,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		default:
 			return  [self pushPanTiltToDevice:&panTiltRel panDirectiorn:0 panSpeed:0 tiltDirection:0 tiltSpeed:0];;
 	}
-	
 }
 @end
 

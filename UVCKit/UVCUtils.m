@@ -1,11 +1,3 @@
-//
-//  UVCUtils.m
-//  UVC Test App
-//
-//  Created by 张伟平 on 2021/6/6.
-//  Copyright © 2021 Chingan. All rights reserved.
-//
-
 #import "UVCUtils.h"
 
 static NSDateFormatter *dateFormatter = nil;
@@ -19,9 +11,7 @@ static NSString *path = nil;
     NSAlert *alert = [[NSAlert alloc] init];
     [alert addButtonWithTitle:@"OK"];
     [alert setMessageText:title];
-    
     [alert setInformativeText:msg];
-    
     [alert setAlertStyle:NSAlertStyleInformational];
     
     [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
@@ -113,10 +103,9 @@ static NSString *path = nil;
 	NSString *file = [[NSString alloc] initWithBytes:sourceFile length:strlen(sourceFile) encoding:NSUTF8StringEncoding];
 	NSString *print = [[NSString alloc] initWithFormat:format arguments:ap];
 	va_end(ap);
-	// NSLog handles synchronization issues
+
 	NSLog(@"%@", print);
 	NSString *log = [NSString stringWithFormat:@"[%@] %s:%d %@\n",  [self currentTime], [[file lastPathComponent] UTF8String], lineNumber, print];
-//	NSLog(@"%s:%d %@", [[file lastPathComponent] UTF8String], lineNumber, print);
 	[logLock lock];
 	[cacheLog addObject:log];
 	[logLock unlock];

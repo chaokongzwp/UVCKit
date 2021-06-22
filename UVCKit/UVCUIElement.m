@@ -13,11 +13,11 @@
 		val = 0;
 		min = 0;
 		max = 0;
-		//[[self titleCell] setControlSize:NSMiniControlSize];
+		
 		[self setTitleFont:[NSFont systemFontOfSize:9]];
 		[self setBorderType:NSNoBorder];
 		[self setBoxType:NSBoxSecondary];
-		//[self setTitle:@"TestTitle"];
+		
 		NSView			*contentView = [self contentView];
 		
 		valSlider = [[NSSlider alloc] initWithFrame:NSMakeRect(0,0,200,20)];
@@ -28,7 +28,6 @@
 		valSlider.trackFillColor = [NSColor blueColor];
 		
 		valField = [[NSTextField alloc] initWithFrame:NSMakeRect(0,0,200,20)];
-		//[[valField cell] setControlSize:NSMiniControlSize];
 		[valField setFont:[NSFont systemFontOfSize:9]];
 		NSNumberFormatter	*formatter = [[NSNumberFormatter alloc] init];
 		[valField setFormatter:formatter];;
@@ -43,19 +42,20 @@
 
 	return nil;
 }
-- (void) dealloc	{
-	if (valSlider != nil)	{
+
+- (void) dealloc {
+	if (valSlider != nil) {
 		[valSlider removeFromSuperview];
 		valSlider = nil;
 	}
-	if (valField != nil)	{
+	
+	if (valField != nil) {
 		[valField removeFromSuperview];
 		valField = nil;
 	}
 }
 
-
-- (void) setEnabled:(BOOL)n{
+- (void) setEnabled:(BOOL)n {
 	if (enabled == n)
 		return;
 	enabled = n;
@@ -69,11 +69,9 @@
 	}
 }
 
-
-- (void) _resizeContents	{
-	//NSLog(@"%s",__func__);
+- (void) _resizeContents {
 	NSRect		contentBounds = [[self contentView] bounds];
-	//NSLog(@"\t\tcontentBounds is (%f, %f) : %f x %f",contentBounds.origin.x,contentBounds.origin.y,contentBounds.size.width,contentBounds.size.height);
+	
 	NSRect		sliderRect;
 	NSRect		txtRect = contentBounds;
 	txtRect.size = NSMakeSize(50,16);
@@ -82,59 +80,54 @@
 	txtRect.origin = NSMakePoint(contentBounds.size.width-txtRect.size.width, 0);
 	[valSlider setFrame:sliderRect];
 	[valField setFrame:txtRect];
-	//NSLog(@"\t\tslider rect is (%f, %f) : %f x %f",sliderRect.origin.x,sliderRect.origin.y,sliderRect.size.width,sliderRect.size.height);
-	//NSLog(@"\t\ttext rect is (%f, %f) : %f x %f",txtRect.origin.x,txtRect.origin.y,txtRect.size.width,txtRect.size.height);
 	[valSlider setAutoresizingMask:NSViewWidthSizable];
 	[valField setAutoresizingMask:NSViewMinXMargin];
 }
+
 - (void) uiItemUsed:(id)sender	{
-	//NSLog(@"%s",__func__);
-	if (sender == valSlider)	{
-		//	update the val, then update the val field
+	if (sender == valSlider) {
 		val = [valSlider intValue];
 		[valField setIntValue:val];
-	}
-	else if (sender == valField)	{
-		//	update the val, then update the val slider
+	} else if (sender == valField) {
 		val = [valField intValue];
 		[valSlider setIntValue:val];
 	}
-	//	if there's a delegate, let it know that my val changed!
-	if (delegate != nil)
+	
+	if (delegate != nil) {
 		[delegate controlElementChanged:self];
+	}
 }
 
 
-//@synthesize delegate;
 - (void) setVal:(int)n	{
-	//NSLog(@"%s ... %@, %d",__func__,[self title],n);
 	val = n;
 	[valField setIntValue:n];
 	[valSlider setIntValue:n];
 }
+
 - (int) val	{
 	return val;
 }
+
 - (void) setMin:(int)n	{
-	//NSLog(@"%s ... %@, %ld",__func__,[self title],n);
 	min = n;
 	NSNumberFormatter		*fmt = [valField formatter];
 	[fmt setMinimum:[NSNumber numberWithInt:n]];
 	[valSlider setMinValue:n];
 }
+
 - (int) min	{
 	return min;
 }
+
 - (void) setMax:(int)n	{
-	//NSLog(@"%s ... %@, %ld",__func__,[self title],n);
 	max = n;
 	NSNumberFormatter		*fmt = [valField formatter];
 	[fmt setMaximum:[NSNumber numberWithInt:n]];
 	[valSlider setMaxValue:n];
 }
+
 - (int) max	{
 	return max;
 }
-
-
 @end

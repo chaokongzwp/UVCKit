@@ -1,11 +1,3 @@
-//
-//  UVCButton.h
-//  UVC Test App
-//
-//  Created by 朝空 on 2021/5/11.
-//  Copyright © 2021 Chingan. All rights reserved.
-//
-
 #import <Cocoa/Cocoa.h>
 
 NS_ASSUME_NONNULL_BEGIN

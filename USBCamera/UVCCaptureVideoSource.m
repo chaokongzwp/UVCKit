@@ -53,7 +53,6 @@
 	[self stop];
 }
 
-
 /*===================================================================================*/
 #pragma mark --------------------- control messages
 /*------------------------------------*/
@@ -100,7 +99,7 @@
 	uvcFormat.subMediaType = codeTypeStr;
 	
 	CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
-	NSXLog(@"%u %u", dimensions.height, dimensions.width);
+	NSXLog(@"activeFormatInfo %@ %u %u",codeTypeStr, dimensions.height, dimensions.width);
 	
 	uvcFormat.height = dimensions.height;
 	uvcFormat.width = dimensions.width;
@@ -141,11 +140,11 @@
 					propSession = [[AVCaptureSession alloc] init];
 					propOutput = [[AVCaptureVideoDataOutput alloc] init];
 					if (![propSession canAddInput:propDeviceInput])	{
-						NSXLog(@"\t\tproblem adding propDeviceInput in %s",__func__);
+						NSXLog(@"problem adding propDeviceInput");
 						bail = YES;
 					}
 					if (![propSession canAddOutput:propOutput])	{
-						NSXLog(@"\t\tproblem adding propOutput in %s",__func__);
+						NSXLog(@"problem adding propOutput");
 						bail = YES;
 					}
 					
@@ -280,10 +279,10 @@
 - (void) start	{
 	NSXLog(@"");
     [propLock lock];
-	if (!propRunning)	{
+	if (!propRunning) {
 		[self _start];
 		propRunning = YES;
-	} else{
+	} else {
 		NSXLog(@"ERR: starting something that wasn't stopped");
     }
 	
@@ -335,16 +334,13 @@
 	NSXLog(@"");
 }
 
-- (void)captureOutput:(AVCaptureOutput *)o didOutputSampleBuffer:(CMSampleBufferRef)b fromConnection:(AVCaptureConnection *)c	{
-	//NSXLog(@"%s",__func__);
+- (void)captureOutput:(AVCaptureOutput *)o didOutputSampleBuffer:(CMSampleBufferRef)b fromConnection:(AVCaptureConnection *)c {
 	CMFormatDescriptionRef		portFormatDesc = CMSampleBufferGetFormatDescription(b);
 	FourCharCode code= CMFormatDescriptionGetMediaSubType(portFormatDesc);
 	NSXLog(@"media subtype is %s",FourCC2Str(code));
 	CMVideoDimensions		vidDims = CMVideoFormatDescriptionGetDimensions(portFormatDesc);
 	NSXLog(@"size is %d x %d",vidDims.width,vidDims.height);
 	
-	//	if this came from a connection belonging to the data output
-	//VVBuffer				*newBuffer = nil;
 	CMBlockBufferRef		blockBufferRef = CMSampleBufferGetDataBuffer(b);
 	if (blockBufferRef) {
 		
@@ -361,7 +357,7 @@
 /*===================================================================================*/
 #pragma mark --------------------- key-val-ish
 /*------------------------------------*/
-- (BOOL) running	{
+- (BOOL) running {
 	BOOL		returnMe;
     [propLock lock];
 	returnMe = propRunning;
@@ -369,7 +365,7 @@
 	return returnMe;
 }
 
-- (NSArray *) arrayOfSourceMenuItems	{
+- (NSArray *) arrayOfSourceMenuItems {
 	NSArray		*devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
 	if (devices == nil || [devices count] < 1){
 		return nil;
