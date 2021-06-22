@@ -1,5 +1,4 @@
 #import "VVUVCUIController.h"
-#import "VVUVCController.h"
 #import "UVCUtils.h"
 
 
@@ -49,8 +48,12 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 	return tmplen / 2 + tmplen % 2;
 }
 
-@implementation VVUVCUIController
+static VVUVCController *device = nil;
 
+@implementation VVUVCUIController
++ (void)updateController:(VVUVCController *)controller{
+	device = controller;
+}
 
 - (id) init	{
 	if (self = [super init])	{
@@ -195,7 +198,6 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 	[UVCUtils showAlert:retStr title:@"请求成功" window:mainView.window completionHandler:nil];
 }
 
-
 - (void) controlElementChanged:(id)sender	{
 	NSLog(@"%s",__func__);
 	if (sender == expElement)	{
@@ -242,6 +244,7 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 	}
 	[self _pushCameraControlStateToUI];
 }
+
 - (IBAction) buttonUsed:(id)sender	{
 	if (sender == expPriorityButton)	{
 		[device setAutoExposurePriority:([sender intValue]==NSOnState) ? YES : NO];
@@ -274,6 +277,7 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 		[self _pushCameraControlStateToUI];
 	}
 }
+
 - (IBAction) popUpButtonUsed:(id)sender	{
 	//NSLog(@"%s ... %d",__func__,[sender indexOfSelectedItem]);
 	if (sender == autoExpButton)	{
@@ -294,13 +298,11 @@ unsigned long StringToHex(NSString *orig, unsigned int *outChar, unsigned long *
 	}
 }
 
-
 - (IBAction) resetToDefaults:(id)sender	{
 	//NSLog(@"%s",__func__);
 	[device resetParamsToDefaults];
 	[self _pushCameraControlStateToUI];
 }
-
 
 - (void) _pushCameraControlStateToUI	{
 	if ([device exposureTimeSupported])	{

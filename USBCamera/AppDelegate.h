@@ -1,8 +1,8 @@
 #import <Cocoa/Cocoa.h>
-#import <VVUVCKit/VVUVCKit.h>
+#import <UVCKit/UVCKit.h>
 #import <USBBusProber/USBBusProber.h>
 #import "AVCaptureVideoSource.h"
-#import <VVUVCKit/VVUVCUIElement.h>
+#import <UVCKit/VVUVCUIElement.h>
 #import "UVCButton.h"
 
 

@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:VVUVCKit.xcodeproj">
+      location = "self:/Users/zhangweiping/Code/VVUVCKit-ck/UVCKit.xcodeproj">
    </FileRef>
 </Workspace>

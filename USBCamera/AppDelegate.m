@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
-#import <VVUVCKit/UVCUtils.h>
+#import <UVCKit/UVCUtils.h>
+#import <UVCKit/VVUVCUIController.h>
 
 typedef NS_ENUM(NSUInteger, UVCUpdateState) {
     UVCUpdateStateNone = 0,
@@ -427,16 +428,19 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 
 - (void)reloadDeviceWithId:(NSString *)deviceId{
     [vidSrc loadDeviceWithUniqueID:deviceId];
+	[uvcController closeSettingsWindow];
     uvcController = [[VVUVCController alloc] initWithDeviceIDString:deviceId];
     if (uvcController==nil){
-        NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+        NSXLog(@"Couldn't create VVUVCController");
         [versionTextView setString:@""];
-		[uvcController closeSettingsWindow];
     } else    {
         if ([uvcController zoomSupported]) {
             [uvcController resetPanTilt];
             [uvcController setZoom:0];
         }
+		
+		[VVUVCUIController updateController:uvcController];
+		[uvcController closeSettingsWindow];
     }
 	
 	[versionTextView setString:@""];
@@ -456,7 +460,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 }
 
 - (IBAction) camPUBUsed:(id)sender	{
-	//NSXLog(@"%s",__func__);
 	NSMenuItem		*selectedItem = [sender selectedItem];
     [self handleSelectedCamera:selectedItem];
 }
@@ -567,7 +570,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	[vidSrc loadDeviceWithUniqueID:[vidSrc currentDeivceId] format:format];
 	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
 	if (uvcController==nil){
-		NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+		NSXLog(@"Couldn't create VVUVCController");
 		[versionTextView setString:@""];
 	} else    {
 		if ([uvcController zoomSupported])    {
@@ -597,7 +600,7 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 	[vidSrc setPreviewLayer:backgroudView];
 	uvcController = [[VVUVCController alloc] initWithDeviceIDString:[vidSrc currentDeivceId]];
 	if (uvcController==nil){
-		NSXLog(@"\t\tERR: couldn't create VVUVCController, %s",__func__);
+		NSXLog(@"Couldn't create VVUVCController");
 		[versionTextView setString:@""];
 	} else    {
 		if ([uvcController zoomSupported])    {
@@ -615,7 +618,6 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 #pragma mark --------------------- AVCaptureVideoSourceDelegate
 /*------------------------------------*/
 - (void) listOfStaticSourcesUpdated:(id)videoSource	{
-	NSXLog(@"%s",__func__);
 }
 @end
 

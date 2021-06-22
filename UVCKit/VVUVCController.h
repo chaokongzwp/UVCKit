@@ -5,7 +5,6 @@
 #include <IOKit/IOCFPlugIn.h>
 #include <IOKit/usb/IOUSBLib.h>
 #import <USBBusProber/USBBusProber.h>
-//#import <QTKit/QTKit.h>
 #import "VVUVCKitStringAdditions.h"
 
 /**

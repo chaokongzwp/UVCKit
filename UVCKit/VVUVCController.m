@@ -328,26 +328,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 /*===================================================================================*/
 #pragma mark --------------------- init/dealloc
 /*------------------------------------*/
-
-
-/*
-- (id) initWithQTCaptureDevice:(QTCaptureDevice *)dev	{
-	//NSXLog(@"%s",__func__);
-	if (dev != nil)	{
-		return [self initWithDeviceIDString:[dev uniqueID]];
-	}
-	[self release];
-	return nil;
-}
-*/
 - (id) initWithDeviceIDString:(NSString *)n	{
-	//NSXLog(@"%s ... %@",__func__,n);
 	if (n != nil)	{
 		unsigned int locationID = 0;
 		sscanf([n UTF8String], "0x%8x",&locationID);
-		if (locationID) return [self initWithLocationID:locationID];
+		if (locationID){
+			return [self initWithLocationID:locationID];
+		}
 	}
-//	[self release];
+
 	return nil;
 }
 
@@ -358,8 +347,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		//	technically i don't need to set these here- they're calculated below from the BusProber, but default values are good, m'kay?
 		inputTerminalID = 1;
 		processingUnitID = 2;	//	logitech C910
-		//processingUnitID = 4;	//	works for microsoft lifecam!
-		//processingUnitID = 3;	//	works for "FaceTime HD Camera" on gen-8 macbook pros!
 		deviceLocationID = locationID;
 		interface = NULL;
 		videoName = [NSMutableArray array];
@@ -375,8 +362,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
 				NSXLog(@"\t\ttop-level keys are %@",[tmpDict allKeys]);
 				NSXLog(@"\t\tdevice dict is %@",tmpDict);
-//				[tmpDict writeToFile:[@"~/Desktop/tmpOut.plist" stringByExpandingTildeInPath] atomically:YES];
-				//	get the dict at the key 'nodeData'
 				NSDictionary		*topLevelNodeDataDict = (tmpDict==nil) ? nil : [tmpDict objectForKey:@"nodeData"];
 				//	from the node data dict, get the 'children' array
 				NSArray				*topLevelNodeChildren = (topLevelNodeDataDict==nil) ? nil : [topLevelNodeDataDict objectForKey:@"children"];
@@ -545,11 +530,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			}
 		}
 		if (prober != nil)	{
-//			[prober release];
 			prober = nil;
 		}
-		
-		
 		
 		//	Find All USB Devices, get their locationId and check if it matches the requested one
 		CFMutableDictionaryRef		matchingDict = IOServiceMatching(kIOUSBDeviceClassName);
@@ -613,17 +595,16 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			
 		} // end while
 		
-		
 		//	if i successfully init'ed the camera, i can return myself
 		if (successfullInit)
 			return self;
 		//	else i couldn't successfully init myself, something went wrong/i couldn't connect: release self and return nil;
 		NSXLog(@"\t\tERR: couldn't create VVUVCController with locationID %d, %X",(unsigned int)locationID,(unsigned int)locationID);
-//		[self release];
 		return nil;
 	}
 	return self;
 }
+
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface {
 	//NSXLog(@"%s",__func__);
 	io_iterator_t					interfaceIterator;
@@ -659,7 +640,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			return NULL;
 		}
 		
-		
 		//	Now create the device interface for the interface
 		result = (*ioPlugin)->QueryInterface( ioPlugin, CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID), (LPVOID *) &controlInterface );
 		//	No longer need the intermediate plug-in
@@ -675,10 +655,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	return NULL;
 }
+
 - (void) generalInit	{
-	
-	//delegate = nil;
-	
 	scanningMode.ctrlInfo = &_scanCtrl;
 	autoExposureMode.ctrlInfo = &_autoExposureModeCtrl;
 	autoExposurePriority.ctrlInfo = &_autoExposurePriorityCtrl;
@@ -715,40 +693,23 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
 	//	unpack the nib, instantiating the object
 	[theNib instantiateWithOwner:self topLevelObjects:nil];
-	//	retain the array of top-level objects (they have to be explicitly freed later)
-//	[nibTopLevelObjects retain];
 	
 	if (uiCtrlr != nil)
 		[uiCtrlr _pushCameraControlStateToUI];
 }
+
 - (void) dealloc {
-	//NSXLog(@"%s ... %p",__func__,self);
 	[self closeSettingsWindow];
 	
 	if( interface ) {
 		(*interface)->USBInterfaceClose(interface);
 		(*interface)->Release(interface);
 	}
-	
-	//	free this (i retained it explicitly earlier)
-	if (nibTopLevelObjects != nil)	{
-//		[nibTopLevelObjects release];
-		nibTopLevelObjects = nil;
-	}
-	//	release the nib
-	if (theNib != nil)	{
-//		[theNib release];
-		theNib = nil;
-	}
-//	[super dealloc];
 }
-
 
 /*===================================================================================*/
 #pragma mark --------------------- saving/restoring state
 /*------------------------------------*/
-
-
 - (NSMutableDictionary *) createSnapshot	{
 	NSMutableDictionary		*returnMe = [NSMutableDictionary dictionaryWithCapacity:0];
 	
@@ -760,9 +721,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[returnMe setObject:[NSNumber numberWithBool:[self autoFocus]] forKey:@"autoFocus"];
 	[returnMe setObject:[NSNumber numberWithLong:[self focus]] forKey:@"focus"];
 	[returnMe setObject:[NSNumber numberWithLong:[self zoom]] forKey:@"zoom"];
-	//[returnMe setObject:[NSNumber numberWithLong:[self pan]] forKey:@"pan"];
-	//[returnMe setObject:[NSNumber numberWithLong:[self tilt]] forKey:@"tilt"];
-	//[returnMe setObject:[NSNumber numberWithLong:[self roll]] forKey:@"roll"];
 	[returnMe setObject:[NSNumber numberWithLong:[self backlight]] forKey:@"backlight"];
 	[returnMe setObject:[NSNumber numberWithLong:[self bright]] forKey:@"bright"];
 	[returnMe setObject:[NSNumber numberWithLong:[self contrast]] forKey:@"contrast"];
@@ -777,9 +735,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[returnMe setObject:[NSNumber numberWithLong:[self whiteBalance]] forKey:@"whiteBalance"];
 	return returnMe;
 }
+
 - (void) loadSnapshot:(NSDictionary *)s	{
-	//NSXLog(@"%s",__func__);
-	//NSXLog(@"\t\t%@",s);
 	if (s == nil)
 		return;
 	
@@ -837,17 +794,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	if (tmpNum!=nil)	{
 		[self setZoom:[tmpNum longValue]];
 	}
-	/*
-	tmpNum = [s objectForKey:@"pan"];
-	if (tmpNum!=nil)
-		[self setPan:[tmpNum longValue]];
-	tmpNum = [s objectForKey:@"tilt"];
-	if (tmpNum!=nil)
-		[self setTilt:[tmpNum longValue]];
-	tmpNum = [s objectForKey:@"roll"];
-	if (tmpNum!=nil)
-		[self setRoll:[tmpNum longValue]];
-	*/
+
 	tmpNum = [s objectForKey:@"backlight"];
 	if (tmpNum != nil)	{
 		[self setBacklight:[tmpNum longValue]];
@@ -908,25 +855,16 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		[self setWhiteBalance:[tmpNum longValue]];
 	}
 	
-	
 	if (uiCtrlr != nil)
 		[uiCtrlr _pushCameraControlStateToUI];
-	
-	//NSXLog(@"\t\t%s - FINISHED",__func__);
 }
-
 
 /*===================================================================================*/
 #pragma mark --------------------- backend
 /*------------------------------------*/
-
-
 //	this method gets called by _setData and _getDataFor
 - (BOOL) _sendControlRequest:(IOUSBDevRequest *)controlRequest {
 	NSXLog(@"%s",__func__);
-//	NSXLog(@"\t\tindex=%d",controlRequest->wIndex);
-//	NSXLog(@"\t\trequestType=%0x",controlRequest->bmRequestType);
-//	NSXLog(@"\t\trequest=%0x",controlRequest->bRequest);
 	NSString *dataStr = @"";
 	for (int i = 0; i < controlRequest->wLength; i++) {
 		dataStr = [dataStr stringByAppendingFormat:@"0x%X ", ((UInt8 *)controlRequest->pData)[i]];
@@ -937,43 +875,24 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		return NO;
 	}
 	
-	
-	/*
-	//Now open the interface. This will cause the pipes associated with
-	//the endpoints in the interface descriptor to be instantiated
-	kern_return_t kr = (*interface)->USBInterfaceOpen(interface);
-	if (kr != kIOReturnSuccess)	{
-		NSXLog( @"CameraControl Error: Unable to open interface (%08x)\n", kr );
-		return NO;
-	}
-	kr = (*interface)->ControlRequest( interface, 0, &controlRequest );
-	*/
 	kern_return_t kr = (*interface)->ControlRequest( interface, 0, controlRequest );
 	if( kr != kIOReturnSuccess ) {
 		NSXLog( @"CameraControl Error: Control request failed: %08x", kr );
 		kr = (*interface)->USBInterfaceClose(interface);
 		return NO;
 	}
-	/*
-	kr = (*interface)->USBInterfaceClose(interface);
-	*/
+
 	return YES;
 }
 
-
 - (int)getExtensionLen{
-	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_GET_LEN;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
-	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
-	//controlRequest.wIndex = (512 | interfaceNumber);
 	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = 2;
 	controlRequest.wLenDone = 0;
@@ -1015,12 +934,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_GET_CUR;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
-	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
-	//controlRequest.wIndex = (512 | interfaceNumber);
 	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = len;
 	controlRequest.wLenDone = 0;
@@ -1050,6 +965,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	
 	free(ret);
 	ret = nil;
+	
 	return version?:@"";
 }
 
@@ -1061,12 +977,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
 	controlRequest.wValue = (UVC_XU_CONTROL_CHINGAN_EXTENSION << 8) | 0x00;
-	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
 	controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
-	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
-	//controlRequest.wIndex = (512 | interfaceNumber);
 	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = len;
 	controlRequest.wLenDone = 0;
@@ -1100,7 +1012,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
     return returnMe>0;
 }
 
-
 - (int) _requestValType:(int)requestType forControl:(const uvc_control_info_t *)ctrl returnVal:(void **)ret	{
 	//NSXLog(@"%s ... 0x%X",__func__,requestType);
 	int					returnMe = 0;
@@ -1108,14 +1019,10 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = requestType;
 	controlRequest.wValue = (ctrl->selector << 8) | 0x00;
-	//NSXLog(@"\t\tctrl->unit is %d",ctrl->unit);
-	//NSXLog(@"\t\tctrl->unit << 8 is %d",ctrl->unit << 8);
 	controlRequest.wIndex = (ctrl->unit==UVC_INPUT_TERMINAL_ID) ? inputTerminalID : processingUnitID;
 	
 	NSXLog(@"inputTerminalID %x, processingUnitID %x, unit %x", inputTerminalID, processingUnitID, ctrl->unit);
 	controlRequest.wIndex = ((controlRequest.wIndex<<8) | interfaceNumber);
-	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
-	//controlRequest.wIndex = (512 | interfaceNumber);
 	//	if it's a "get info" request, the length is always going to be 1!
 	controlRequest.wLength = (requestType==UVC_GET_INFO) ? 1 : ctrl->intendedSize;
 	controlRequest.wLenDone = 0;
@@ -1187,22 +1094,18 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	bytes[0] = bZoom;
 	bytes[1] = 0;
 	NSXLog(@"setRelativeZoomControl bytes %x %x %x", bytes[0], bytes[1], bytes[2]);
-	//NSXLog(@"\t\tbytes are %ld, size is %d",tmpLong,size);
+
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
 	controlRequest.bRequest = UVC_SET_CUR;
 	controlRequest.wValue = (UVC_CT_ZOOM_RELATIVE_CONTROL << 8) | 0x00;
 	controlRequest.wIndex = ((inputTerminalID<<8) | interfaceNumber);
-	//controlRequest.wIndex = ((ctrl->unit << 8) | interfaceNumber);
-	//controlRequest.wIndex = (512 | interfaceNumber);
 	controlRequest.wLength = 3;
 	controlRequest.wLenDone = 0;
 	controlRequest.pData = bytes;
 	returnMe = [self _sendControlRequest:&controlRequest];
 	return returnMe;
 }
-
-
 
 - (void) _populateAllParams	{
 	[self _populateParam:&scanningMode];
@@ -1263,9 +1166,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	NSXLogParam(@"\t\t auto wb",autoWhiteBalance);
 	NSXLogParam(@"\t\t wb",whiteBalance);
 	NSXLog(@"\t\t*******************");
-
 }
-
 
 - (void)getRelativePanTiltInfo:(RelativePanTiltInfo *)param {
 	u_int8_t		*bytesPtr = nil;
@@ -1358,16 +1259,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		param->resolution_tilt_speed = bytesPtr[3];
 		free(bytesPtr);
 		bytesPtr = nil;
-		//NSXLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
-		//if (param->actualSize != bytesRead)
-		//	NSXLog(@"******* ERR: bytes read on default don't match bytes read on val!");
 	}
 	
 	return;
 	DISABLED_PARAM:
-	//NSXLog(@"\t\tDISABLED_PARAM %s",__func__);
 	param->supported = NO;
-	//param->ctrlInfo = nil;
 }
 
 - (void) _populateParam:(uvc_param *)param	{
@@ -1380,9 +1276,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&longPtr];
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
-		//NSXLog(@"\t\terr: couldn't get info %s",__func__);
 		goto DISABLED_PARAM;
 	}
+	
 	tmpLong = 0x00000000;
 	memcpy(&tmpLong,bytesPtr,bytesRead);
 	free(bytesPtr);
@@ -1417,10 +1313,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//	calculate the mask to reveal the sign, and the mask to remove the sign from the value!
 	unsigned long		maskToRevealSign = (param->ctrlInfo->isSigned) ? (0x0001 << shiftToGetSignBit) : (0x0000);
 	unsigned long		maskToRemoveSign = maskToRevealSign-1;
-	//NSXLog(@"\t\tshift to get sign bit is %d",shiftToGetSignBit);
-	//NSXLog(@"\t\tmask to reveal sign is %ld",maskToRevealSign);
-	//NSXLog(@"\t\tmask to remove sign is %ld",maskToRemoveSign);
-	
 	//	get the current val (which is definitely supported)
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
@@ -1432,10 +1324,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	free(bytesPtr);
 	bytesPtr = nil;
 	param->val = (tmpLong & valSizeMask & maskToRemoveSign);
-	//NSXLog(@"\t\traw val is %ld, refined val is %ld",tmpLong,param->val);
+
 	param->actualSize = bytesRead;
-	//if (param->actualSize != param->ctrlInfo->intendedSize)
-	//	NSXLog(@"\t\t****** err: actual size doesn't match intended size!");
 	if ((tmpLong & maskToRevealSign) != 0)
 		param->val = param->val * -1;
 	
@@ -1452,9 +1342,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->min = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->min = -((~tmpLong & valSizeMask) + 1);
-		//NSXLog(@"\t\traw min is %ld, refined min is %ld",tmpLong,param->min);
-		//if (param->actualSize != bytesRead)
-		//	NSXLog(@"******* ERR: bytes read on min don't match bytes read on val!");
 	}
 	//	max
 	if (param->ctrlInfo->hasMax)	{
@@ -1469,9 +1356,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->max = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->max = -((~tmpLong & valSizeMask) + 1);
-		//NSXLog(@"\t\traw max is %ld, refined max is %ld",tmpLong,param->max);
-		//if (param->actualSize != bytesRead)
-		//	NSXLog(@"******* ERR: bytes read on max don't match bytes read on val!");
 	}
 	//	default
 	if (param->ctrlInfo->hasDef)	{
@@ -1486,9 +1370,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 			param->def = (tmpLong & valSizeMask & maskToRemoveSign);
 		else
 			param->def = -((~tmpLong & valSizeMask) + 1);
-		//NSXLog(@"\t\traw def is %ld, refined def is %ld",tmpLong,param->def);
-		//if (param->actualSize != bytesRead)
-		//	NSXLog(@"******* ERR: bytes read on default don't match bytes read on val!");
 	}
 	
 	return;
@@ -1517,12 +1398,9 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	int			valToSend = 0x0000;
 	//	if the val may be signed, i may have to assemble the value to be sent manually
 	if (param->ctrlInfo->isSigned)	{
-		//NSXLog(@"\t\traw val is %ld",param->val);
 		valToSend = (int)labs(param->val);
-		//NSXLog(@"\t\tabs val is %d",valToSend);
 		if (param->val < 0)
 			valToSend = (~valToSend + 1);
-		//NSXLog(@"\t\tactual val to send is %d",valToSend);
 	}
 	//	else the control isn't signed, i can just send it out as-is and it'll be fine
 	else
@@ -1572,10 +1450,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 /*===================================================================================*/
 #pragma mark --------------------- misc
 /*------------------------------------*/
-
-
 - (void) resetParamsToDefaults	{
-	//NSXLog(@"%s",__func__);
 	[self _resetParamToDefault:&scanningMode];
 	[self _resetParamToDefault:&autoExposureMode];
 	[self _resetParamToDefault:&autoExposurePriority];
@@ -1602,39 +1477,26 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&autoWhiteBalance];
 	[self _resetParamToDefault:&whiteBalance];
 }
+
 - (void) openSettingsWindow	{
-	//NSXLog(@"%s",__func__);
+	NSXLog(@"");
 	[settingsWindow makeKeyAndOrderFront:nil];
 }
-- (void) closeSettingsWindow	{
-	//NSXLog(@"%s",__func__);
-	[settingsWindow orderOut:nil];
-}
 
+- (void) closeSettingsWindow {
+	NSXLog(@"");
+	[settingsWindow close];
+}
 
 /*===================================================================================*/
 #pragma mark --------------------- key-val
 /*------------------------------------*/
-
-
-/*
-- (void) setDelegate:(id<VVUVCControllerDelegate>)n	{
-	if (n!=nil && [(id)n conformsToProtocol:@protocol(VVUVCControllerDelegate)])
-		delegate = n;
-}
-- (id) delegate	{
-	return delegate;
-}
-*/
-
-
 - (void) setInterlaced:(BOOL)n	{
 	//BOOL			changed = (scanningMode.val != ((n) ? 0x00 : 0x01)) ? YES : NO;
 	scanningMode.val = (n) ? 0x00 : 0x01;
 	[self _pushParamToDevice:&scanningMode];
-	//if (changed && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
+
 - (BOOL) interlaced	{
 	if (!scanningMode.supported)
 		return NO;
@@ -1642,12 +1504,15 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		return YES;
 	return NO;
 }
+
 - (BOOL) interlacedSupported	{
 	return scanningMode.supported;
 }
+
 - (void) resetInterlaced	{
 	[self _resetParamToDefault:&scanningMode];
 }
+
 - (void) setAutoExposureMode:(UVC_AEMode)n	{
 	//long			oldVal = autoExposureMode.val;
 	switch (n)	{
@@ -1664,28 +1529,29 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	if (![self _pushParamToDevice:&autoExposureMode])
 		[uiCtrlr _pushCameraControlStateToUI];	//	this is meant to "reload" the UI from the existing camera state if pushing a param failed (because the auto-exposure mode isn't supported).  this does not work- i think the USB device will accept the value, even though it isn't supported (the val is changing, but the behavior is simply unsupported)
 	
-	[self _pushParamToDevice:&exposureTime];
-	//if (oldVal != autoExposureMode.val && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
+	[self _pushParamToDevice:&exposureTime];;
 }
+
 - (UVC_AEMode) autoExposureMode	{
 	if (!autoExposureMode.supported)
 		return 0;
 	return (UVC_AEMode)autoExposureMode.val;
 }
+
 - (BOOL) autoExposureModeSupported	{
 	return autoExposureMode.supported;
 }
+
 - (void) resetAutoExposureMode	{
 	[self _resetParamToDefault:&autoExposureMode];
 }
+
 - (void) setAutoExposurePriority:(BOOL)n	{
 	//BOOL			changed = (autoExposurePriority.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoExposurePriority.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoExposurePriority];
-	//if (changed && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
+
 - (BOOL) autoExposurePriority	{
 	if (!autoExposurePriority.supported)
 		return NO;
@@ -1693,9 +1559,11 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		return YES;
 	return NO;
 }
+
 - (BOOL) autoExposurePrioritySupported	{
 	return autoExposurePriority.supported;
 }
+
 - (void) resetAutoExposurePriority	{
 	[self _resetParamToDefault:&autoExposurePriority];
 }
@@ -1704,8 +1572,6 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	//long		oldVal = p->val;
 	p->val = fminl(fmaxl(newVal,p->min),p->max);
 	[self _pushParamToDevice:p];
-	//if (oldVal!=p->val && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
 
 - (void) setExposureTime:(long)n	{
@@ -1759,12 +1625,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 }
 
 - (void) setAutoFocus:(BOOL)n	{
-	//NSXLog(@"%s ... %ld",__func__,n);
-	//BOOL			changed = (autoFocus.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoFocus.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoFocus];
-	//if (changed && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
 
 - (BOOL) autoFocus	{
@@ -1836,25 +1698,30 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 
 }
 
-- (long) pan	{
+- (long) pan{
 	return 0;
 }
 
 - (BOOL) panSupported	{
 	return panTilt.supported;
 }
+
 - (void) setTilt:(long)n	{
 
 }
+
 - (long) tilt	{
 	return 0;
 }
+
 - (BOOL) tiltSupported	{
 	return panTilt.supported;
 }
+
 - (void) setRoll:(long)n	{
 
 }
+
 - (long) roll	{
 	return 0;
 }
@@ -1866,104 +1733,133 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 - (void) setBacklight:(long)n	{
 	[self setVal:n forParam:&backlight];
 }
+
 - (long) backlight	{
 	return (!backlight.supported) ? 0 : backlight.val;
 }
+
 - (BOOL) backlightSupported	{
 	return backlight.supported;
 }
+
 - (void) resetBacklight	{
 	[self _resetParamToDefault:&backlight];
 }
+
 - (long) minBacklight	{
 	return (!backlight.supported) ? 0 : backlight.min;
 }
+
 - (long) maxBacklight	{
 	return (!backlight.supported) ? 0 : backlight.max;
 }
+
 - (void) setBright:(long)n	{
 	[self setVal:n forParam:&bright];
 }
+
 - (long) bright	{
 	return (!bright.supported) ? 0 : bright.val;
 }
+
 - (BOOL) brightSupported	{
 	return bright.supported;
 }
+
 - (void) resetBright	{
 	[self _resetParamToDefault:&bright];
 }
+
 - (long) minBright	{
 	return (!bright.supported) ? 0 : bright.min;
 }
+
 - (long) maxBright	{
 	return (!bright.supported) ? 0 : bright.max;
 }
+
 - (void) setContrast:(long)n	{
 	[self setVal:n forParam:&contrast];
 }
+
 - (long) contrast	{
 	return (!contrast.supported) ? 0 : contrast.val;
 }
+
 - (BOOL) contrastSupported	{
 	return contrast.supported;
 }
+
 - (void) resetContrast	{
 	[self _resetParamToDefault:&contrast];
 }
+
 - (long) minContrast	{
 	return (!contrast.supported) ? 0 : contrast.min;
 }
+
 - (long) maxContrast	{
 	return (!contrast.supported) ? 0 : contrast.max;
 }
+
 - (void) setGain:(long)n	{
 	[self setVal:n forParam:&gain];
 }
+
 - (long) gain	{
 	if (!gain.supported)
 		return 0;
 	return gain.val;
 }
+
 - (BOOL) gainSupported	{
 	return gain.supported;
 }
+
 - (void) resetGain	{
 	[self _resetParamToDefault:&gain];
 }
+
 - (long) minGain	{
 	return (!gain.supported) ? 0 : gain.min;
 }
+
 - (long) maxGain	{
 	return (!gain.supported) ? 0 : gain.max;
 }
+
 - (void) setPowerLine:(long)n	{
 	[self setVal:n forParam:&powerLine];
 }
+
 - (long) powerLine	{
 	if (!powerLine.supported)
 		return 0;
 	return powerLine.val;
 }
+
 - (BOOL) powerLineSupported	{
 	return powerLine.supported;
 }
+
 - (void) resetPowerLine	{
 	[self _resetParamToDefault:&powerLine];
 }
+
 - (long) minPowerLine {
 	return (!powerLine.supported) ? 0 : powerLine.min;
 }
+
 - (long) maxPowerLine {
 	return (!powerLine.supported) ? 0 : powerLine.max;
 }
+
 - (void) setAutoHue:(BOOL)n	{
 	//BOOL			changed = (autoHue.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoHue.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoHue];
-	//if (changed && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
+
 - (BOOL) autoHue	{
 	if (!autoHue.supported)
 		return NO;
@@ -1971,93 +1867,119 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		return YES;
 	return NO;
 }
+
 - (BOOL) autoHueSupported	{
 	return autoHue.supported;
 }
+
 - (void) resetAutoHue	{
 	[self _resetParamToDefault:&autoHue];
 }
+
 - (void) setHue:(long)n	{
 	[self setVal:n forParam:&hue];
 }
-- (long) hue	{
+
+- (long) hue {
 	return (!hue.supported) ? 0 : hue.val;
 }
-- (BOOL) hueSupported	{
+
+- (BOOL) hueSupported {
 	return hue.supported;
 }
+
 - (void) resetHue	{
 	[self _resetParamToDefault:&hue];
 }
+
 - (long) minHue	{
 	return (!hue.supported) ? 0 : hue.min;
 }
+
 - (long) maxHue	{
 	return (!hue.supported) ? 0 : hue.max;
 }
+
 - (void) setSaturation:(long)n	{
 	[self setVal:n forParam:&saturation];
 }
+
 - (long) saturation	{
 	return (!saturation.supported) ? 0 : saturation.val;
 }
+
 - (BOOL) saturationSupported	{
 	return saturation.supported;
 }
+
 - (void) resetSaturation	{
 	[self _resetParamToDefault:&saturation];
 }
+
 - (long) minSaturation	{
 	return (!saturation.supported) ? 0 : saturation.min;
 }
+
 - (long) maxSaturation	{
 	return (!saturation.supported) ? 0 : saturation.max;
 }
+
 - (void) setSharpness:(long)n	{
 	[self setVal:n forParam:&sharpness];
 }
+
 - (long) sharpness	{
 	return (!sharpness.supported) ? 0 : sharpness.val;
 }
+
 - (BOOL) sharpnessSupported	{
 	return sharpness.supported;
 }
+
 - (void) resetSharpness	{
 	[self _resetParamToDefault:&sharpness];
 }
+
 - (long) minSharpness	{
 	return (!sharpness.supported) ? 0 : sharpness.min;
 }
+
 - (long) maxSharpness	{
 	return (!sharpness.supported) ? 0 : sharpness.max;
 }
+
 - (void) setGamma:(long)n	{
 	[self setVal:n forParam:&gamma];
 }
+
 - (long) gamma	{
 	if (!gamma.supported)
 		return 0;
 	return gamma.val;
 }
+
 - (BOOL) gammaSupported	{
 	return gamma.supported;
 }
+
 - (void) resetGamma	{
 	[self _resetParamToDefault:&gamma];
 }
+
 - (long) minGamma	{
 	return (!gamma.supported) ? 0 : gamma.min;
 }
+
 - (long) maxGamma	{
 	return (!gamma.supported) ? 0 : gamma.max;
 }
+
 - (void) setAutoWhiteBalance:(BOOL)n	{
 	//BOOL			changed = (autoWhiteBalance.val != ((n) ? 0x01 : 0x00)) ? YES : NO;
 	autoWhiteBalance.val = (n) ? 0x01 : 0x00;
 	[self _pushParamToDevice:&autoWhiteBalance];
-	//if (changed && delegate!=nil)
-	//	[delegate VVUVCControllerParamsUpdated:self];
 }
+
 - (BOOL) autoWhiteBalance	{
 	if (!autoWhiteBalance.supported)
 		return NO;
@@ -2065,27 +1987,35 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		return YES;
 	return NO;
 }
+
 - (BOOL) autoWhiteBalanceSupported	{
 	return autoWhiteBalance.supported;
 }
+
 - (void) resetAutoWhiteBalance	{
 	[self _resetParamToDefault:&autoWhiteBalance];
 }
+
 - (void) setWhiteBalance:(long)n	{
 	[self setVal:n forParam:&whiteBalance];
 }
+
 - (long) whiteBalance	{
 	return (!whiteBalance.supported) ? 0 : whiteBalance.val;
 }
+
 - (BOOL) whiteBalanceSupported	{
 	return whiteBalance.supported;
 }
+
 - (void) resetWhiteBalance	{
 	[self _resetParamToDefault:&whiteBalance];
 }
+
 - (long) minWhiteBalance	{
 	return whiteBalance.min;
 }
+
 - (long) maxWhiteBalance	{
 	return whiteBalance.max;
 }
@@ -2109,7 +2039,5 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	}
 	
 }
-
-
 @end
 
