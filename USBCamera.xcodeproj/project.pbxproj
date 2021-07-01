@@ -11,6 +11,12 @@
 		4B92806E264A693A00C06688 /* UVCButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B92806D264A693A00C06688 /* UVCButton.m */; };
 		4BE74C102679CAEB00801FEA /* UVCUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE74C0E2679CAEB00801FEA /* UVCUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BE74C112679CAEB00801FEA /* UVCUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74C0F2679CAEB00801FEA /* UVCUtils.m */; };
+		4BE74D02268B3A5300801FEA /* UVCControllerUIBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE74D00268B3A5300801FEA /* UVCControllerUIBox.h */; };
+		4BE74D03268B3A5300801FEA /* UVCControllerUIBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74D01268B3A5300801FEA /* UVCControllerUIBox.m */; };
+		4BE74D0A268CA69C00801FEA /* GplWindowHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE74D08268CA69C00801FEA /* GplWindowHandler.h */; };
+		4BE74D0B268CA69C00801FEA /* GplWindowHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74D09268CA69C00801FEA /* GplWindowHandler.m */; };
+		4BE74D10268CA6C400801FEA /* CtrlWindowHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE74D0E268CA6C400801FEA /* CtrlWindowHandler.h */; };
+		4BE74D11268CA6C400801FEA /* CtrlWindowHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE74D0F268CA6C400801FEA /* CtrlWindowHandler.m */; };
 		960A01BF19D88DD4000A8627 /* APPLE_LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 960A01BE19D88DD4000A8627 /* APPLE_LICENSE */; };
 		9627739719D56BE5001EDD16 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9627739619D56BE5001EDD16 /* IOKit.framework */; };
 		9627739D19D56C69001EDD16 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96C2713119D5695B00705982 /* Cocoa.framework */; };
@@ -124,6 +130,12 @@
 		4B92806D264A693A00C06688 /* UVCButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCButton.m; sourceTree = "<group>"; };
 		4BE74C0E2679CAEB00801FEA /* UVCUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UVCUtils.h; sourceTree = "<group>"; };
 		4BE74C0F2679CAEB00801FEA /* UVCUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UVCUtils.m; sourceTree = "<group>"; };
+		4BE74D00268B3A5300801FEA /* UVCControllerUIBox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UVCControllerUIBox.h; sourceTree = "<group>"; };
+		4BE74D01268B3A5300801FEA /* UVCControllerUIBox.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UVCControllerUIBox.m; sourceTree = "<group>"; };
+		4BE74D08268CA69C00801FEA /* GplWindowHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GplWindowHandler.h; sourceTree = "<group>"; };
+		4BE74D09268CA69C00801FEA /* GplWindowHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GplWindowHandler.m; sourceTree = "<group>"; };
+		4BE74D0E268CA6C400801FEA /* CtrlWindowHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CtrlWindowHandler.h; sourceTree = "<group>"; };
+		4BE74D0F268CA6C400801FEA /* CtrlWindowHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CtrlWindowHandler.m; sourceTree = "<group>"; };
 		960A01BE19D88DD4000A8627 /* APPLE_LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = APPLE_LICENSE; sourceTree = "<group>"; };
 		9627739619D56BE5001EDD16 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		9627739C19D56C69001EDD16 /* UsbCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UsbCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -254,6 +266,10 @@
 				4B4E1C00264412AD005A857A /* IMAGE.xcassets */,
 				4B92806C264A693A00C06688 /* UVCButton.h */,
 				4B92806D264A693A00C06688 /* UVCButton.m */,
+				4BE74D08268CA69C00801FEA /* GplWindowHandler.h */,
+				4BE74D09268CA69C00801FEA /* GplWindowHandler.m */,
+				4BE74D0E268CA6C400801FEA /* CtrlWindowHandler.h */,
+				4BE74D0F268CA6C400801FEA /* CtrlWindowHandler.m */,
 			);
 			path = USBCamera;
 			sourceTree = "<group>";
@@ -330,6 +346,8 @@
 				96C2714F19D569DC00705982 /* UVCUIElement.m */,
 				968065D219D73AA600CF045A /* UVCKitStringAdditions.h */,
 				968065D319D73AA600CF045A /* UVCKitStringAdditions.m */,
+				4BE74D00268B3A5300801FEA /* UVCControllerUIBox.h */,
+				4BE74D01268B3A5300801FEA /* UVCControllerUIBox.m */,
 			);
 			path = UVCKit;
 			sourceTree = "<group>";
@@ -421,10 +439,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				96C2714819D5698F00705982 /* UVCController.h in Headers */,
+				4BE74D0A268CA69C00801FEA /* GplWindowHandler.h in Headers */,
+				4BE74D02268B3A5300801FEA /* UVCControllerUIBox.h in Headers */,
 				96C2714C19D569C400705982 /* UVCUIController.h in Headers */,
 				96C2715019D569DC00705982 /* UVCUIElement.h in Headers */,
 				969BC95D19D5ED4F00477BE7 /* UVCKit.h in Headers */,
 				4BE74C102679CAEB00801FEA /* UVCUtils.h in Headers */,
+				4BE74D10268CA6C400801FEA /* CtrlWindowHandler.h in Headers */,
 				968065D419D73AA600CF045A /* UVCKitStringAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,9 +624,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4BE74C112679CAEB00801FEA /* UVCUtils.m in Sources */,
+				4BE74D11268CA6C400801FEA /* CtrlWindowHandler.m in Sources */,
 				96C2714919D5698F00705982 /* UVCController.m in Sources */,
+				4BE74D03268B3A5300801FEA /* UVCControllerUIBox.m in Sources */,
 				96C2714D19D569C400705982 /* UVCUIController.m in Sources */,
 				96C2715119D569DC00705982 /* UVCUIElement.m in Sources */,
+				4BE74D0B268CA69C00801FEA /* GplWindowHandler.m in Sources */,
 				968065D519D73AA600CF045A /* UVCKitStringAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

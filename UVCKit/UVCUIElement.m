@@ -13,10 +13,10 @@
 		val = 0;
 		min = 0;
 		max = 0;
-		
+
 		[self setTitleFont:[NSFont systemFontOfSize:9]];
 		[self setBorderType:NSNoBorder];
-		[self setBoxType:NSBoxSecondary];
+		[self setBoxType:NSBoxPrimary];
 		
 		NSView			*contentView = [self contentView];
 		
@@ -33,7 +33,6 @@
 		[valField setFormatter:formatter];;
 		[valField setTarget:self];
 		[valField setAction:@selector(uiItemUsed:)];
-		
 		[contentView addSubview:valSlider];
 		[contentView addSubview:valField];
 		[self _resizeContents];
@@ -71,10 +70,10 @@
 
 - (void) _resizeContents {
 	NSRect		contentBounds = [[self contentView] bounds];
-	
 	NSRect		sliderRect;
 	NSRect		txtRect = contentBounds;
-	txtRect.size = NSMakeSize(50,16);
+	
+	txtRect.size = NSMakeSize(16,16);
 	sliderRect.size = NSMakeSize(contentBounds.size.width-txtRect.size.width-2, txtRect.size.height);
 	sliderRect.origin = NSMakePoint(0,0);
 	txtRect.origin = NSMakePoint(contentBounds.size.width-txtRect.size.width, 0);

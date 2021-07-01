@@ -3,7 +3,7 @@
 
 
 
-@protocol VVUVCUIElementDelegate
+@protocol UVCUIElementDelegate
 - (void) controlElementChanged:(id)sender;
 @end
 

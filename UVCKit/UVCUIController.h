@@ -4,7 +4,7 @@
 
 
 
-@interface UVCUIController : NSObject <VVUVCUIElementDelegate, NSTextViewDelegate> {
+@interface UVCUIController : NSObject <UVCUIElementDelegate, NSTextViewDelegate> {
 	IBOutlet id				device;
 	__weak IBOutlet NSView *mainView;
 	IBOutlet NSPopUpButton	*autoExpButton;

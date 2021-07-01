@@ -11,14 +11,112 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 };
 
 
+typedef enum : NSUInteger {
+	ChildWindows_HIDEN,
+	ChildWindows_GPL,
+	ChildWindows_CTRL,
+} ChildWindowsStateEn;
 
-@interface AppDelegate()
+@interface AppDelegate()<NSWindowDelegate>
 @property (nonatomic, copy) NSString *updateDeviceId;
 @property (nonatomic, copy) NSString *updateBinFile;
 @property (nonatomic, assign) UVCUpdateState updateState;
+@property (nonatomic, strong) IBOutlet NSMenu *customMenu;
+@property (weak) IBOutlet NSPanel *ctrlWindow;
+@property (weak) IBOutlet NSPanel *gplWindow;
+@property (unsafe_unretained) IBOutlet NSTextView *gplTextView;
+@property (weak) IBOutlet NSToolbarItem *uvcSettingMenu;
+@property (weak) IBOutlet NSView *settingView;
+@property (nonatomic, assign) ChildWindowsStateEn childWindowsState;
+
+
+// setting
+@property (weak) IBOutlet NSButton *flipHorizontalButton;
+@property (weak) IBOutlet NSButton *flipVerticalButton;
+
+
+// image ctrl
+@property (weak) IBOutlet NSSlider *brightnessSlider;
+@property (weak) IBOutlet NSButton *brightnessSwitchButton;
+@property (weak) IBOutlet NSSlider *contrastSlider;
+@property (weak) IBOutlet NSButton *contrastSwitchButton;
+@property (weak) IBOutlet NSSlider *hueSlider;
+@property (weak) IBOutlet NSButton *hueSwitchButton;
+@property (weak) IBOutlet NSSlider *saturateSlider;
+@property (weak) IBOutlet NSButton *saturateSwitchButton;
+@property (weak) IBOutlet NSSlider *sharpnessSlider;
+@property (weak) IBOutlet NSButton *sharpnessSwitch;
+@property (weak) IBOutlet NSSlider *gammaSlider;
+@property (weak) IBOutlet NSButton *gammaSwitch;
+@property (weak) IBOutlet NSButton *whiteBalanceSwitch;
+@property (weak) IBOutlet NSSlider *whiteBalanceSlider;
+@property (weak) IBOutlet NSButton *backlightSwitch;
+@property (weak) IBOutlet NSSlider *backlightContrastSlider;
+@property (weak) IBOutlet NSSlider *gainSlider;
+@property (weak) IBOutlet NSButton *gainSwitch;
+@property (weak) IBOutlet NSButton *enableColorSwitch;
+@property (weak) IBOutlet NSPopUpButton *anitFickerSelector;
+
+
+// camera ctrl
+
+
 @end
 
 @implementation AppDelegate
+// setting
+- (IBAction)resetCameraAction:(id)sender {
+}
+
+- (IBAction)flipVerticalAction:(id)sender {
+}
+
+- (IBAction)flipHorizontalAction:(id)sender {
+}
+
+
+// imageCtrl
+- (IBAction)brightnessSlideAction:(id)sender {
+}
+
+- (IBAction)brightnessAutoAction:(id)sender {
+}
+
+
+- (IBAction)contrastSlideAction:(id)sender {
+}
+
+- (IBAction)hueSlideAction:(id)sender {
+}
+
+- (IBAction)saturateSlideAction:(id)sender {
+}
+
+- (IBAction)sharpnessSlideAction:(id)sender {
+}
+
+- (IBAction)gammaSlideAction:(id)sender {
+}
+
+- (IBAction)whiteBalanceAction:(id)sender {
+}
+
+- (IBAction)backlightContracstAction:(id)sender {
+}
+
+- (IBAction)gainSlideAction:(id)sender {
+}
+
+- (IBAction)imageCtrlDefaultAction:(id)sender {
+}
+
+- (IBAction)imageCtrlApplyAction:(id)sender {
+}
+
+- (IBAction)imageCtrlCancelAction:(id)sender {
+}
+
+
 - (void)mouseDown:(NSEvent *)event sender:(nonnull id)sender{
     if ([self isInUpdating]) {
         return;
@@ -158,7 +256,96 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 //	backgroudView
 	backgroudView.wantsLayer = true;///设置背景颜色
 	backgroudView.layer.backgroundColor = [NSColor blackColor].CGColor;
+	
+	mainWindow.delegate = self;
+	self.gplWindow.delegate = self;
+	self.ctrlWindow.delegate = self;
+	[self.gplWindow close];
+	[self.ctrlWindow close];
 }
+
+
+- (IBAction)openMenuAction:(id)sender {
+	NSLog(@"openMenuAction %@", self.uvcSettingMenu.view);
+	NSPoint point = mainWindow.contentView.frame.origin;
+	point.x = mainWindow.contentView.frame.size.width - 64;
+	point.y = mainWindow.contentView.frame.size.height ;
+	[self.customMenu popUpMenuPositioningItem:nil atLocation:point inView:mainWindow.contentView];
+}
+
+- (void)windowWillClose:(NSNotification *)nofi{
+	NSWindow *window = nofi.object;
+	if (window == mainWindow){
+		[[NSApplication sharedApplication] terminate:nil];
+	} else if (window == self.gplWindow || window == self.ctrlWindow){
+		self.childWindowsState = ChildWindows_HIDEN;
+	}
+}
+
+- (void)windowDidMiniaturize:(NSNotification *)nofi{
+	[self.gplWindow close];
+	[self.ctrlWindow close];
+}
+
+- (void)windowDidDeminiaturize:(NSNotification *)notification{
+	if (self.childWindowsState == ChildWindows_CTRL) {
+		[_ctrlWindow makeKeyAndOrderFront:nil];
+	} else if (self.childWindowsState == ChildWindows_GPL){
+		[_gplWindow makeKeyAndOrderFront:nil];
+	}
+}
+
+- (void)windowDidMove:(NSNotification *)nofi{
+	NSLog(@"%@", nofi);
+	NSWindow *window = nofi.object;
+	if (![window isKeyWindow] || self.childWindowsState == ChildWindows_HIDEN) {
+		return;
+	}
+	
+	if (nofi.object == mainWindow){
+		NSPoint point = mainWindow.frame.origin;
+		point.x = mainWindow.frame.size.width + point.x;
+		
+		if (self.childWindowsState == ChildWindows_CTRL) {
+			[_ctrlWindow setFrameOrigin:point];
+		} else {
+			[_gplWindow setFrameOrigin:point];
+		}
+	} else if (nofi.object == self.gplWindow || nofi.object == self.ctrlWindow){
+		NSWindow *window = nofi.object;
+		NSPoint point = window.frame.origin;
+		point.x =  point.x - mainWindow.frame.size.width;
+		
+		[mainWindow setFrameOrigin:point];
+	}
+}
+
+
+- (IBAction)openGPL:(id)sender {
+	NSPoint point = mainWindow.frame.origin;
+	point.x = mainWindow.frame.size.width + point.x;
+	
+	[_ctrlWindow setFrameOrigin:point];
+	[_gplWindow setFrameOrigin:point];
+	[_gplWindow makeKeyAndOrderFront:nil];
+	[_ctrlWindow close];
+	
+	self.childWindowsState = ChildWindows_GPL;
+}
+
+- (IBAction)openCtrl:(id)sender {
+	NSPoint point = mainWindow.frame.origin;
+	point.x = mainWindow.frame.size.width + point.x;
+	
+	[_ctrlWindow setFrameOrigin:point];
+	[_gplWindow setFrameOrigin:point];
+	
+	[_ctrlWindow makeKeyAndOrderFront:nil];
+	[_gplWindow close];
+	
+	self.childWindowsState = ChildWindows_CTRL;
+}
+
 
 - (void) populateCamPopUpButton	{
 	NSXLog(@"populateCamPopUpButton");
@@ -284,6 +471,9 @@ typedef NS_ENUM(NSUInteger, UVCUpdateState) {
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification	{
 	NSXLog(@"applicationDidFinishLaunching");
+	[self.gplWindow close];
+	[self.ctrlWindow close];
+	
 	dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC);
 
 	dispatch_after(time, dispatch_get_main_queue(), ^{
