@@ -37,21 +37,30 @@ typedef enum : NSUInteger {
 
 // image ctrl
 @property (weak) IBOutlet NSSlider *brightnessSlider;
+@property (weak) IBOutlet NSTextField *brightnessLabel;
 @property (weak) IBOutlet NSButton *brightnessSwitchButton;
 @property (weak) IBOutlet NSSlider *contrastSlider;
+@property (weak) IBOutlet NSTextField *contrastLabel;
 @property (weak) IBOutlet NSButton *contrastSwitchButton;
+@property (weak) IBOutlet NSTextField *hueLabel;
 @property (weak) IBOutlet NSSlider *hueSlider;
 @property (weak) IBOutlet NSButton *hueSwitchButton;
+@property (weak) IBOutlet NSTextField *saturateLabel;
 @property (weak) IBOutlet NSSlider *saturateSlider;
 @property (weak) IBOutlet NSButton *saturateSwitchButton;
+@property (weak) IBOutlet NSTextField *sharpnessLabel;
 @property (weak) IBOutlet NSSlider *sharpnessSlider;
+@property (weak) IBOutlet NSTextField *gammaLabel;
 @property (weak) IBOutlet NSButton *sharpnessSwitch;
 @property (weak) IBOutlet NSSlider *gammaSlider;
 @property (weak) IBOutlet NSButton *gammaSwitch;
+@property (weak) IBOutlet NSTextField *whiteBalanceLabel;
 @property (weak) IBOutlet NSButton *whiteBalanceSwitch;
 @property (weak) IBOutlet NSSlider *whiteBalanceSlider;
+@property (weak) IBOutlet NSTextField *backlightLabel;
 @property (weak) IBOutlet NSButton *backlightSwitch;
 @property (weak) IBOutlet NSSlider *backlightContrastSlider;
+@property (weak) IBOutlet NSTextField *gainLabel;
 @property (weak) IBOutlet NSSlider *gainSlider;
 @property (weak) IBOutlet NSButton *gainSwitch;
 @property (weak) IBOutlet NSButton *enableColorSwitch;
@@ -59,63 +68,326 @@ typedef enum : NSUInteger {
 
 
 // camera ctrl
-
-
+@property (weak) IBOutlet NSSlider *zoomSlider;
+@property (weak) IBOutlet NSButton *zoomSwitch;
+@property (weak) IBOutlet NSTextField *zoomLabel;
+@property (weak) IBOutlet NSSlider *focusSlider;
+@property (weak) IBOutlet NSButton *focusSwitch;
+@property (weak) IBOutlet NSTextField *focusLabel;
+@property (weak) IBOutlet NSSlider *exposureSlider;
+@property (weak) IBOutlet NSButton *exposureSwitch;
+@property (weak) IBOutlet NSTextField *exposureLabel;
+@property (weak) IBOutlet NSTextField *irisLabel;
+@property (weak) IBOutlet NSSlider *irisSlider;
+@property (weak) IBOutlet NSButton *irisSwitch;
+@property (weak) IBOutlet NSTextField *panoramaLabel;
+@property (weak) IBOutlet NSSlider *panoramaSlider;
+@property (weak) IBOutlet NSButton *panoramaSwitch;
+@property (weak) IBOutlet NSTextField *tiltLabel;
+@property (weak) IBOutlet NSSlider *tiltSlider;
+@property (weak) IBOutlet NSButton *tiltSwitch;
+@property (weak) IBOutlet NSTextField *rollLabel;
+@property (weak) IBOutlet NSSlider *rollSlider;
+@property (weak) IBOutlet NSButton *rollSwitch;
+@property (weak) IBOutlet NSButton *lowBrightnessCompensateSwitch;
 @end
 
 @implementation AppDelegate
+- (void)flipSet{
+    if (self.flipHorizontalButton.state == NSControlStateValueOn && self.flipVerticalButton.state == NSControlStateValueOn) {
+        [uvcController setUVCExtensionSettingValue:FlipHorizontalOnAndFlipVerticalOn];
+    } else if (self.flipHorizontalButton.state == NSControlStateValueOff && self.flipVerticalButton.state == NSControlStateValueOn) {
+        [uvcController setUVCExtensionSettingValue:FlipHorizontalOffAndFlipVerticalOn];
+    } else if (self.flipHorizontalButton.state == NSControlStateValueOn && self.flipVerticalButton.state == NSControlStateValueOff) {
+        [uvcController setUVCExtensionSettingValue:FlipHorizontalOnAndFlipVerticalOff];
+    } else if (self.flipHorizontalButton.state == NSControlStateValueOff && self.flipVerticalButton.state == NSControlStateValueOff) {
+        [uvcController setUVCExtensionSettingValue:FlipHorizontalOffAndFlipVerticalOff];
+    }
+}
+
 // setting
+- (void)settingPageUpdate{
+    UVCExtensionSettingValue flipValue= [uvcController getFlipValue];
+    switch (flipValue) {
+        case FlipHorizontalOnAndFlipVerticalOn:
+            [self.flipHorizontalButton setState:NSControlStateValueOn];
+            [self.flipVerticalButton setState:NSControlStateValueOn];
+            break;
+        
+        case FlipHorizontalOffAndFlipVerticalOn:
+            [self.flipHorizontalButton setState:NSControlStateValueOff];
+            [self.flipVerticalButton setState:NSControlStateValueOn];
+            break;
+            
+        case FlipHorizontalOnAndFlipVerticalOff:
+            [self.flipHorizontalButton setState:NSControlStateValueOn];
+            [self.flipVerticalButton setState:NSControlStateValueOff];
+            break;
+            
+        case FlipHorizontalOffAndFlipVerticalOff:
+            [self.flipHorizontalButton setState:NSControlStateValueOff];
+            [self.flipVerticalButton setState:NSControlStateValueOff];
+            break;
+            
+        default:
+            break;
+    }
+}
+
 - (IBAction)resetCameraAction:(id)sender {
+    if ([uvcController setUVCExtensionSettingValue:UVCFactoryReset]) {
+        [self imageCtrlPageUpdate];
+        [self cameraCtrlPageUpdate];
+    }
 }
 
 - (IBAction)flipVerticalAction:(id)sender {
+    [self flipSet];
 }
 
 - (IBAction)flipHorizontalAction:(id)sender {
+    [self flipSet];
 }
 
-
 // imageCtrl
+- (void)imageCtrlPageUpdate{
+    [_brightnessLabel setIntegerValue:[uvcController bright]];
+    [_brightnessSlider setIntegerValue:[uvcController bright]];
+    
+    [_contrastLabel setIntegerValue:[uvcController contrast]];
+    [_contrastSlider setIntegerValue:[uvcController contrast]];
+    
+    [_hueLabel setIntegerValue:[uvcController hue]];
+    [_hueSlider setIntegerValue:[uvcController hue]];
+    
+    [_saturateLabel setIntegerValue:[uvcController saturation]];
+    [_saturateSlider setIntegerValue:[uvcController saturation]];
+    
+    [_sharpnessLabel setIntegerValue:[uvcController sharpness]];
+    [_sharpnessSlider setIntegerValue:[uvcController sharpness]];
+    
+    [_gammaLabel setIntegerValue:[uvcController gamma]];
+    [_gammaSlider setIntegerValue:[uvcController gamma]];
+    
+    [_whiteBalanceSwitch setState:[uvcController isAutoWhiteBalance]?NSControlStateValueOn:NSControlStateValueOff];
+    [_whiteBalanceLabel setIntegerValue:[uvcController whiteBalance]];
+    [_whiteBalanceSlider setIntegerValue:[uvcController whiteBalance]];
+    
+    [_backlightLabel setIntegerValue:[uvcController backlight]];
+    [_backlightContrastSlider setIntegerValue:[uvcController backlight]];
+    
+    [_gainLabel setIntegerValue:[uvcController gain]];
+    [_gainSlider setIntegerValue:[uvcController gain]];
+}
+
 - (IBAction)brightnessSlideAction:(id)sender {
+    [uvcController setBright:_brightnessSlider.intValue];
+    [_brightnessLabel setStringValue:_brightnessSlider.stringValue];
 }
 
 - (IBAction)brightnessAutoAction:(id)sender {
 }
 
-
 - (IBAction)contrastSlideAction:(id)sender {
+    [uvcController setContrast:_contrastSlider.intValue];
+    [_contrastLabel setStringValue:_contrastSlider.stringValue];
 }
+
+- (IBAction)contrastAutoAction:(id)sender {
+}
+
 
 - (IBAction)hueSlideAction:(id)sender {
+    [uvcController setHue:_hueSlider.intValue];
+    [_hueLabel setStringValue:_hueSlider.stringValue];
 }
+
+- (IBAction)hueAutoAction:(id)sender {
+}
+
 
 - (IBAction)saturateSlideAction:(id)sender {
+    [uvcController setSaturation:_saturateSlider.intValue];
+    [_saturateLabel setStringValue:_saturateSlider.stringValue];
 }
+
+- (IBAction)saturateAutoAction:(id)sender {
+}
+
 
 - (IBAction)sharpnessSlideAction:(id)sender {
+    [uvcController setSharpness:_sharpnessSlider.intValue];
+    [_sharpnessLabel setStringValue:_sharpnessSlider.stringValue];
 }
+
+- (IBAction)sharpnessAutoAction:(id)sender {
+}
+
 
 - (IBAction)gammaSlideAction:(id)sender {
+    [uvcController setGamma:_gammaSlider.intValue];
+    [_gammaLabel setStringValue:_gammaSlider.stringValue];
 }
 
+- (IBAction)gammaAutoAction:(id)sender {
+}
+
+
 - (IBAction)whiteBalanceAction:(id)sender {
+    [uvcController setWhiteBalance:_whiteBalanceSlider.intValue];
+    [_whiteBalanceLabel setStringValue:_whiteBalanceSlider.stringValue];
+}
+
+- (IBAction)whiteBalanceAutoAction:(id)sender {
+    if (_whiteBalanceSwitch.state == NSControlStateValueOn){
+        [uvcController setAutoWhiteBalance:true];
+        _whiteBalanceSlider.enabled = false;
+    } else {
+        [uvcController setAutoWhiteBalance:false];
+        _whiteBalanceSlider.enabled = true;
+    }
 }
 
 - (IBAction)backlightContracstAction:(id)sender {
+    [uvcController setBacklight:_backlightContrastSlider.intValue];
+    [_backlightLabel setStringValue:_backlightContrastSlider.stringValue];
 }
 
+- (IBAction)backlightAutoAction:(id)sender {
+}
+
+
 - (IBAction)gainSlideAction:(id)sender {
+    [uvcController setGain:_gainSlider.intValue];
+    [_gainLabel setStringValue:_gainSlider.stringValue];
+}
+
+- (IBAction)gainAutoAction:(id)sender {
+}
+
+- (IBAction)antiFickerPopUpButton:(id)sender {
 }
 
 - (IBAction)imageCtrlDefaultAction:(id)sender {
+    [uvcController resetDefaultImageCtrlParams];
+    [self imageCtrlPageUpdate];
 }
 
 - (IBAction)imageCtrlApplyAction:(id)sender {
+    [uvcController saveImageCtrlParamToLocal];
+    [self imageCtrlPageUpdate];
 }
 
 - (IBAction)imageCtrlCancelAction:(id)sender {
+    [uvcController rollbackImageCtrlParams];
+    [self imageCtrlPageUpdate];
 }
 
+// camera Ctrl
+- (void)cameraCtrlPageUpdate{
+    [_zoomLabel setIntegerValue:[uvcController zoom]];
+    [_zoomSlider setIntegerValue:[uvcController zoom]];
+    
+    [_focusLabel setIntegerValue:[uvcController focus]];
+    [_focusSlider setIntegerValue:[uvcController focus]];
+    
+    [_exposureLabel setIntegerValue:[uvcController exposureTime]];
+    [_exposureSlider setIntegerValue:[uvcController exposureTime]];
+    [_exposureSwitch setState:[uvcController isExposureAutoMode]?NSControlStateValueOn:NSControlStateValueOff];
+    
+    [_irisLabel setIntegerValue:[uvcController iris]];
+    [_irisSlider setIntegerValue:[uvcController iris]];
+    
+    [_panoramaLabel setIntegerValue:[uvcController absPan]];
+    [_panoramaSlider setIntegerValue:[uvcController absPan]];
+    
+    [_tiltLabel setIntegerValue:[uvcController absTilt]];
+    [_tiltSlider setIntegerValue:[uvcController absTilt]];
+    
+    [_rollLabel setIntegerValue:[uvcController roll]];
+    [_rollSlider setIntegerValue:[uvcController roll]];
+}
+
+- (IBAction)cameraCtrlDefautAction:(id)sender {
+    [uvcController resetDefaultCameraCtrlParams];
+    [self cameraCtrlPageUpdate];
+}
+
+- (IBAction)cameraCtrlCancelAction:(id)sender {
+    [uvcController rollbackCameraCtrlParams];
+    [self cameraCtrlPageUpdate];
+}
+
+- (IBAction)cameraCtrlApplyAction:(id)sender {
+    [uvcController saveCameraCtrlParamToLocal];
+    [self cameraCtrlPageUpdate];
+}
+
+- (IBAction)zoomSliderAction:(id)sender {
+    [uvcController setZoom:_zoomSlider.intValue];
+    [_zoomLabel setStringValue:_zoomSlider.stringValue];
+}
+
+- (IBAction)zoomSwitchAction:(id)sender {
+}
+
+- (IBAction)focusSliderAction:(id)sender {
+    [uvcController setFocus:_focusSlider.intValue];
+    [_focusLabel setStringValue:_focusSlider.stringValue];
+}
+
+- (IBAction)focusSwitchAction:(id)sender {
+}
+
+- (IBAction)exposureSliderAction:(id)sender {
+    [uvcController setExposureTime:_exposureSlider.intValue];
+    [_exposureLabel setStringValue:_exposureSlider.stringValue];
+}
+
+- (IBAction)exposureSwitchAction:(id)sender {
+    if (_exposureSwitch.state == NSControlStateValueOn) {
+        [uvcController setAutoExposureMode:UVC_AEMode_AperturePriority];
+        _exposureSlider.enabled = false;
+    } else {
+        [uvcController setAutoExposureMode:UVC_AEMode_Manual];
+        _exposureSlider.enabled = true;
+    }
+}
+
+- (IBAction)irisSliderAction:(id)sender {
+    [uvcController setIris:_irisSlider.intValue];
+    [_irisLabel setStringValue:_irisSlider.stringValue];
+}
+
+- (IBAction)irisAutoAction:(id)sender {
+}
+
+- (IBAction)panoramaSliderAction:(id)sender {
+    [uvcController setAbsPan:_panoramaSlider.intValue];
+    [_panoramaLabel setStringValue:_panoramaSlider.stringValue];
+}
+
+- (IBAction)panoramaAutoAction:(id)sender {
+}
+
+- (IBAction)tiltSliderAction:(id)sender {
+    [uvcController setAbsTilt:_tiltSlider.intValue];
+    [_tiltLabel setStringValue:_tiltSlider.stringValue];
+}
+
+- (IBAction)tiltAutoAction:(id)sender {
+}
+
+- (IBAction)rollSliderAction:(id)sender {
+    [uvcController setRoll:_rollSlider.intValue];
+    [_rollLabel setStringValue:_rollSlider.stringValue];
+}
+
+- (IBAction)rollAutoAction:(id)sender {
+}
+
+- (IBAction)lowBrightnessCompensateAction:(id)sender {
+}
 
 - (void)mouseDown:(NSEvent *)event sender:(nonnull id)sender{
     if ([self isInUpdating]) {
@@ -627,6 +899,9 @@ typedef enum : NSUInteger {
 		
 		[UVCUIController updateController:uvcController];
 		[uvcController closeSettingsWindow];
+        [self imageCtrlPageUpdate];
+        [self cameraCtrlPageUpdate];
+        [self settingPageUpdate];
     }
 	
 	[versionTextView setString:@""];

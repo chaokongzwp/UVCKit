@@ -661,11 +661,11 @@
             </items>
             <point key="canvasLocation" x="-351" y="-884"/>
         </menu>
-        <window title="Avaya UVC Camera" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" animationBehavior="default" id="371">
+        <window title="Avaya UVC Camera" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" animationBehavior="default" toolbarStyle="compact" id="371">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="611"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
             <value key="minSize" type="size" width="876" height="680"/>
             <value key="maxSize" type="size" width="876" height="680"/>
             <value key="minFullScreenContentSize" type="size" width="876" height="680"/>
@@ -992,8 +992,8 @@
             <toolbar key="toolbar" implicitIdentifier="5682430C-0D11-49F9-B0F0-40477505EBF8" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="J2C-qU-ygR">
                 <allowedToolbarItems>
                     <toolbarItem implicitItemIdentifier="9A6C348F-FD54-4A21-8648-B31E255E43D5" label="menu" paletteLabel="menu" tag="-1" image="menu" visibilityPriority="1" autovalidates="NO" id="DHn-CY-gGE">
-                        <size key="minSize" width="32" height="32"/>
-                        <size key="maxSize" width="32" height="32"/>
+                        <size key="minSize" width="24" height="24"/>
+                        <size key="maxSize" width="24" height="24"/>
                         <connections>
                             <action selector="openMenuAction:" target="494" id="jnZ-wl-S1h"/>
                         </connections>
@@ -1011,17 +1011,20 @@
                 </defaultToolbarItems>
             </toolbar>
             <contentBorderThickness minY="28"/>
-            <point key="canvasLocation" x="-978" y="-378.5"/>
+            <point key="canvasLocation" x="-241" y="-408"/>
         </window>
         <customObject id="494" customClass="AppDelegate">
             <connections>
                 <outlet property="anitFickerSelector" destination="UGY-8u-CrM" id="lRI-ZQ-ZfV"/>
                 <outlet property="backgroudView" destination="vOY-xu-Fok" id="UCA-pL-PXg"/>
                 <outlet property="backlightContrastSlider" destination="p4s-1z-xe3" id="CVy-R8-dSg"/>
+                <outlet property="backlightLabel" destination="8UC-jp-N7g" id="PiC-iF-75o"/>
                 <outlet property="backlightSwitch" destination="SsA-k1-w2T" id="33v-Zr-MZs"/>
+                <outlet property="brightnessLabel" destination="rFE-8E-c55" id="sMB-rR-sGF"/>
                 <outlet property="brightnessSlider" destination="6Hb-af-iX6" id="MkK-NP-coX"/>
                 <outlet property="brightnessSwitchButton" destination="sc8-8B-lo9" id="3nK-8c-bvg"/>
                 <outlet property="camPUB" destination="536" id="547"/>
+                <outlet property="contrastLabel" destination="27z-q7-T8y" id="X7i-mX-QaH"/>
                 <outlet property="contrastSlider" destination="qus-gr-TY2" id="baJ-BM-2fv"/>
                 <outlet property="contrastSwitchButton" destination="6YC-OH-8fM" id="4UN-Ky-CbB"/>
                 <outlet property="ctrlWindow" destination="JnL-Mk-1kS" id="Xlz-TD-Rtf"/>
@@ -1029,49 +1032,77 @@
                 <outlet property="dimensionPUB" destination="dvO-gW-Pom" id="1Ot-NI-lnL"/>
                 <outlet property="downPanTiltButton" destination="31v-TC-uGf" id="4Ax-eX-EwV"/>
                 <outlet property="enableColorSwitch" destination="dk1-DT-f2e" id="Jvv-9k-Mcx"/>
+                <outlet property="exposureLabel" destination="Y41-3d-8UR" id="PbH-GI-kob"/>
+                <outlet property="exposureSlider" destination="G1U-Xt-KRK" id="SI0-kX-fXL"/>
+                <outlet property="exposureSwitch" destination="dh2-na-dMq" id="kXT-Cw-hs2"/>
                 <outlet property="firmwareFileTextfield" destination="sK4-r0-QWv" id="60p-Lw-4al"/>
                 <outlet property="flipHorizontalButton" destination="hvW-ND-FVC" id="Yzl-Kp-XAm"/>
                 <outlet property="flipVerticalButton" destination="qJ8-nl-LCx" id="MCS-Kh-9aW"/>
+                <outlet property="focusLabel" destination="DI1-dX-q68" id="evQ-jy-Fc0"/>
+                <outlet property="focusSlider" destination="pU8-fV-GWg" id="LEL-X8-wk8"/>
+                <outlet property="focusSwitch" destination="6K3-H5-Hrq" id="7dR-nb-FpN"/>
+                <outlet property="gainLabel" destination="6fb-ro-vhD" id="S8R-Km-H3V"/>
                 <outlet property="gainSlider" destination="6bP-UZ-CeQ" id="S2B-RV-pP6"/>
                 <outlet property="gainSwitch" destination="LhA-fl-9UK" id="Ec0-Ov-bYO"/>
+                <outlet property="gammaLabel" destination="k6x-5x-EmS" id="XI7-HG-JdN"/>
                 <outlet property="gammaSlider" destination="7ma-eB-mr6" id="6a6-fZ-gS1"/>
                 <outlet property="gammaSwitch" destination="cig-mn-sOv" id="t2i-Kv-l2d"/>
                 <outlet property="glView" destination="550" id="a8v-Oz-1EH"/>
                 <outlet property="gplTextView" destination="WQd-uf-CEC" id="nBa-GT-uDd"/>
                 <outlet property="gplWindow" destination="DwN-qc-oVp" id="9WU-6X-guL"/>
+                <outlet property="hueLabel" destination="4Uh-Dl-Ihq" id="69Y-dp-sdV"/>
                 <outlet property="hueSlider" destination="YFp-Ww-vL4" id="VOL-jT-jhX"/>
-                <outlet property="hueSliderButton" destination="FA9-sK-Ou8" id="QtS-1F-Is1"/>
+                <outlet property="hueSwitchButton" destination="FA9-sK-Ou8" id="ifk-33-UU5"/>
+                <outlet property="irisLabel" destination="bGf-n0-ui0" id="C7d-UE-mHh"/>
+                <outlet property="irisSlider" destination="Agf-sQ-7bn" id="CIi-8i-Xj4"/>
+                <outlet property="irisSwitch" destination="2s2-hi-BUz" id="eGq-7P-lIx"/>
                 <outlet property="leftPanTiltButton" destination="L6J-SZ-fAs" id="wAg-1a-ByY"/>
                 <outlet property="logMenu" destination="hlH-ER-kM7" id="C72-M5-Xuw"/>
+                <outlet property="lowBrightnessCompensateSwitch" destination="VyK-Jo-Ahp" id="Kbq-zb-Yt9"/>
                 <outlet property="mainView" destination="372" id="mgv-zL-bvE"/>
                 <outlet property="mainWindow" destination="371" id="2WC-35-vWB"/>
+                <outlet property="panoramaLabel" destination="bgF-Ci-Q13" id="zFe-XJ-Bgv"/>
+                <outlet property="panoramaSlider" destination="NAI-aF-fS9" id="OJ4-Sh-KC4"/>
+                <outlet property="panoramaSwitch" destination="Yrc-pR-2TG" id="wRe-IQ-WjU"/>
                 <outlet property="resetHomeButton" destination="8FE-Da-i8G" id="0bp-gd-2K9"/>
                 <outlet property="rightPanTiltButton" destination="Jko-bb-c6A" id="oh2-KC-3nA"/>
+                <outlet property="rollLabel" destination="HYm-Za-K3l" id="ex6-4L-W35"/>
+                <outlet property="rollSlider" destination="M7h-67-hNZ" id="5We-LV-uAa"/>
+                <outlet property="rollSwitch" destination="Xqy-Nr-PlJ" id="6zV-CC-Eed"/>
+                <outlet property="saturateLabel" destination="PER-U6-wTJ" id="S4V-Om-61M"/>
                 <outlet property="saturateSlider" destination="ZX0-S0-gIo" id="JgG-pe-FFo"/>
                 <outlet property="saturateSwitchButton" destination="er2-QH-q4u" id="PJX-Wi-gZs"/>
                 <outlet property="settingView" destination="Fr5-Dj-Eyx" id="9Rh-eM-lnn"/>
+                <outlet property="sharpnessLabel" destination="ryI-f4-xSi" id="yJ5-06-Az1"/>
                 <outlet property="sharpnessSlider" destination="HRv-xi-DLI" id="s6Y-C0-xEL"/>
                 <outlet property="sharpnessSwitch" destination="717-qn-PDm" id="L9T-L3-NX7"/>
                 <outlet property="startUpgrade" destination="uwl-K3-KEZ" id="53G-KP-ePJ"/>
                 <outlet property="subMediaTypePUB" destination="d7S-IH-QXS" id="4n8-fC-OCq"/>
+                <outlet property="tiltLabel" destination="Bgw-ti-HSu" id="EeA-44-mQa"/>
+                <outlet property="tiltSlider" destination="UGS-er-mFz" id="ZE7-cf-gRC"/>
+                <outlet property="tiltSwitch" destination="HuD-XV-Yf6" id="jKa-Sr-wGy"/>
                 <outlet property="upPanTiltButton" destination="LeT-V1-JI6" id="9t4-LM-weY"/>
                 <outlet property="upgradeButton" destination="Uh5-xD-EZg" id="mAZ-Dk-uHu"/>
                 <outlet property="upgradeProgressIndicator" destination="Mg5-IU-RdT" id="2BU-jV-o6G"/>
                 <outlet property="uvcSettingMenu" destination="DHn-CY-gGE" id="Kar-DM-VBv"/>
                 <outlet property="versionTextView" destination="KPx-Qc-dSx" id="dCe-HM-i5D"/>
+                <outlet property="whiteBalanceLabel" destination="Sal-tN-Lqm" id="1VW-jD-OC3"/>
                 <outlet property="whiteBalanceSlider" destination="gg5-fd-TiD" id="Boh-6G-oBe"/>
                 <outlet property="whiteBalanceSwitch" destination="oQ5-AJ-7ia" id="7wq-A0-9Im"/>
                 <outlet property="window" destination="371" id="532"/>
+                <outlet property="zoomLabel" destination="8ax-7K-tvH" id="dBC-LK-lfh"/>
+                <outlet property="zoomSlider" destination="0mY-fB-j5p" id="dNf-Wi-1Mf"/>
+                <outlet property="zoomSwitch" destination="eKq-I4-Gei" id="dMG-9S-Ckq"/>
                 <outlet property="zoom_in" destination="8NC-cu-ePY" id="DTg-0j-mL0"/>
                 <outlet property="zoom_out" destination="aye-38-2Ps" id="aS0-TA-iMm"/>
             </connections>
         </customObject>
         <customObject id="420" customClass="NSFontManager"/>
-        <window title="Ctrl" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" frameAutosaveName="" animationBehavior="default" id="JnL-Mk-1kS">
+        <window title="Ctrl" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" frameAutosaveName="" animationBehavior="default" toolbarStyle="compact" id="JnL-Mk-1kS">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -1113,7 +1144,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N8j-aQ-lB0">
-                                            <rect key="frame" x="294" y="424" width="70" height="32"/>
+                                            <rect key="frame" x="295" y="424" width="69" height="32"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gZe-IP-D42">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -1399,7 +1430,7 @@
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sc8-8B-lo9">
                                             <rect key="frame" x="343" y="529" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="QMy-tA-cPT">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="QMy-tA-cPT">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -1409,38 +1440,53 @@
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6YC-OH-8fM">
                                             <rect key="frame" x="343" y="490" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="BZ1-3g-BFj">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="BZ1-3g-BFj">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="contrastAutoAction:" target="494" id="vRS-hU-my8"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="FA9-sK-Ou8">
                                             <rect key="frame" x="343" y="448" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="60m-Cm-Vgh">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="60m-Cm-Vgh">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="hueAutoAction:" target="494" id="2RP-xx-aHB"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="er2-QH-q4u">
                                             <rect key="frame" x="343" y="412" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="dwf-70-l1p">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="dwf-70-l1p">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="saturateAutoAction:" target="494" id="ZcR-mp-koC"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="717-qn-PDm">
                                             <rect key="frame" x="343" y="371" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Tse-qQ-vch">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="Tse-qQ-vch">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="sharpnessAutoAction:" target="494" id="CMq-n6-V8W"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cig-mn-sOv">
                                             <rect key="frame" x="343" y="334" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="amW-6U-k8b">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="amW-6U-k8b">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="gammaAutoAction:" target="494" id="Hcm-VR-8mU"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oQ5-AJ-7ia">
                                             <rect key="frame" x="343" y="296" width="18" height="18"/>
@@ -1448,20 +1494,29 @@
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="whiteBalanceAutoAction:" target="494" id="4WH-dt-17J"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SsA-k1-w2T">
                                             <rect key="frame" x="343" y="255" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Fh8-hZ-who">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="Fh8-hZ-who">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="backlightAutoAction:" target="494" id="eIQ-Ah-L7w"/>
+                                            </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LhA-fl-9UK">
                                             <rect key="frame" x="343" y="222" width="18" height="18"/>
-                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="EVa-gA-KXB">
+                                            <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="EVa-gA-KXB">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
+                                            <connections>
+                                                <action selector="gainAutoAction:" target="494" id="hm6-dA-PWH"/>
+                                            </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Z6d-8N-chy">
                                             <rect key="frame" x="336" y="553" width="33" height="16"/>
@@ -1532,7 +1587,7 @@
                                                 <constraint firstAttribute="height" constant="16" id="Ejn-zw-WFB"/>
                                                 <constraint firstAttribute="width" constant="101" id="mEf-s4-RWH"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="check" title="Enable Color" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="foy-ak-6j6">
+                                            <buttonCell key="cell" type="check" title="Enable Color" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="foy-ak-6j6">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -1555,17 +1610,20 @@
                                                 <constraint firstAttribute="height" constant="20" id="Um0-IO-hHp"/>
                                                 <constraint firstAttribute="width" constant="94" id="gV2-9c-ghP"/>
                                             </constraints>
-                                            <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Im7-Xu-CaL" id="mBW-5V-MiW">
+                                            <popUpButtonCell key="cell" type="push" title="OFF" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Im7-Xu-CaL" id="mBW-5V-MiW">
                                                 <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="menu"/>
                                                 <menu key="menu" id="7iD-Tz-bdc">
                                                     <items>
-                                                        <menuItem title="Item 1" state="on" id="Im7-Xu-CaL"/>
-                                                        <menuItem title="Item 2" id="CZt-NW-Ly4"/>
-                                                        <menuItem title="Item 3" id="up6-i9-VZy"/>
+                                                        <menuItem title="OFF" state="on" id="Im7-Xu-CaL"/>
+                                                        <menuItem title="50HZ" id="CZt-NW-Ly4"/>
+                                                        <menuItem title="60HZ" id="up6-i9-VZy"/>
                                                     </items>
                                                 </menu>
                                             </popUpButtonCell>
+                                            <connections>
+                                                <action selector="antiFickerPopUpButton:" target="494" id="2Xl-9I-T2a"/>
+                                            </connections>
                                         </popUpButton>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Gf9-oM-Emj">
                                             <rect key="frame" x="8" y="117" width="84" height="32"/>
@@ -1787,6 +1845,9 @@ Gw
                                                         <constraint firstAttribute="height" constant="20" id="XyT-d0-H4T"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="3bb-OI-fHM"/>
+                                                    <connections>
+                                                        <action selector="zoomSliderAction:" target="494" id="jHo-6I-UYb"/>
+                                                    </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pU8-fV-GWg">
                                                     <rect key="frame" x="132" y="483" width="178" height="28"/>
@@ -1795,6 +1856,9 @@ Gw
                                                         <constraint firstAttribute="height" constant="20" id="uIf-2U-ZLq"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="OjQ-Az-nDD"/>
+                                                    <connections>
+                                                        <action selector="focusSliderAction:" target="494" id="pOj-ND-Gdp"/>
+                                                    </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G1U-Xt-KRK">
                                                     <rect key="frame" x="132" y="441" width="178" height="28"/>
@@ -1803,6 +1867,9 @@ Gw
                                                         <constraint firstAttribute="height" constant="20" id="dZ4-ow-8r9"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="rGE-Sh-lB5"/>
+                                                    <connections>
+                                                        <action selector="exposureSliderAction:" target="494" id="iJO-Z7-Ayp"/>
+                                                    </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Agf-sQ-7bn">
                                                     <rect key="frame" x="132" y="405" width="178" height="28"/>
@@ -1810,7 +1877,11 @@ Gw
                                                         <constraint firstAttribute="height" constant="20" id="FBH-sY-dig"/>
                                                         <constraint firstAttribute="width" constant="174" id="gXq-xt-xs4"/>
                                                     </constraints>
-                                                    <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="8Tb-a5-UJF"/>
+                                                    <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="8Tb-a5-UJF">
+                                                        <connections>
+                                                            <action selector="irisSliderAction:" target="494" id="1A6-79-0xd"/>
+                                                        </connections>
+                                                    </sliderCell>
                                                 </slider>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DI1-dX-q68">
                                                     <rect key="frame" x="314" y="491" width="25" height="16"/>
@@ -1886,17 +1957,23 @@ Gw
                                                 </textField>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eKq-I4-Gei">
                                                     <rect key="frame" x="343" y="529" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="KZP-1Y-Tm2">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="KZP-1Y-Tm2">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="zoomSwitchAction:" target="494" id="dZt-uG-PXe"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6K3-H5-Hrq">
                                                     <rect key="frame" x="343" y="490" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Tz1-xi-Hvp">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="Tz1-xi-Hvp">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="focusSwitchAction:" target="494" id="U2s-6g-lI5"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dh2-na-dMq">
                                                     <rect key="frame" x="343" y="448" width="18" height="18"/>
@@ -1904,34 +1981,49 @@ Gw
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="exposureSwitchAction:" target="494" id="IPF-9Y-mYj"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2s2-hi-BUz">
                                                     <rect key="frame" x="343" y="412" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="ZeH-u2-P4I">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="ZeH-u2-P4I">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="irisAutoAction:" target="494" id="hkq-IG-2vF"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yrc-pR-2TG">
                                                     <rect key="frame" x="343" y="371" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="OcL-cK-jJG">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="OcL-cK-jJG">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="panoramaAutoAction:" target="494" id="V96-dN-L4N"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HuD-XV-Yf6">
                                                     <rect key="frame" x="343" y="334" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="7Ab-UW-O9X">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="7Ab-UW-O9X">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="tiltAutoAction:" target="494" id="8fa-Tb-aRF"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xqy-Nr-PlJ">
                                                     <rect key="frame" x="343" y="296" width="18" height="18"/>
-                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="3uc-Ue-UWX">
+                                                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="3uc-Ue-UWX">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="rollAutoAction:" target="494" id="0W9-eB-1WY"/>
+                                                    </connections>
                                                 </button>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ddE-FJ-8hn">
                                                     <rect key="frame" x="336" y="553" width="33" height="16"/>
@@ -1948,6 +2040,9 @@ Gw
                                                         <constraint firstAttribute="width" constant="174" id="iuT-X6-pi2"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="ecq-Aq-3Ba"/>
+                                                    <connections>
+                                                        <action selector="panoramaSliderAction:" target="494" id="ole-wD-fYl"/>
+                                                    </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UGS-er-mFz">
                                                     <rect key="frame" x="132" y="327" width="178" height="28"/>
@@ -1956,6 +2051,9 @@ Gw
                                                         <constraint firstAttribute="height" constant="20" id="ZqQ-lB-IBP"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="Rjo-KE-FmA"/>
+                                                    <connections>
+                                                        <action selector="tiltSliderAction:" target="494" id="DEL-Az-56s"/>
+                                                    </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M7h-67-hNZ">
                                                     <rect key="frame" x="132" y="289" width="178" height="28"/>
@@ -1964,6 +2062,9 @@ Gw
                                                         <constraint firstAttribute="width" constant="174" id="Zed-F2-xkT"/>
                                                     </constraints>
                                                     <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="g8a-sp-70m"/>
+                                                    <connections>
+                                                        <action selector="rollSliderAction:" target="494" id="Aiv-a5-BgV"/>
+                                                    </connections>
                                                 </slider>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VyK-Jo-Ahp">
                                                     <rect key="frame" x="5" y="235" width="216" height="18"/>
@@ -1975,16 +2076,22 @@ Gw
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="lowBrightnessCompensateAction:" target="494" id="JJW-BY-Fzr"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yOS-ws-XvE">
-                                                    <rect key="frame" x="12" y="189" width="84" height="32"/>
+                                                    <rect key="frame" x="12" y="189" width="83" height="32"/>
                                                     <buttonCell key="cell" type="push" title="Defatult" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="CLf-dY-GAj">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
+                                                    <connections>
+                                                        <action selector="cameraCtrlDefautAction:" target="494" id="4Mi-IP-Lwh"/>
+                                                    </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Yq0-ph-ylT">
-                                                    <rect key="frame" x="268" y="189" width="82" height="32"/>
+                                                    <rect key="frame" x="267" y="189" width="82" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="68" id="l5a-JV-7nX"/>
                                                     </constraints>
@@ -1994,6 +2101,9 @@ Gw
                                                         <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
+                                                        <connections>
+                                                            <action selector="cameraCtrlApplyAction:" target="494" id="qWu-Xc-xbG"/>
+                                                        </connections>
                                                     </buttonCell>
                                                 </button>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8ax-7K-tvH">
@@ -2010,13 +2120,16 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pkj-fJ-RTf">
-                                                    <rect key="frame" x="181" y="189" width="76" height="32"/>
+                                                    <rect key="frame" x="180" y="189" width="76" height="32"/>
                                                     <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="YhI-Og-kKh">
                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                         <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
+                                                        <connections>
+                                                            <action selector="cameraCtrlCancelAction:" target="494" id="Wug-dA-80Y"/>
+                                                        </connections>
                                                     </buttonCell>
                                                 </button>
                                             </subviews>
@@ -2113,13 +2226,13 @@ Gw
                     <toolbarItem reference="rg2-y7-kch"/>
                 </defaultToolbarItems>
             </toolbar>
-            <point key="canvasLocation" x="-304" y="-379"/>
+            <point key="canvasLocation" x="-917" y="-407"/>
         </window>
-        <window title="Open Source License" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" frameAutosaveName="" animationBehavior="default" id="DwN-qc-oVp">
+        <window title="Open Source License" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" appearanceType="aqua" frameAutosaveName="" animationBehavior="default" toolbarStyle="compact" id="DwN-qc-oVp">
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -2131,7 +2244,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
                         <clipView key="contentView" drawsBackground="NO" id="WRL-LN-KmG">
                             <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="WQd-uf-CEC">
                                     <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
@@ -2204,14 +2317,14 @@ Gw
         </textField>
     </objects>
     <resources>
-        <image name="app_icon" width="64" height="64"/>
-        <image name="arrow-down-filling" width="32" height="32"/>
-        <image name="arrow-left-filling" width="32" height="32"/>
-        <image name="arrow-right-filling" width="32" height="32"/>
-        <image name="arrow-up-filling" width="32" height="32"/>
-        <image name="home-filling" width="32" height="32"/>
-        <image name="menu" width="64" height="64"/>
-        <image name="zoom-in" width="32" height="32"/>
-        <image name="zoom-out" width="32" height="32"/>
+        <image name="app_icon" width="32" height="32"/>
+        <image name="arrow-down-filling" width="16" height="16"/>
+        <image name="arrow-left-filling" width="16" height="16"/>
+        <image name="arrow-right-filling" width="16" height="16"/>
+        <image name="arrow-up-filling" width="16" height="16"/>
+        <image name="home-filling" width="16" height="16"/>
+        <image name="menu" width="32" height="32"/>
+        <image name="zoom-in" width="16" height="16"/>
+        <image name="zoom-out" width="16" height="16"/>
     </resources>
 </document>

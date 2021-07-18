@@ -15,6 +15,13 @@ typedef enum	{
 	UVC_AEMode_AperturePriority = 0x08	///	auto exposure, manual iris
 } UVC_AEMode;
 
+typedef enum : NSUInteger {
+    FlipHorizontalOffAndFlipVerticalOff = 0x00,
+    FlipHorizontalOnAndFlipVerticalOff = 0x01,
+    FlipHorizontalOffAndFlipVerticalOn = 0x02,
+    FlipHorizontalOnAndFlipVerticalOn = 0x03,
+    UVCFactoryReset = 0xFF
+} UVCExtensionSettingValue;
 
 typedef struct {
 	int		unit;	//	describes whether terminal/hardware or processing/software
@@ -37,6 +44,13 @@ typedef struct	{
 	int		actualSize;
 	uvc_control_info_t	*ctrlInfo;
 } uvc_param;
+
+typedef struct {
+    BOOL    supported;
+    uvc_param pan;
+    uvc_param tilt;
+    uvc_control_info_t    *ctrlInfo;
+}uvc_pan_tilt_abs_param;
 
 typedef enum{
 	UVC_PAN_TILT_UP,
@@ -91,7 +105,7 @@ struct fireware_info{
 	uvc_param			autoFocus;
 	uvc_param			focus;
 	uvc_param			zoom;
-	uvc_param			panTilt;
+    uvc_pan_tilt_abs_param	panTilt;
 	RelativePanTiltInfo	panTiltRel;
 	uvc_param			roll;
 	uvc_param			rollRel;
@@ -211,10 +225,6 @@ struct fireware_info{
 - (long) minZoom;
 ///	The max zoom value
 - (long) maxZoom;
-//	pan/tilt/roll aren't enabled
-- (BOOL) panSupported;
-- (BOOL) tiltSupported;
-- (BOOL) rollSupported;
 ///	Sets the backlight to the passed value
 - (void) setBacklight:(long)n;
 ///	Gets the backlight value currently being used by the camera
@@ -356,4 +366,30 @@ struct fireware_info{
 - (BOOL)setUpdateMode;
 - (BOOL)resetPanTilt;
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom;
+
+- (long)absPan;
+- (BOOL)setAbsPan:(long)pan;
+- (long)absTilt;
+- (BOOL)setAbsTilt:(long)tilt;
+- (void) setRoll:(long)n;
+- (long) roll;
+- (BOOL) rollSupported;
+
+// flip
+- (NSUInteger)getFlipValue;
+- (BOOL)setUVCExtensionSettingValue:(UVCExtensionSettingValue)value;
+
+// image ctrl
+- (void)populateImageCtrlParams;
+- (void)rollbackImageCtrlParams;
+- (void)saveImageCtrlParamToLocal;
+- (void)resetDefaultImageCtrlParams;
+- (BOOL)isAutoWhiteBalance;
+
+// camera ctrl
+- (void)populateCameraCtrlParams;
+- (void)rollbackCameraCtrlParams;
+- (void)saveCameraCtrlParamToLocal;
+- (void)resetDefaultCameraCtrlParams;
+- (BOOL)isExposureAutoMode;
 @end

@@ -42,6 +42,9 @@ VVUVCControl class contain the actual per-camera addresses of these blocks)- the
 #define UVC_GET_INFO 0x86
 #define UVC_GET_DEF 0x87
 
+#define UVCSetParamToLocal(key, value) [[NSUserDefaults standardUserDefaults] setObject:@(value) forKey:key]
+#define UVCGetParamFromLocal(key) [[[NSUserDefaults standardUserDefaults] objectForKey:key] longValue]
+
 //	camera terminal control selectors
 typedef enum	{
 	UVC_CT_CONTROL_UNDEFINED = 0x00,
@@ -88,6 +91,7 @@ typedef enum	{
 
 typedef enum : NSUInteger {
 	UVC_XU_CONTROL_CHINGAN_EXTENSION = 0x09,
+    UVC_XU_FLIP_HORIZONTAL_VERTICAL_EXTENSION = 0x0A,
 } UVC_XU_t;
 
 uvc_control_info_t	_scanCtrl;
@@ -115,7 +119,7 @@ uvc_control_info_t	_sharpnessCtrl;
 uvc_control_info_t	_gammaCtrl;
 uvc_control_info_t	_whiteBalanceAutoTempCtrl;
 uvc_control_info_t	_whiteBalanceTempCtrl;
-
+uvc_control_info_t  _extensionFlipSettingCtrl;
 
 @implementation UVCController
 + (void) load	{
@@ -635,6 +639,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	}
 	
 	[self _populateAllParams];
+    [self imageCtrlInit];
+    [self cameraCtrlInit];
 	
 	//	create the nib from my class name
 	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
@@ -828,6 +834,75 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	}
 
 	return YES;
+}
+
+- (NSUInteger)getFlipValue{
+    int                    returnMe = 0;
+    IOUSBDevRequest        controlRequest;
+    controlRequest.bmRequestType = USBmakebmRequestType( kUSBIn, kUSBClass, kUSBInterface );
+    controlRequest.bRequest = UVC_GET_CUR;
+    controlRequest.wValue = (UVC_XU_FLIP_HORIZONTAL_VERTICAL_EXTENSION << 8) | 0x00;
+    NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+    controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
+    controlRequest.wLength = 1;
+    controlRequest.wLenDone = 0;
+    
+    void *ret = malloc(controlRequest.wLength);
+    bzero(ret, controlRequest.wLength);
+    controlRequest.pData = ret;
+    
+    if (![self _sendControlRequest:&controlRequest]){
+        returnMe = -1;
+    } else {
+        returnMe = controlRequest.wLenDone;
+    }
+    
+    if (returnMe <= 0)    {
+        controlRequest.pData = nil;
+        returnMe = 0;
+    } else {
+        NSXLog(@"%d", *((short int *)ret));
+        returnMe = *((short int *)ret);
+    }
+    
+    free(ret);
+    ret = nil;
+    
+    return (NSUInteger)returnMe;
+}
+
+- (BOOL)setUVCExtensionSettingValue:(UVCExtensionSettingValue)value {
+    int len = 1;
+    int       returnMe = 0;
+    IOUSBDevRequest        controlRequest;
+    controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
+    controlRequest.bRequest = UVC_SET_CUR;
+    controlRequest.wValue = (UVC_XU_FLIP_HORIZONTAL_VERTICAL_EXTENSION << 8) | 0x00;
+    NSXLog(@"extensionUnitID %x interfaceNumber %x", extensionUnitID, interfaceNumber);
+    controlRequest.wIndex = ((extensionUnitID <<8) | interfaceNumber);
+    controlRequest.wLength = len;
+    controlRequest.wLenDone = 0;
+    
+    uint8 *ret = malloc(len);
+    bzero(ret,len);
+    controlRequest.pData = ret;
+    *ret = value;
+    
+    if (![self _sendControlRequest:&controlRequest]){
+        returnMe = -1;
+    } else {
+        returnMe = controlRequest.wLenDone;
+        if (UVCFactoryReset == value) {
+            [self populateImageCtrlParams];
+            [self saveCameraCtrlParamToLocal];
+            [self populateCameraCtrlParams];
+            [self saveCameraCtrlParamToLocal];
+        }
+    }
+    
+    free(ret);
+    
+    return returnMe>0;
 }
 
 - (int)getExtensionLen{
@@ -1033,6 +1108,156 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return returnMe;
 }
 
+// image ctrl
+- (void)imageCtrlInit{
+    [self populateImageCtrlParams];
+    
+    id zoomLocal = [[NSUserDefaults standardUserDefaults] objectForKey:@"zoom"];
+    if (zoomLocal) {
+        [self rollbackCameraCtrlParams];
+    } else {
+        [self saveCameraCtrlParamToLocal];
+    }
+}
+
+- (BOOL)isAutoWhiteBalance{
+    return autoWhiteBalance.val;
+}
+
+- (void)populateImageCtrlParams{
+    [self _populateParam:&bright];
+    [self _populateParam:&contrast];
+    [self _populateParam:&hue];
+    [self _populateParam:&saturation];
+    [self _populateParam:&sharpness];
+    [self _populateParam:&gamma];
+    [self _populateParam:&autoWhiteBalance];
+    [self _populateParam:&whiteBalance];
+    [self _populateParam:&backlight];
+    [self _populateParam:&gain];
+}
+
+- (void)saveImageCtrlParamToLocal{
+    UVCSetParamToLocal(@"bright", bright.val);
+    UVCSetParamToLocal(@"contrast", contrast.val);
+    UVCSetParamToLocal(@"hue", hue.val);
+    UVCSetParamToLocal(@"saturation", saturation.val);
+    UVCSetParamToLocal(@"sharpness", sharpness.val);
+    UVCSetParamToLocal(@"gamma", gamma.val);
+    UVCSetParamToLocal(@"autoWhiteBalance", autoWhiteBalance.val);
+    UVCSetParamToLocal(@"whiteBalance", whiteBalance.val);
+    UVCSetParamToLocal(@"backlight", backlight.val);
+    UVCSetParamToLocal(@"gain", gain.val);
+}
+
+- (void)rollbackImageCtrlParams{
+    bright.val = UVCGetParamFromLocal(@"bright");
+    [self _pushParamToDevice:&bright];
+    contrast.val = UVCGetParamFromLocal(@"contrast");
+    [self _pushParamToDevice:&contrast];
+    hue.val = UVCGetParamFromLocal(@"hue");
+    [self _pushParamToDevice:&hue];
+    saturation.val = UVCGetParamFromLocal(@"saturation");
+    [self _pushParamToDevice:&saturation];
+    sharpness.val = UVCGetParamFromLocal(@"sharpness");
+    [self _pushParamToDevice:&sharpness];
+    gamma.val = UVCGetParamFromLocal(@"gamma");
+    [self _pushParamToDevice:&gamma];
+    autoWhiteBalance.val = UVCGetParamFromLocal(@"autoWhiteBalance");
+    [self _pushParamToDevice:&autoWhiteBalance];
+    whiteBalance.val = UVCGetParamFromLocal(@"whiteBalance");
+    [self _pushParamToDevice:&whiteBalance];
+    backlight.val = UVCGetParamFromLocal(@"backlight");
+    [self _pushParamToDevice:&backlight];
+    gain.val = UVCGetParamFromLocal(@"gain");
+    [self _pushParamToDevice:&gain];
+}
+
+- (void)resetDefaultImageCtrlParams{
+    [self _resetParamToDefault:&bright];
+    [self _resetParamToDefault:&contrast];
+    [self _resetParamToDefault:&hue];
+    [self _resetParamToDefault:&saturation];
+    [self _resetParamToDefault:&sharpness];
+    [self _resetParamToDefault:&gamma];
+    [self _resetParamToDefault:&autoWhiteBalance];
+    [self _resetParamToDefault:&whiteBalance];
+    [self _resetParamToDefault:&backlight];
+    [self _resetParamToDefault:&gain];
+}
+
+// camera ctrl
+- (void)cameraCtrlInit{
+    [self populateCameraCtrlParams];
+    
+    id zoomLocal = [[NSUserDefaults standardUserDefaults] objectForKey:@"zoom"];
+    if (zoomLocal) {
+        [self rollbackCameraCtrlParams];
+    } else {
+        [self saveCameraCtrlParamToLocal];
+    }
+}
+
+- (BOOL)isExposureAutoMode{
+    return autoExposureMode.val == 0x04 || autoExposureMode.val == 0x02;
+}
+
+- (void)saveCameraCtrlParamToLocal{
+    UVCSetParamToLocal(@"zoom", zoom.val);
+    UVCSetParamToLocal(@"focus", focus.val);
+    UVCSetParamToLocal(@"autoExposureMode", autoExposureMode.val);
+    UVCSetParamToLocal(@"exposureTime", exposureTime.val);
+    UVCSetParamToLocal(@"iris", iris.val);
+    UVCSetParamToLocal(@"pan", panTilt.pan.val);
+    UVCSetParamToLocal(@"tilt", panTilt.tilt.val);
+    UVCSetParamToLocal(@"zoom", zoom.val);
+}
+
+- (void)populateCameraCtrlParams{
+    [self _populateParam:&zoom];
+    [self _populateParam:&focus];
+    [self _populateParam:&autoExposureMode];
+    [self _populateParam:&exposureTime];
+    [self _populateParam:&iris];
+    [self populateAbsPanTiltParam:&panTilt];
+    [self _populateParam:&roll];
+}
+
+- (void)rollbackCameraCtrlParams{
+    zoom.val = UVCGetParamFromLocal(@"zoom");
+    [self _pushParamToDevice:&zoom];
+    
+    focus.val = UVCGetParamFromLocal(@"focus");
+    [self _pushParamToDevice:&focus];
+    
+    autoExposureMode.val = UVCGetParamFromLocal(@"autoExposureMode");
+    [self _pushParamToDevice:&autoExposureMode];
+    
+    exposureTime.val = UVCGetParamFromLocal(@"exposureTime");
+    [self _pushParamToDevice:&exposureTime];
+    
+    iris.val = UVCGetParamFromLocal(@"iris");
+    [self _pushParamToDevice:&iris];
+    
+    panTilt.pan.val = UVCGetParamFromLocal(@"pan");
+    panTilt.tilt.val = UVCGetParamFromLocal(@"tilt");
+    [self pushAbsPanTiltToDevice:&panTilt];
+    
+    roll.val = UVCGetParamFromLocal(@"roll");
+    [self _pushParamToDevice:&roll];
+}
+
+- (void)resetDefaultCameraCtrlParams{
+    [self _resetParamToDefault:&zoom];
+    [self _resetParamToDefault:&focus];
+    [self _resetParamToDefault:&autoExposureMode];
+    [self _resetParamToDefault:&exposureTime];
+    [self _resetParamToDefault:&iris];
+    [self resetPanTilt];
+    [self _resetParamToDefault:&roll];
+}
+
+
 - (void) _populateAllParams	{
 	[self _populateParam:&scanningMode];
 	[self _populateParam:&autoExposureMode];
@@ -1042,7 +1267,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _populateParam:&autoFocus];
 	[self _populateParam:&focus];
 	[self _populateParam:&zoom];
-	[self _populateParam:&panTilt];
+	[self populateAbsPanTiltParam:&panTilt];
 	[self getRelativePanTiltInfo:&panTiltRel];
 	[self _populateParam:&roll];
 	[self _populateParam:&rollRel];
@@ -1070,7 +1295,8 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	NSXLogParam(@"\t\t auto focus",autoFocus);
 	NSXLogParam(@"\t\t focus",focus);
 	NSXLogParam(@"\t\t zoom",zoom);
-	NSXLogParam(@"\t\t pan/tilt (abs)",panTilt);
+	NSXLogParam(@"\t\t pan (abs)",panTilt.pan);
+    NSXLogParam(@"\t\t tilt (abs)",panTilt.tilt);
 	NSXLogParam(@"\t\t roll (abs)",roll);
 	NSXLogParam(@"\t\t roll (rel)",rollRel);
 	NSXLogParam(@"\t\t backlight",backlight);
@@ -1180,6 +1406,95 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return;
 	DISABLED_PARAM:
 	param->supported = NO;
+}
+
+
+- (void)populateAbsPanTiltParam:(uvc_pan_tilt_abs_param *)param {
+    //long            *longPtr = nil;
+    void            *bytesPtr = nil;
+    long            tmpLong = 0;
+    int                bytesRead = 0;
+    
+    bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
+    if (bytesRead <= 0)    {
+        goto DISABLED_PARAM;
+    }
+    
+    tmpLong = 0x00000000;
+    memcpy(&tmpLong,bytesPtr,bytesRead);
+    free(bytesPtr);
+    bytesPtr = nil;
+    
+    BOOL            canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
+    if (!canGetAndSet)    {
+        NSXLog(@"err: can't get or set");
+        goto DISABLED_PARAM;
+    }
+    
+    param->supported = YES;
+    bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:&bytesPtr];
+    if (bytesRead <= 0)    {
+        NSXLog(@"err: couldn't get current val");
+        goto DISABLED_PARAM;
+    }
+    uint8 value[8];
+    memcpy(value,bytesPtr,bytesRead);
+    free(bytesPtr);
+    bytesPtr = nil;
+    param->pan.val = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
+    param->tilt.val = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+    
+    //    min
+    if (param->ctrlInfo->hasMin)    {
+        bytesRead = [self _requestValType:UVC_GET_MIN forControl:param->ctrlInfo returnVal:&bytesPtr];
+        if (bytesRead != 8){
+            NSXLog(@"err: couldn't get MIN val");
+            goto DISABLED_PARAM;
+        }
+        uint8 value[8];
+        memcpy(value,bytesPtr,bytesRead);
+        free(bytesPtr);
+        bytesPtr = nil;
+        param->pan.min = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
+        param->tilt.min = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+    }
+    
+    //    max
+    if (param->ctrlInfo->hasMax)    {
+        bytesRead = [self _requestValType:UVC_GET_MAX forControl:param->ctrlInfo returnVal:&bytesPtr];
+        if (bytesRead != 8){
+            NSXLog(@"err: couldn't get MAX val");
+            goto DISABLED_PARAM;
+        }
+        uint8 value[8];
+        memcpy(value,bytesPtr,bytesRead);
+        free(bytesPtr);
+        bytesPtr = nil;
+        param->pan.max = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
+        param->tilt.max = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+    }
+    
+    //    default
+    if (param->ctrlInfo->hasDef)    {
+        bytesRead = [self _requestValType:UVC_GET_DEF forControl:param->ctrlInfo returnVal:&bytesPtr];
+        if (bytesRead != 8){
+            NSXLog(@"err: couldn't get DEF val");
+            goto DISABLED_PARAM;
+        }
+        uint8 value[8];
+        memcpy(value,bytesPtr,bytesRead);
+        free(bytesPtr);
+        bytesPtr = nil;
+        param->pan.def = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
+        param->tilt.def = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+    }
+    
+    
+    
+    return;
+    
+    DISABLED_PARAM:
+        param->supported = NO;
 }
 
 - (void) _populateParam:(uvc_param *)param	{
@@ -1315,7 +1630,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 		valToSend = (int)param->val;
 	}
 	
-	NSLog(@"valToSend %d", valToSend);
+	NSXLog(@"valToSend %d", valToSend);
 	void			*bytesToSend = malloc(paramSize);
 	bzero(bytesToSend,paramSize);
 	memcpy(bytesToSend,&valToSend,paramSize);
@@ -1342,11 +1657,38 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
 }
 
+- (BOOL)setAbsPan:(long)pan{
+    panTilt.pan.val = pan;
+    return [self pushAbsPanTiltToDevice:&panTilt];
+}
+
+- (BOOL)setAbsTilt:(long)tilt{
+    panTilt.tilt.val = tilt;
+    return [self pushAbsPanTiltToDevice:&panTilt];
+}
+
+- (BOOL)pushAbsPanTiltToDevice:(uvc_pan_tilt_abs_param *)panTilt{
+    long data[8];
+    memset(data, 0, 8);
+    
+    data[0] = panTilt->pan.val & 0xFF;
+    data[1] = (panTilt->pan.val >> 8) & 0xFF;
+    data[2] = (panTilt->pan.val >> 16) & 0xFF;
+    data[3] = (panTilt->pan.val >> 24) & 0xFF;
+    
+    data[4] = panTilt->tilt.val & 0xFF;
+    data[5] = (panTilt->tilt.val >> 8) & 0xFF;
+    data[6] = (panTilt->tilt.val >> 16) & 0xFF;
+    data[7] = (panTilt->tilt.val >> 24) & 0xFF;
+    
+    return [self _setBytes:data sized:8 toControl:&_panTiltCtrl];
+}
+
 - (BOOL)resetPanTilt{
-	u_int8_t data[8];
-	memset(data, 0, 8);
+    panTilt.pan.val = panTilt.pan.def;
+    panTilt.tilt.val = panTilt.tilt.def;
 	
-	return [self _setBytes:data sized:4 toControl:&_panTiltCtrl];
+    return [self pushAbsPanTiltToDevice:&panTilt];
 }
 
 - (void) _resetParamToDefault:(uvc_param *)param	{
@@ -1367,7 +1709,7 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self _resetParamToDefault:&autoFocus];
 	[self _resetParamToDefault:&focus];
 	[self _resetParamToDefault:&zoom];
-	[self _resetParamToDefault:&panTilt];
+//	[self _resetParamToDefault:&panTilt];
 	[self resetPanTilt];
 	[self _resetParamToDefault:&roll];
 	[self _resetParamToDefault:&rollRel];
@@ -1579,6 +1921,14 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	[self setVal:n forParam:&zoom];
 }
 
+- (long)absPan{
+    return panTilt.pan.val;
+}
+
+- (long)absTilt{
+    return panTilt.tilt.val;
+}
+
 - (long) zoom	{
 	return (!zoom.supported) ? 0 : zoom.val;
 }
@@ -1599,41 +1949,17 @@ uvc_control_info_t	_whiteBalanceTempCtrl;
 	return (!zoom.supported) ? 0 : zoom.max;
 }
 
-- (void) setPan:(float)n	{
-
-}
-
-- (long) pan{
-	return 0;
-}
-
-- (BOOL) panSupported	{
-	return panTilt.supported;
-}
-
-- (void) setTilt:(long)n	{
-
-}
-
-- (long) tilt	{
-	return 0;
-}
-
-- (BOOL) tiltSupported	{
-	return panTilt.supported;
-}
-
-- (void) setRoll:(long)n	{
-
+- (void) setRoll:(long)n{
+    [self setVal:n forParam:&roll];
 }
 
 - (long) roll	{
-	return 0;
+	return roll.val;
 }
+
 - (BOOL) rollSupported	{
 	return roll.supported;
 }
-
 
 - (void) setBacklight:(long)n	{
 	[self setVal:n forParam:&backlight];
