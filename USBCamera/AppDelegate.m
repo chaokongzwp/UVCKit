@@ -178,6 +178,8 @@ typedef enum : NSUInteger {
     
     [_gainLabel setIntegerValue:[uvcController gain]];
     [_gainSlider setIntegerValue:[uvcController gain]];
+    
+    [_anitFickerSelector selectItemAtIndex:[uvcController powerLine]];
 }
 
 - (IBAction)brightnessSlideAction:(id)sender {
@@ -266,6 +268,8 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)antiFickerPopUpButton:(id)sender {
+    NSPopUpButton *pop = sender;
+    [uvcController setPowerLine:pop.indexOfSelectedItem];
 }
 
 - (IBAction)imageCtrlDefaultAction:(id)sender {
@@ -274,7 +278,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)imageCtrlApplyAction:(id)sender {
-    [uvcController saveImageCtrlParamToLocal];
+    [uvcController saveImageCtrlParamToCache];
     [self imageCtrlPageUpdate];
 }
 
@@ -319,7 +323,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)cameraCtrlApplyAction:(id)sender {
-    [uvcController saveCameraCtrlParamToLocal];
+    [uvcController saveCameraCtrlParamToCache];
     [self cameraCtrlPageUpdate];
 }
 
@@ -551,6 +555,12 @@ typedef enum : NSUInteger {
 		[[NSApplication sharedApplication] terminate:nil];
 	} else if (window == self.gplWindow || window == self.ctrlWindow){
 		self.childWindowsState = ChildWindows_HIDEN;
+        if (self.ctrlWindow == window){
+            [uvcController rollbackCameraCtrlParams];
+            [self cameraCtrlPageUpdate];
+            [uvcController rollbackImageCtrlParams];
+            [self imageCtrlPageUpdate];
+        }
 	}
 }
 

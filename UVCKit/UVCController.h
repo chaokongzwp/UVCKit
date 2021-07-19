@@ -382,14 +382,14 @@ struct fireware_info{
 // image ctrl
 - (void)populateImageCtrlParams;
 - (void)rollbackImageCtrlParams;
-- (void)saveImageCtrlParamToLocal;
+- (void)saveImageCtrlParamToCache;
 - (void)resetDefaultImageCtrlParams;
 - (BOOL)isAutoWhiteBalance;
 
 // camera ctrl
 - (void)populateCameraCtrlParams;
 - (void)rollbackCameraCtrlParams;
-- (void)saveCameraCtrlParamToLocal;
+- (void)saveCameraCtrlParamToCache;
 - (void)resetDefaultCameraCtrlParams;
 - (BOOL)isExposureAutoMode;
 @end

@@ -4,6 +4,7 @@
 #import "UVCUtils.h"
 
 
+static NSMutableDictionary<NSString *, NSNumber *> *uvcParamsCache = nil;
 
 
 //#define NSXLogParam(n,p) NSXLog(@"%@, (%ld)-[%ld]-(%ld), %ld",n,p.min,p.val,p.max,p.def)
@@ -42,8 +43,8 @@ VVUVCControl class contain the actual per-camera addresses of these blocks)- the
 #define UVC_GET_INFO 0x86
 #define UVC_GET_DEF 0x87
 
-#define UVCSetParamToLocal(key, value) [[NSUserDefaults standardUserDefaults] setObject:@(value) forKey:key]
-#define UVCGetParamFromLocal(key) [[[NSUserDefaults standardUserDefaults] objectForKey:key] longValue]
+#define UVCSetParamToLocal(key, value) [uvcParamsCache setObject:@(value) forKey:key]
+#define UVCGetParamFromLocal(key) [[uvcParamsCache objectForKey:key] longValue]
 
 //	camera terminal control selectors
 typedef enum	{
@@ -254,9 +255,9 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	_gainCtrl.isRelative = NO;
 	_powerLineCtrl.unit = UVC_PROCESSING_UNIT_ID;
 	_powerLineCtrl.selector = UVC_PU_POWER_LINE_FREQUENCY_CONTROL;
-	_powerLineCtrl.intendedSize = 2;
-	_powerLineCtrl.hasMin = YES;
-	_powerLineCtrl.hasMax = YES;
+	_powerLineCtrl.intendedSize = 1;
+	_powerLineCtrl.hasMin = NO;
+	_powerLineCtrl.hasMax = NO;
 	_powerLineCtrl.hasDef = YES;
 	_powerLineCtrl.isSigned = NO;
 	_powerLineCtrl.isRelative = NO;
@@ -638,6 +639,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		(*interface)->GetInterfaceNumber(interface,&interfaceNumber);
 	}
 	
+    uvcParamsCache = [NSMutableDictionary dictionary];
 	[self _populateAllParams];
     [self imageCtrlInit];
     [self cameraCtrlInit];
@@ -894,9 +896,9 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
         returnMe = controlRequest.wLenDone;
         if (UVCFactoryReset == value) {
             [self populateImageCtrlParams];
-            [self saveCameraCtrlParamToLocal];
+            [self saveCameraCtrlParamToCache];
             [self populateCameraCtrlParams];
-            [self saveCameraCtrlParamToLocal];
+            [self saveCameraCtrlParamToCache];
         }
     }
     
@@ -1111,13 +1113,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 // image ctrl
 - (void)imageCtrlInit{
     [self populateImageCtrlParams];
-    
-    id zoomLocal = [[NSUserDefaults standardUserDefaults] objectForKey:@"zoom"];
-    if (zoomLocal) {
-        [self rollbackCameraCtrlParams];
-    } else {
-        [self saveCameraCtrlParamToLocal];
-    }
+    [self saveCameraCtrlParamToCache];
 }
 
 - (BOOL)isAutoWhiteBalance{
@@ -1135,9 +1131,10 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     [self _populateParam:&whiteBalance];
     [self _populateParam:&backlight];
     [self _populateParam:&gain];
+    [self _populateParam:&powerLine];
 }
 
-- (void)saveImageCtrlParamToLocal{
+- (void)saveImageCtrlParamToCache{
     UVCSetParamToLocal(@"bright", bright.val);
     UVCSetParamToLocal(@"contrast", contrast.val);
     UVCSetParamToLocal(@"hue", hue.val);
@@ -1148,6 +1145,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     UVCSetParamToLocal(@"whiteBalance", whiteBalance.val);
     UVCSetParamToLocal(@"backlight", backlight.val);
     UVCSetParamToLocal(@"gain", gain.val);
+    UVCSetParamToLocal(@"powerLine", powerLine.val);
 }
 
 - (void)rollbackImageCtrlParams{
@@ -1171,6 +1169,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     [self _pushParamToDevice:&backlight];
     gain.val = UVCGetParamFromLocal(@"gain");
     [self _pushParamToDevice:&gain];
+    powerLine.val = UVCGetParamFromLocal(@"powerLine");
+    [self _pushParamToDevice:&powerLine];
 }
 
 - (void)resetDefaultImageCtrlParams{
@@ -1184,25 +1184,20 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     [self _resetParamToDefault:&whiteBalance];
     [self _resetParamToDefault:&backlight];
     [self _resetParamToDefault:&gain];
+    [self _resetParamToDefault:&powerLine];
 }
 
 // camera ctrl
 - (void)cameraCtrlInit{
     [self populateCameraCtrlParams];
-    
-    id zoomLocal = [[NSUserDefaults standardUserDefaults] objectForKey:@"zoom"];
-    if (zoomLocal) {
-        [self rollbackCameraCtrlParams];
-    } else {
-        [self saveCameraCtrlParamToLocal];
-    }
+    [self saveCameraCtrlParamToCache];
 }
 
 - (BOOL)isExposureAutoMode{
     return autoExposureMode.val == 0x04 || autoExposureMode.val == 0x02;
 }
 
-- (void)saveCameraCtrlParamToLocal{
+- (void)saveCameraCtrlParamToCache{
     UVCSetParamToLocal(@"zoom", zoom.val);
     UVCSetParamToLocal(@"focus", focus.val);
     UVCSetParamToLocal(@"autoExposureMode", autoExposureMode.val);
