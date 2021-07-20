@@ -44,7 +44,7 @@ VVUVCControl class contain the actual per-camera addresses of these blocks)- the
 #define UVC_GET_DEF 0x87
 
 #define UVCSetParamToLocal(key, value) [uvcParamsCache setObject:@(value) forKey:key]
-#define UVCGetParamFromLocal(key) [[uvcParamsCache objectForKey:key] longValue]
+#define UVCGetParamFromLocal(key) [[uvcParamsCache objectForKey:key] intValue]
 
 //	camera terminal control selectors
 typedef enum	{
@@ -594,7 +594,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		
 		//	Now create the device interface for the interface
 		result = (*ioPlugin)->QueryInterface( ioPlugin, CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID), (LPVOID *) &controlInterface );
-		//	No longer need the intermediate plug-in
+		//	No inter need the intermediate plug-in
 		(*ioPlugin)->Release(ioPlugin);
 		
 		if (result || !controlInterface) {
@@ -726,12 +726,12 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	
 	tmpNum = [s objectForKey:@"exposureTime"];
 	if (tmpNum!=nil)	{
-		[self setExposureTime:[tmpNum longValue]];
+		[self setExposureTime:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"iris"];
 	if (tmpNum!=nil)	{
-		[self setIris:[tmpNum longValue]];
+		[self setIris:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"autoFocus"];
@@ -742,37 +742,37 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	tmpNum = [s objectForKey:@"focus"];
 	if (tmpNum!=nil)	{
 		[self setFocus:focus.def];
-		[self setFocus:[tmpNum longValue]];
+		[self setFocus:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"zoom"];
 	if (tmpNum!=nil)	{
-		[self setZoom:[tmpNum longValue]];
+		[self setZoom:[tmpNum intValue]];
 	}
 
 	tmpNum = [s objectForKey:@"backlight"];
 	if (tmpNum != nil)	{
-		[self setBacklight:[tmpNum longValue]];
+		[self setBacklight:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"bright"];
 	if (tmpNum!=nil)	{
-		[self setBright:[tmpNum longValue]];
+		[self setBright:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"contrast"];
 	if (tmpNum!=nil)	{
-		[self setContrast:[tmpNum longValue]];
+		[self setContrast:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"gain"];
 	if (tmpNum!=nil)	{
-		[self setGain:[tmpNum longValue]];
+		[self setGain:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"powerLine"];
 	if (tmpNum!=nil)	{
-		[self setPowerLine:[tmpNum longValue]];
+		[self setPowerLine:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"autoHue"];
@@ -782,22 +782,22 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	
 	tmpNum = [s objectForKey:@"hue"];
 	if (tmpNum!=nil)	{
-		[self setHue:[tmpNum longValue]];
+		[self setHue:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"saturation"];
 	if (tmpNum!=nil)	{
-		[self setSaturation:[tmpNum longValue]];
+		[self setSaturation:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"sharpness"];
 	if (tmpNum!=nil)	{
-		[self setSharpness:[tmpNum longValue]];
+		[self setSharpness:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"gamma"];
 	if (tmpNum!=nil)	{
-		[self setGamma:[tmpNum longValue]];
+		[self setGamma:[tmpNum intValue]];
 	}
 	
 	tmpNum = [s objectForKey:@"autoWhiteBalance"];
@@ -807,7 +807,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	
 	tmpNum = [s objectForKey:@"whiteBalance"];
 	if (tmpNum!=nil)	{
-		[self setWhiteBalance:[tmpNum longValue]];
+		[self setWhiteBalance:[tmpNum intValue]];
 	}
 	
 	if (uiCtrlr != nil)
@@ -834,6 +834,12 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		kr = (*interface)->USBInterfaceClose(interface);
 		return NO;
 	}
+    
+    NSString *resStr = @"";
+    for (int i = 0; i < controlRequest->wLength; i++) {
+        resStr = [resStr stringByAppendingFormat:@"0x%X ", ((UInt8 *)controlRequest->pData)[i]];
+    }
+    NSXLog(@"response data %@", resStr);
 
 	return YES;
 }
@@ -1058,8 +1064,6 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 
 - (BOOL) _setBytes:(void *)bytes sized:(int)size toControl:(const uvc_control_info_t *)ctrl	{
 	BOOL			returnMe = NO;
-	long			tmpLong = 0x00000000;
-	memcpy(&tmpLong,bytes,size);
 
 	IOUSBDevRequest		controlRequest;
 	controlRequest.bmRequestType = USBmakebmRequestType( kUSBOut, kUSBClass, kUSBInterface );
@@ -1113,7 +1117,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 // image ctrl
 - (void)imageCtrlInit{
     [self populateImageCtrlParams];
-    [self saveCameraCtrlParamToCache];
+    [self saveImageCtrlParamToCache];
 }
 
 - (BOOL)isAutoWhiteBalance{
@@ -1135,6 +1139,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 }
 
 - (void)saveImageCtrlParamToCache{
+    NSXLog(@"saveImageCtrlParamToCache in %@", uvcParamsCache);
     UVCSetParamToLocal(@"bright", bright.val);
     UVCSetParamToLocal(@"contrast", contrast.val);
     UVCSetParamToLocal(@"hue", hue.val);
@@ -1146,9 +1151,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     UVCSetParamToLocal(@"backlight", backlight.val);
     UVCSetParamToLocal(@"gain", gain.val);
     UVCSetParamToLocal(@"powerLine", powerLine.val);
+    NSXLog(@"saveImageCtrlParamToCache out %@", uvcParamsCache);
 }
 
 - (void)rollbackImageCtrlParams{
+    NSXLog(@"rollbackImageCtrlParams in %@", uvcParamsCache);
     bright.val = UVCGetParamFromLocal(@"bright");
     [self _pushParamToDevice:&bright];
     contrast.val = UVCGetParamFromLocal(@"contrast");
@@ -1205,7 +1212,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     UVCSetParamToLocal(@"iris", iris.val);
     UVCSetParamToLocal(@"pan", panTilt.pan.val);
     UVCSetParamToLocal(@"tilt", panTilt.tilt.val);
-    UVCSetParamToLocal(@"zoom", zoom.val);
+    UVCSetParamToLocal(@"roll", roll.val);
 }
 
 - (void)populateCameraCtrlParams{
@@ -1311,7 +1318,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 
 - (void)getRelativePanTiltInfo:(RelativePanTiltInfo *)param {
 	u_int8_t		*bytesPtr = nil;
-	long			tmpLong = 0;
+	int			tmpint = 0;
 	int				bytesRead = 0;
 	
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:(void **)&bytesPtr];
@@ -1320,12 +1327,12 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		goto DISABLED_PARAM;
 	}
 	
-	tmpLong = 0x00000000;
-	memcpy(&tmpLong,bytesPtr,bytesRead);
+	tmpint = 0x00000000;
+	memcpy(&tmpint,bytesPtr,bytesRead);
 	free(bytesPtr);
 	bytesPtr = nil;
 	
-	BOOL canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
+	BOOL canGetAndSet = (((tmpint & 0x01) == 0x01) && ((tmpint & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
 		NSXLog(@"err: can't get or set");
 		goto DISABLED_PARAM;
@@ -1405,22 +1412,22 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 
 
 - (void)populateAbsPanTiltParam:(uvc_pan_tilt_abs_param *)param {
-    //long            *longPtr = nil;
+    //int            *intPtr = nil;
     void            *bytesPtr = nil;
-    long            tmpLong = 0;
-    int                bytesRead = 0;
+    int            tmpint = 0;
+    int             bytesRead = 0;
     
     bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
     if (bytesRead <= 0)    {
         goto DISABLED_PARAM;
     }
     
-    tmpLong = 0x00000000;
-    memcpy(&tmpLong,bytesPtr,bytesRead);
+    tmpint = 0x00000000;
+    memcpy(&tmpint,bytesPtr,bytesRead);
     free(bytesPtr);
     bytesPtr = nil;
     
-    BOOL            canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
+    BOOL            canGetAndSet = (((tmpint & 0x01) == 0x01) && ((tmpint & 0x02) == 0x02)) ? YES : NO;
     if (!canGetAndSet)    {
         NSXLog(@"err: can't get or set");
         goto DISABLED_PARAM;
@@ -1436,8 +1443,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     memcpy(value,bytesPtr,bytesRead);
     free(bytesPtr);
     bytesPtr = nil;
-    param->pan.val = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
-    param->tilt.val = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+    param->pan.val = value[0] & ((int)value[1]>>8) & ((int)value[2]>>16) & ((int)value[3]>>24);
+    param->tilt.val = value[4] & ((int)value[5]>>8) & ((int)value[6]>>16) & ((int)value[7]>>24);
     
     //    min
     if (param->ctrlInfo->hasMin)    {
@@ -1450,8 +1457,13 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
         memcpy(value,bytesPtr,bytesRead);
         free(bytesPtr);
         bytesPtr = nil;
-        param->pan.min = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
-        param->tilt.min = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+        
+        NSLog(@"%lu %lu", sizeof(int), sizeof(int));
+        
+        NSLog(@"0x%X 0x%X 0x%X 0x%X", value[0], (((int)value[1])<<8), ((int)value[2]<<16), ((int)value[3]<<24));
+        param->pan.min = (int)(value[0] + (((int)value[1])<<8) + ((int)value[2]<<16) + ((int)value[3]<<24));
+        NSLog(@"0x%X 0x%X 0x%X 0x%X", value[4], (((int)value[5])<<8), ((int)value[6]<<16), ((int)value[7]<<24));
+        param->tilt.min = (int)(value[4] + ((int)value[5]<<8) + ((int)value[6]<<16) + ((int)value[7]<<24));
     }
     
     //    max
@@ -1465,8 +1477,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
         memcpy(value,bytesPtr,bytesRead);
         free(bytesPtr);
         bytesPtr = nil;
-        param->pan.max = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
-        param->tilt.max = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+        param->pan.max = value[0] + ((int)value[1]<<8) + ((int)value[2]<<16) + ((int)value[3]<<24);
+        param->tilt.max = value[4] + ((int)value[5]<<8) + ((int)value[6]<<16) + ((int)value[7]<<24);
     }
     
     //    default
@@ -1480,8 +1492,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
         memcpy(value,bytesPtr,bytesRead);
         free(bytesPtr);
         bytesPtr = nil;
-        param->pan.def = value[0] & (value[1]>>8) & (value[2]>>16) & (value[3]>>24);
-        param->tilt.def = value[4] & (value[5]>>8) & (value[6]>>16) & (value[7]>>24);
+        param->pan.def = value[0] + ((int)value[1]<<8) + ((int)value[2]<<16) + ((int)value[3]<<24);
+        param->tilt.def = value[4] + ((int)value[5]<<8) + ((int)value[6]<<16) + ((int)value[7]<<24);
     }
     
     
@@ -1493,9 +1505,9 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 }
 
 - (void) _populateParam:(uvc_param *)param	{
-	//long			*longPtr = nil;
+	//int			*intPtr = nil;
 	void			*bytesPtr = nil;
-	long			tmpLong = 0;
+	int			tmpint = 0;
 	int				bytesRead = 0;
 	
 	bytesRead = [self _requestValType:UVC_GET_INFO forControl:param->ctrlInfo returnVal:&bytesPtr];
@@ -1503,12 +1515,12 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		goto DISABLED_PARAM;
 	}
 	
-	tmpLong = 0x00000000;
-	memcpy(&tmpLong,bytesPtr,bytesRead);
+	tmpint = 0x00000000;
+	memcpy(&tmpint,bytesPtr,bytesRead);
 	free(bytesPtr);
 	bytesPtr = nil;
 	
-	BOOL			canGetAndSet = (((tmpLong & 0x01) == 0x01) && ((tmpLong & 0x02) == 0x02)) ? YES : NO;
+	BOOL			canGetAndSet = (((tmpint & 0x01) == 0x01) && ((tmpint & 0x02) == 0x02)) ? YES : NO;
 	if (!canGetAndSet)	{
 		NSXLog(@"err: can't get or set");
 		goto DISABLED_PARAM;
@@ -1517,7 +1529,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	param->supported = YES;
 	
 	int			paramSize = param->ctrlInfo->intendedSize;
-	long		valSizeMask;
+	int		valSizeMask;
 	if (paramSize == 1) {
 		valSizeMask = 0x00FF;
 	} else if (paramSize == 2) {
@@ -1530,22 +1542,22 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	}
 	
 	int					shiftToGetSignBit = ((paramSize * 8) - 1);
-	unsigned long		maskToRevealSign = (param->ctrlInfo->isSigned) ? (0x0001 << shiftToGetSignBit) : (0x0000);
-	unsigned long		maskToRemoveSign = maskToRevealSign-1;
+	unsigned int		maskToRevealSign = (param->ctrlInfo->isSigned) ? (0x0001 << shiftToGetSignBit) : (0x0000);
+	unsigned int		maskToRemoveSign = maskToRevealSign-1;
 
 	bytesRead = [self _requestValType:UVC_GET_CUR forControl:param->ctrlInfo returnVal:&bytesPtr];
 	if (bytesRead <= 0)	{
 		NSXLog(@"err: couldn't get current val");
 		goto DISABLED_PARAM;
 	}
-	tmpLong = 0x00000000;
-	memcpy(&tmpLong,bytesPtr,bytesRead);
+	tmpint = 0x00000000;
+	memcpy(&tmpint,bytesPtr,bytesRead);
 	free(bytesPtr);
 	bytesPtr = nil;
-	param->val = (tmpLong & valSizeMask & maskToRemoveSign);
+	param->val = (tmpint & valSizeMask & maskToRemoveSign);
 
 	param->actualSize = bytesRead;
-	if ((tmpLong & maskToRevealSign) != 0)
+	if ((tmpint & maskToRevealSign) != 0)
 		param->val = param->val * -1;
 	
 	//	min
@@ -1553,14 +1565,14 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		bytesRead = [self _requestValType:UVC_GET_MIN forControl:param->ctrlInfo returnVal:&bytesPtr];
 		if (bytesRead <= 0)
 			goto DISABLED_PARAM;
-		tmpLong = 0x00000000;
-		memcpy(&tmpLong,bytesPtr,bytesRead);
+		tmpint = 0x00000000;
+		memcpy(&tmpint,bytesPtr,bytesRead);
 		free(bytesPtr);
 		bytesPtr = nil;
-		if ((tmpLong & maskToRevealSign) == 0)
-			param->min = (tmpLong & valSizeMask & maskToRemoveSign);
+		if ((tmpint & maskToRevealSign) == 0)
+			param->min = (tmpint & valSizeMask & maskToRemoveSign);
 		else
-			param->min = -((~tmpLong & valSizeMask) + 1);
+			param->min = -((~tmpint & valSizeMask) + 1);
 	}
 	
 	//	max
@@ -1568,14 +1580,14 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		bytesRead = [self _requestValType:UVC_GET_MAX forControl:param->ctrlInfo returnVal:&bytesPtr];
 		if (bytesRead <= 0)
 			goto DISABLED_PARAM;
-		tmpLong = 0x00000000;
-		memcpy(&tmpLong,bytesPtr,bytesRead);
+		tmpint = 0x00000000;
+		memcpy(&tmpint,bytesPtr,bytesRead);
 		free(bytesPtr);
 		bytesPtr = nil;
-		if ((tmpLong & maskToRevealSign) == 0)
-			param->max = (tmpLong & valSizeMask & maskToRemoveSign);
+		if ((tmpint & maskToRevealSign) == 0)
+			param->max = (tmpint & valSizeMask & maskToRemoveSign);
 		else
-			param->max = -((~tmpLong & valSizeMask) + 1);
+			param->max = -((~tmpint & valSizeMask) + 1);
 	}
 	
 	//	default
@@ -1583,14 +1595,14 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 		bytesRead = [self _requestValType:UVC_GET_DEF forControl:param->ctrlInfo returnVal:&bytesPtr];
 		if (bytesRead <= 0)
 			goto DISABLED_PARAM;
-		tmpLong = 0x00000000;
-		memcpy(&tmpLong,bytesPtr,bytesRead);
+		tmpint = 0x00000000;
+		memcpy(&tmpint,bytesPtr,bytesRead);
 		free(bytesPtr);
 		bytesPtr = nil;
-		if ((tmpLong & maskToRevealSign) == 0)
-			param->def = (tmpLong & valSizeMask & maskToRemoveSign);
+		if ((tmpint & maskToRevealSign) == 0)
+			param->def = (tmpint & valSizeMask & maskToRemoveSign);
 		else
-			param->def = -((~tmpLong & valSizeMask) + 1);
+			param->def = -((~tmpint & valSizeMask) + 1);
 	}
 	
 	return;
@@ -1652,18 +1664,18 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	return [self _setBytes:data sized:4 toControl:param->ctrlInfo];
 }
 
-- (BOOL)setAbsPan:(long)pan{
+- (BOOL)setAbsPan:(int)pan{
     panTilt.pan.val = pan;
     return [self pushAbsPanTiltToDevice:&panTilt];
 }
 
-- (BOOL)setAbsTilt:(long)tilt{
+- (BOOL)setAbsTilt:(int)tilt{
     panTilt.tilt.val = tilt;
     return [self pushAbsPanTiltToDevice:&panTilt];
 }
 
 - (BOOL)pushAbsPanTiltToDevice:(uvc_pan_tilt_abs_param *)panTilt{
-    long data[8];
+    uint8 data[8];
     memset(data, 0, 8);
     
     data[0] = panTilt->pan.val & 0xFF;
@@ -1811,16 +1823,16 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&autoExposurePriority];
 }
 
-- (void) setVal:(long)newVal forParam:(uvc_param *)p	{
+- (void) setVal:(int)newVal forParam:(uvc_param *)p	{
 	p->val = fminl(fmaxl(newVal,p->min),p->max);
 	[self _pushParamToDevice:p];
 }
 
-- (void) setExposureTime:(long)n	{
+- (void) setExposureTime:(int)n	{
 	[self setVal:n forParam:&exposureTime];
 }
 
-- (long) exposureTime	{
+- (int) exposureTime	{
 	if (!exposureTime.supported)
 		return 0;
 	return exposureTime.val;
@@ -1834,19 +1846,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&exposureTime];
 }
 
-- (long) minExposureTime	{
+- (int) minExposureTime	{
 	return exposureTime.min;
 }
 
-- (long) maxExposureTime	{
+- (int) maxExposureTime	{
 	return exposureTime.max;
 }
 
-- (void) setIris:(long)n	{
+- (void) setIris:(int)n	{
 	[self setVal:n forParam:&iris];
 }
 
-- (long) iris	{
+- (int) iris	{
 	return (!iris.supported) ? 0 : iris.val;
 }
 
@@ -1858,11 +1870,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&iris];
 }
 
-- (long) minIris	{
+- (int) minIris	{
 	return iris.min;
 }
 
-- (long) maxIris	{
+- (int) maxIris	{
 	return iris.max;
 }
 
@@ -1887,11 +1899,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&autoFocus];
 }
 
-- (void) setFocus:(long)n	{
+- (void) setFocus:(int)n	{
 	[self setVal:n forParam:&focus];
 }
 
-- (long) focus	{
+- (int) focus	{
 	return (!focus.supported) ? 0 : focus.val;
 }
 
@@ -1903,28 +1915,44 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&focus];
 }
 
-- (long) minFocus	{
+- (int) minFocus	{
 	return (!focus.supported) ? 0 : focus.min;
 }
 
-- (long) maxFocus	{
+- (int) maxFocus	{
 	return (!focus.supported) ? 0 : focus.max;
 }
 
-- (void) setZoom:(long)n	{
-	NSXLog(@"set zoom %ld", n);
-	[self setVal:n forParam:&zoom];
+- (int)minAbsPan{
+    return panTilt.pan.min;
 }
 
-- (long)absPan{
+- (int)maxAbsPan{
+    return panTilt.pan.max;
+}
+
+- (int)absPan{
     return panTilt.pan.val;
 }
 
-- (long)absTilt{
+- (int)minAbsTilt{
+    return panTilt.tilt.min;
+}
+
+- (int)maxAbsTilt{
+    return panTilt.tilt.max;
+}
+
+- (int)absTilt{
     return panTilt.tilt.val;
 }
 
-- (long) zoom	{
+- (void) setZoom:(int)n    {
+    NSXLog(@"set zoom %ld", n);
+    [self setVal:n forParam:&zoom];
+}
+
+- (int) zoom	{
 	return (!zoom.supported) ? 0 : zoom.val;
 }
 
@@ -1936,19 +1964,27 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&zoom];
 }
 
-- (long) minZoom	{
+- (int) minZoom	{
 	return (!zoom.supported) ? 0 : zoom.min;
 }
 
-- (long) maxZoom	{
+- (int) maxZoom	{
 	return (!zoom.supported) ? 0 : zoom.max;
 }
 
-- (void) setRoll:(long)n{
+-(int)minRoll{
+    return roll.min;
+}
+
+- (int)maxRoll{
+    return roll.max;
+}
+
+- (void) setRoll:(int)n{
     [self setVal:n forParam:&roll];
 }
 
-- (long) roll	{
+- (int) roll	{
 	return roll.val;
 }
 
@@ -1956,11 +1992,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	return roll.supported;
 }
 
-- (void) setBacklight:(long)n	{
+- (void) setBacklight:(int)n	{
 	[self setVal:n forParam:&backlight];
 }
 
-- (long) backlight	{
+- (int) backlight	{
 	return (!backlight.supported) ? 0 : backlight.val;
 }
 
@@ -1972,19 +2008,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&backlight];
 }
 
-- (long) minBacklight	{
+- (int) minBacklight	{
 	return (!backlight.supported) ? 0 : backlight.min;
 }
 
-- (long) maxBacklight	{
+- (int) maxBacklight	{
 	return (!backlight.supported) ? 0 : backlight.max;
 }
 
-- (void) setBright:(long)n	{
+- (void) setBright:(int)n	{
 	[self setVal:n forParam:&bright];
 }
 
-- (long) bright	{
+- (int) bright	{
 	return (!bright.supported) ? 0 : bright.val;
 }
 
@@ -1996,19 +2032,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&bright];
 }
 
-- (long) minBright	{
+- (int) minBright	{
 	return (!bright.supported) ? 0 : bright.min;
 }
 
-- (long) maxBright	{
+- (int) maxBright	{
 	return (!bright.supported) ? 0 : bright.max;
 }
 
-- (void) setContrast:(long)n	{
+- (void) setContrast:(int)n	{
 	[self setVal:n forParam:&contrast];
 }
 
-- (long) contrast	{
+- (int) contrast	{
 	return (!contrast.supported) ? 0 : contrast.val;
 }
 
@@ -2020,19 +2056,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&contrast];
 }
 
-- (long) minContrast	{
+- (int) minContrast	{
 	return (!contrast.supported) ? 0 : contrast.min;
 }
 
-- (long) maxContrast	{
+- (int) maxContrast	{
 	return (!contrast.supported) ? 0 : contrast.max;
 }
 
-- (void) setGain:(long)n	{
+- (void) setGain:(int)n	{
 	[self setVal:n forParam:&gain];
 }
 
-- (long) gain	{
+- (int) gain	{
 	if (!gain.supported)
 		return 0;
 	return gain.val;
@@ -2046,19 +2082,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&gain];
 }
 
-- (long) minGain	{
+- (int) minGain	{
 	return (!gain.supported) ? 0 : gain.min;
 }
 
-- (long) maxGain	{
+- (int) maxGain	{
 	return (!gain.supported) ? 0 : gain.max;
 }
 
-- (void) setPowerLine:(long)n	{
+- (void) setPowerLine:(int)n	{
 	[self setVal:n forParam:&powerLine];
 }
 
-- (long) powerLine	{
+- (int) powerLine	{
 	if (!powerLine.supported)
 		return 0;
 	return powerLine.val;
@@ -2072,11 +2108,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&powerLine];
 }
 
-- (long) minPowerLine {
+- (int) minPowerLine {
 	return (!powerLine.supported) ? 0 : powerLine.min;
 }
 
-- (long) maxPowerLine {
+- (int) maxPowerLine {
 	return (!powerLine.supported) ? 0 : powerLine.max;
 }
 
@@ -2102,11 +2138,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&autoHue];
 }
 
-- (void) setHue:(long)n	{
+- (void) setHue:(int)n	{
 	[self setVal:n forParam:&hue];
 }
 
-- (long) hue {
+- (int) hue {
 	return (!hue.supported) ? 0 : hue.val;
 }
 
@@ -2118,19 +2154,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&hue];
 }
 
-- (long) minHue	{
+- (int) minHue	{
 	return (!hue.supported) ? 0 : hue.min;
 }
 
-- (long) maxHue	{
+- (int) maxHue	{
 	return (!hue.supported) ? 0 : hue.max;
 }
 
-- (void) setSaturation:(long)n	{
+- (void) setSaturation:(int)n	{
 	[self setVal:n forParam:&saturation];
 }
 
-- (long) saturation	{
+- (int) saturation	{
 	return (!saturation.supported) ? 0 : saturation.val;
 }
 
@@ -2142,19 +2178,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&saturation];
 }
 
-- (long) minSaturation	{
+- (int) minSaturation	{
 	return (!saturation.supported) ? 0 : saturation.min;
 }
 
-- (long) maxSaturation	{
+- (int) maxSaturation	{
 	return (!saturation.supported) ? 0 : saturation.max;
 }
 
-- (void) setSharpness:(long)n {
+- (void) setSharpness:(int)n {
 	[self setVal:n forParam:&sharpness];
 }
 
-- (long) sharpness	{
+- (int) sharpness	{
 	return (!sharpness.supported) ? 0 : sharpness.val;
 }
 
@@ -2166,19 +2202,19 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&sharpness];
 }
 
-- (long) minSharpness {
+- (int) minSharpness {
 	return (!sharpness.supported) ? 0 : sharpness.min;
 }
 
-- (long) maxSharpness	{
+- (int) maxSharpness	{
 	return (!sharpness.supported) ? 0 : sharpness.max;
 }
 
-- (void) setGamma:(long)n {
+- (void) setGamma:(int)n {
 	[self setVal:n forParam:&gamma];
 }
 
-- (long) gamma {
+- (int) gamma {
 	if (!gamma.supported)
 		return 0;
 	return gamma.val;
@@ -2192,11 +2228,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&gamma];
 }
 
-- (long) minGamma {
+- (int) minGamma {
 	return (!gamma.supported) ? 0 : gamma.min;
 }
 
-- (long) maxGamma {
+- (int) maxGamma {
 	return (!gamma.supported) ? 0 : gamma.max;
 }
 
@@ -2222,11 +2258,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&autoWhiteBalance];
 }
 
-- (void) setWhiteBalance:(long)n {
+- (void) setWhiteBalance:(int)n {
 	[self setVal:n forParam:&whiteBalance];
 }
 
-- (long) whiteBalance {
+- (int) whiteBalance {
 	return (!whiteBalance.supported) ? 0 : whiteBalance.val;
 }
 
@@ -2238,11 +2274,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	[self _resetParamToDefault:&whiteBalance];
 }
 
-- (long) minWhiteBalance	{
+- (int) minWhiteBalance	{
 	return whiteBalance.min;
 }
 
-- (long) maxWhiteBalance {
+- (int) maxWhiteBalance {
 	return whiteBalance.max;
 }
 

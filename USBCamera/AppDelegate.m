@@ -151,40 +151,73 @@ typedef enum : NSUInteger {
 
 // imageCtrl
 - (void)imageCtrlPageUpdate{
-    [_brightnessLabel setIntegerValue:[uvcController bright]];
+    _brightnessSlider.minValue = [uvcController minBright];
+    _brightnessSlider.maxValue = [uvcController maxBright];
+    _brightnessSlider.altIncrementValue = 1;
     [_brightnessSlider setIntegerValue:[uvcController bright]];
+    [_brightnessLabel setStringValue:@(_brightnessSlider.intValue).stringValue];
     
-    [_contrastLabel setIntegerValue:[uvcController contrast]];
+    _contrastSlider.minValue = [uvcController minContrast];
+    _contrastSlider.maxValue = [uvcController maxContrast];
+    _contrastSlider.altIncrementValue = 1;
     [_contrastSlider setIntegerValue:[uvcController contrast]];
+    [_contrastLabel setStringValue:@(_contrastSlider.intValue).stringValue];
     
-    [_hueLabel setIntegerValue:[uvcController hue]];
     [_hueSlider setIntegerValue:[uvcController hue]];
+    _hueSlider.minValue = [uvcController minHue];
+    _hueSlider.maxValue = [uvcController maxHue];
+    _hueSlider.altIncrementValue = 1;
+    [_hueLabel setStringValue:@(_hueSlider.intValue).stringValue];
     
-    [_saturateLabel setIntegerValue:[uvcController saturation]];
     [_saturateSlider setIntegerValue:[uvcController saturation]];
+    _saturateSlider.minValue = [uvcController minSaturation];
+    _saturateSlider.maxValue = [uvcController maxSaturation];
+    _saturateSlider.altIncrementValue = 1;
+    [_saturateLabel setStringValue:@(_saturateSlider.intValue).stringValue];
     
-    [_sharpnessLabel setIntegerValue:[uvcController sharpness]];
+    _sharpnessSlider.minValue = [uvcController minSharpness];
+    _sharpnessSlider.maxValue = [uvcController maxSharpness];
+    _sharpnessSlider.altIncrementValue = 1;
     [_sharpnessSlider setIntegerValue:[uvcController sharpness]];
+    [_sharpnessLabel setStringValue:@(_sharpnessSlider.intValue).stringValue];
     
-    [_gammaLabel setIntegerValue:[uvcController gamma]];
+    _gammaSlider.minValue = [uvcController minGamma];
+    _gammaSlider.maxValue = [uvcController maxGamma];
+    _gammaSlider.altIncrementValue = 1;
     [_gammaSlider setIntegerValue:[uvcController gamma]];
+    [_gammaLabel setStringValue:@(_gammaSlider.intValue).stringValue];
+    
     
     [_whiteBalanceSwitch setState:[uvcController isAutoWhiteBalance]?NSControlStateValueOn:NSControlStateValueOff];
-    [_whiteBalanceLabel setIntegerValue:[uvcController whiteBalance]];
+    _whiteBalanceSlider.minValue = [uvcController minWhiteBalance];
+    _whiteBalanceSlider.maxValue = [uvcController maxWhiteBalance];
+    _whiteBalanceSlider.altIncrementValue = 1;
     [_whiteBalanceSlider setIntegerValue:[uvcController whiteBalance]];
+    [_whiteBalanceLabel setStringValue:@(_whiteBalanceSlider.intValue).stringValue];
+    if ([uvcController isAutoWhiteBalance]) {
+        _whiteBalanceSlider.enabled = false;
+    } else {
+        _whiteBalanceSlider.enabled = true;
+    }
     
-    [_backlightLabel setIntegerValue:[uvcController backlight]];
+    _backlightContrastSlider.minValue = [uvcController minBacklight];
+    _backlightContrastSlider.maxValue = [uvcController maxBacklight];
+    _backlightContrastSlider.altIncrementValue = 1;
     [_backlightContrastSlider setIntegerValue:[uvcController backlight]];
+    [_backlightLabel setStringValue:@(_backlightContrastSlider.intValue).stringValue];
     
-    [_gainLabel setIntegerValue:[uvcController gain]];
+    _gainSlider.minValue = [uvcController minGain];
+    _gainSlider.maxValue = [uvcController maxGain];
+    _gainSlider.altIncrementValue = 1;
     [_gainSlider setIntegerValue:[uvcController gain]];
+    [_gainLabel setStringValue:@(_gainSlider.intValue).stringValue];
     
     [_anitFickerSelector selectItemAtIndex:[uvcController powerLine]];
 }
 
 - (IBAction)brightnessSlideAction:(id)sender {
     [uvcController setBright:_brightnessSlider.intValue];
-    [_brightnessLabel setStringValue:_brightnessSlider.stringValue];
+    [_brightnessLabel setStringValue:@(_brightnessSlider.intValue).stringValue];
 }
 
 - (IBAction)brightnessAutoAction:(id)sender {
@@ -192,7 +225,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)contrastSlideAction:(id)sender {
     [uvcController setContrast:_contrastSlider.intValue];
-    [_contrastLabel setStringValue:_contrastSlider.stringValue];
+    [_contrastLabel setStringValue:@(_contrastSlider.intValue).stringValue];
 }
 
 - (IBAction)contrastAutoAction:(id)sender {
@@ -201,7 +234,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)hueSlideAction:(id)sender {
     [uvcController setHue:_hueSlider.intValue];
-    [_hueLabel setStringValue:_hueSlider.stringValue];
+    [_hueLabel setStringValue:@(_hueSlider.intValue).stringValue];
 }
 
 - (IBAction)hueAutoAction:(id)sender {
@@ -210,7 +243,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)saturateSlideAction:(id)sender {
     [uvcController setSaturation:_saturateSlider.intValue];
-    [_saturateLabel setStringValue:_saturateSlider.stringValue];
+    [_saturateLabel setStringValue:@(_saturateSlider.intValue).stringValue];
 }
 
 - (IBAction)saturateAutoAction:(id)sender {
@@ -219,7 +252,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)sharpnessSlideAction:(id)sender {
     [uvcController setSharpness:_sharpnessSlider.intValue];
-    [_sharpnessLabel setStringValue:_sharpnessSlider.stringValue];
+    [_sharpnessLabel setStringValue:@(_sharpnessSlider.intValue).stringValue];
 }
 
 - (IBAction)sharpnessAutoAction:(id)sender {
@@ -228,7 +261,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)gammaSlideAction:(id)sender {
     [uvcController setGamma:_gammaSlider.intValue];
-    [_gammaLabel setStringValue:_gammaSlider.stringValue];
+    [_gammaLabel setStringValue:@(_gammaSlider.intValue).stringValue];
 }
 
 - (IBAction)gammaAutoAction:(id)sender {
@@ -237,7 +270,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)whiteBalanceAction:(id)sender {
     [uvcController setWhiteBalance:_whiteBalanceSlider.intValue];
-    [_whiteBalanceLabel setStringValue:_whiteBalanceSlider.stringValue];
+    [_whiteBalanceLabel setStringValue:@(_whiteBalanceSlider.intValue).stringValue];
 }
 
 - (IBAction)whiteBalanceAutoAction:(id)sender {
@@ -246,13 +279,14 @@ typedef enum : NSUInteger {
         _whiteBalanceSlider.enabled = false;
     } else {
         [uvcController setAutoWhiteBalance:false];
+        [uvcController setWhiteBalance:_whiteBalanceSlider.intValue];
         _whiteBalanceSlider.enabled = true;
     }
 }
 
 - (IBAction)backlightContracstAction:(id)sender {
     [uvcController setBacklight:_backlightContrastSlider.intValue];
-    [_backlightLabel setStringValue:_backlightContrastSlider.stringValue];
+    [_backlightLabel setStringValue:@(_backlightContrastSlider.intValue).stringValue];
 }
 
 - (IBAction)backlightAutoAction:(id)sender {
@@ -261,7 +295,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)gainSlideAction:(id)sender {
     [uvcController setGain:_gainSlider.intValue];
-    [_gainLabel setStringValue:_gainSlider.stringValue];
+    [_gainLabel setStringValue:@(_gainSlider.intValue).stringValue];
 }
 
 - (IBAction)gainAutoAction:(id)sender {
@@ -269,7 +303,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)antiFickerPopUpButton:(id)sender {
     NSPopUpButton *pop = sender;
-    [uvcController setPowerLine:pop.indexOfSelectedItem];
+    [uvcController setPowerLine:(int)pop.indexOfSelectedItem];
 }
 
 - (IBAction)imageCtrlDefaultAction:(id)sender {
@@ -290,26 +324,53 @@ typedef enum : NSUInteger {
 // camera Ctrl
 - (void)cameraCtrlPageUpdate{
     [_zoomLabel setIntegerValue:[uvcController zoom]];
+    _zoomSlider.minValue = [uvcController minZoom];
+    _zoomSlider.maxValue = [uvcController maxZoom];
+    _zoomSlider.altIncrementValue = 1;
     [_zoomSlider setIntegerValue:[uvcController zoom]];
+    [_zoomLabel setStringValue:@(_zoomSlider.intValue).stringValue];
     
-    [_focusLabel setIntegerValue:[uvcController focus]];
+    _focusSlider.minValue = [uvcController minFocus];
+    _focusSlider.maxValue = [uvcController maxFocus];
+    _focusSlider.altIncrementValue = 1;
     [_focusSlider setIntegerValue:[uvcController focus]];
+    [_focusLabel setStringValue:@(_focusSlider.intValue).stringValue];
     
-    [_exposureLabel setIntegerValue:[uvcController exposureTime]];
+    _exposureSlider.minValue = [uvcController minExposureTime];
+    _exposureSlider.maxValue = [uvcController maxExposureTime];
+    _exposureSlider.altIncrementValue = 1;
     [_exposureSlider setIntegerValue:[uvcController exposureTime]];
+    [_exposureLabel setStringValue:@(_exposureSlider.intValue).stringValue];
     [_exposureSwitch setState:[uvcController isExposureAutoMode]?NSControlStateValueOn:NSControlStateValueOff];
+    if ([uvcController isExposureAutoMode]){
+        _exposureSlider.enabled = false;
+    } else {
+        _exposureSlider.enabled = true;
+    }
     
-    [_irisLabel setIntegerValue:[uvcController iris]];
+    _irisSlider.minValue = [uvcController minIris];
+    _irisSlider.maxValue = [uvcController maxIris];
+    _irisSlider.altIncrementValue = 1;
     [_irisSlider setIntegerValue:[uvcController iris]];
+    [_irisLabel setStringValue:@(_irisSlider.intValue).stringValue];
     
-    [_panoramaLabel setIntegerValue:[uvcController absPan]];
+    _panoramaSlider.minValue = [uvcController minAbsPan];
+    _panoramaSlider.maxValue = [uvcController maxAbsPan];
+    _panoramaSlider.altIncrementValue = 1;
     [_panoramaSlider setIntegerValue:[uvcController absPan]];
+    [_panoramaLabel setStringValue:@(_panoramaSlider.intValue).stringValue];
     
-    [_tiltLabel setIntegerValue:[uvcController absTilt]];
+    _tiltSlider.minValue = [uvcController minAbsTilt];
+    _tiltSlider.maxValue = [uvcController maxAbsTilt];
+    _tiltSlider.altIncrementValue = 1;
     [_tiltSlider setIntegerValue:[uvcController absTilt]];
+    [_tiltLabel setStringValue:@(_tiltSlider.intValue).stringValue];
     
-    [_rollLabel setIntegerValue:[uvcController roll]];
+    _rollSlider.minValue = [uvcController minRoll];
+    _rollSlider.maxValue = [uvcController maxRoll];
+    _rollSlider.altIncrementValue = 1;
     [_rollSlider setIntegerValue:[uvcController roll]];
+    [_rollLabel setStringValue:@(_rollSlider.intValue).stringValue];
 }
 
 - (IBAction)cameraCtrlDefautAction:(id)sender {
@@ -329,7 +390,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)zoomSliderAction:(id)sender {
     [uvcController setZoom:_zoomSlider.intValue];
-    [_zoomLabel setStringValue:_zoomSlider.stringValue];
+    [_zoomLabel setStringValue:@(_zoomSlider.intValue).stringValue];
 }
 
 - (IBAction)zoomSwitchAction:(id)sender {
@@ -337,7 +398,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)focusSliderAction:(id)sender {
     [uvcController setFocus:_focusSlider.intValue];
-    [_focusLabel setStringValue:_focusSlider.stringValue];
+    [_focusLabel setStringValue:@(_focusSlider.intValue).stringValue];
 }
 
 - (IBAction)focusSwitchAction:(id)sender {
@@ -345,7 +406,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)exposureSliderAction:(id)sender {
     [uvcController setExposureTime:_exposureSlider.intValue];
-    [_exposureLabel setStringValue:_exposureSlider.stringValue];
+    [_exposureLabel setStringValue:@(_exposureSlider.intValue).stringValue];
 }
 
 - (IBAction)exposureSwitchAction:(id)sender {
@@ -354,13 +415,14 @@ typedef enum : NSUInteger {
         _exposureSlider.enabled = false;
     } else {
         [uvcController setAutoExposureMode:UVC_AEMode_Manual];
+        [uvcController setExposureTime:_exposureSlider.intValue];
         _exposureSlider.enabled = true;
     }
 }
 
 - (IBAction)irisSliderAction:(id)sender {
     [uvcController setIris:_irisSlider.intValue];
-    [_irisLabel setStringValue:_irisSlider.stringValue];
+    [_irisLabel setStringValue:@(_irisSlider.intValue).stringValue];
 }
 
 - (IBAction)irisAutoAction:(id)sender {
@@ -368,7 +430,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)panoramaSliderAction:(id)sender {
     [uvcController setAbsPan:_panoramaSlider.intValue];
-    [_panoramaLabel setStringValue:_panoramaSlider.stringValue];
+    [_panoramaLabel setStringValue:@(_panoramaSlider.intValue).stringValue];
 }
 
 - (IBAction)panoramaAutoAction:(id)sender {
@@ -376,7 +438,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)tiltSliderAction:(id)sender {
     [uvcController setAbsTilt:_tiltSlider.intValue];
-    [_tiltLabel setStringValue:_tiltSlider.stringValue];
+    [_tiltLabel setStringValue:@(_tiltSlider.intValue).stringValue];
 }
 
 - (IBAction)tiltAutoAction:(id)sender {
@@ -384,7 +446,7 @@ typedef enum : NSUInteger {
 
 - (IBAction)rollSliderAction:(id)sender {
     [uvcController setRoll:_rollSlider.intValue];
-    [_rollLabel setStringValue:_rollSlider.stringValue];
+    [_rollLabel setStringValue:@(_rollSlider.intValue).stringValue];
 }
 
 - (IBAction)rollAutoAction:(id)sender {

@@ -1277,18 +1277,18 @@
                                             </textFieldCell>
                                         </textField>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6Hb-af-iX6">
-                                            <rect key="frame" x="132" y="522" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="522" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="174" id="8NV-76-i4U"/>
                                                 <constraint firstAttribute="height" constant="20" id="VQ1-ys-397"/>
                                             </constraints>
-                                            <sliderCell key="cell" state="on" alignment="left" maxValue="100" doubleValue="50" tickMarkPosition="above" sliderType="linear" id="6A6-cC-5jd"/>
+                                            <sliderCell key="cell" alignment="left" maxValue="100" doubleValue="69.17312423904221" tickMarkPosition="above" sliderType="linear" id="6A6-cC-5jd"/>
                                             <connections>
                                                 <action selector="brightnessSlideAction:" target="494" id="p2l-c6-T5G"/>
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="qus-gr-TY2">
-                                            <rect key="frame" x="132" y="483" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="483" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="52g-jM-gSP"/>
                                                 <constraint firstAttribute="width" constant="174" id="rvn-TZ-bpp"/>
@@ -1299,7 +1299,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YFp-Ww-vL4">
-                                            <rect key="frame" x="132" y="441" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="441" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="iYB-pa-9AR"/>
                                                 <constraint firstAttribute="width" constant="174" id="yUh-FN-o7c"/>
@@ -1310,7 +1310,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ZX0-S0-gIo">
-                                            <rect key="frame" x="132" y="405" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="405" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="174" id="2g4-ER-hnf"/>
                                                 <constraint firstAttribute="height" constant="20" id="5tJ-oW-6Hf"/>
@@ -1320,22 +1320,10 @@
                                                 <action selector="saturateSlideAction:" target="494" id="r8X-xw-fea"/>
                                             </connections>
                                         </slider>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rFE-8E-c55">
-                                            <rect key="frame" x="314" y="529" width="25" height="16"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="Jjo-Hh-nRr"/>
-                                                <constraint firstAttribute="height" constant="16" id="xwj-qF-vCL"/>
-                                            </constraints>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="Idj-z3-EUh">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="27z-q7-T8y">
-                                            <rect key="frame" x="314" y="491" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="490" width="34" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="vrt-7f-UDC"/>
+                                                <constraint firstAttribute="width" constant="30" id="vrt-7f-UDC"/>
                                                 <constraint firstAttribute="height" constant="16" id="yk6-eJ-TKT"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="XGR-Ff-F6F">
@@ -1345,9 +1333,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Uh-Dl-Ihq">
-                                            <rect key="frame" x="314" y="449" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="448" width="34" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="Kdk-7G-h4d"/>
+                                                <constraint firstAttribute="width" constant="30" id="Kdk-7G-h4d"/>
                                                 <constraint firstAttribute="height" constant="16" id="SXK-qD-DH7"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="fXj-ts-07a">
@@ -1357,10 +1345,10 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="PER-U6-wTJ">
-                                            <rect key="frame" x="314" y="413" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="412" width="34" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="ZYh-fv-MpA"/>
-                                                <constraint firstAttribute="width" constant="21" id="g0a-ha-tvp"/>
+                                                <constraint firstAttribute="width" constant="30" id="g0a-ha-tvp"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="Xuu-qT-t3b">
                                                 <font key="font" metaFont="system"/>
@@ -1369,9 +1357,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ryI-f4-xSi">
-                                            <rect key="frame" x="314" y="372" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="371" width="34" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="CWL-7R-jW1"/>
+                                                <constraint firstAttribute="width" constant="30" id="CWL-7R-jW1"/>
                                                 <constraint firstAttribute="height" constant="16" id="Scs-Mz-ymH"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="Rdb-XN-EQJ">
@@ -1381,9 +1369,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="k6x-5x-EmS">
-                                            <rect key="frame" x="314" y="336" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="335" width="34" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="cuB-0r-ZDd"/>
+                                                <constraint firstAttribute="width" constant="30" id="cuB-0r-ZDd"/>
                                                 <constraint firstAttribute="height" constant="16" id="xdJ-Ey-32Z"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="Qzz-WN-UhV">
@@ -1393,10 +1381,10 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Sal-tN-Lqm">
-                                            <rect key="frame" x="314" y="297" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="296" width="34" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="E8c-jD-FxO"/>
-                                                <constraint firstAttribute="width" constant="21" id="tqi-OA-70F"/>
+                                                <constraint firstAttribute="width" constant="30" id="tqi-OA-70F"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="4LW-QB-1Ad">
                                                 <font key="font" metaFont="system"/>
@@ -1405,9 +1393,9 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8UC-jp-N7g">
-                                            <rect key="frame" x="314" y="256" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="255" width="34" height="16"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="KPh-fr-oRe"/>
+                                                <constraint firstAttribute="width" constant="30" id="KPh-fr-oRe"/>
                                                 <constraint firstAttribute="height" constant="16" id="ini-wY-0vQ"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="WUT-mJ-WDN">
@@ -1417,10 +1405,10 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6fb-ro-vhD">
-                                            <rect key="frame" x="314" y="223" width="25" height="16"/>
+                                            <rect key="frame" x="305" y="222" width="34" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="7Da-7v-ZnY"/>
-                                                <constraint firstAttribute="width" constant="21" id="bAx-m0-IXf"/>
+                                                <constraint firstAttribute="width" constant="30" id="bAx-m0-IXf"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="vMG-S7-alO">
                                                 <font key="font" metaFont="system"/>
@@ -1527,7 +1515,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HRv-xi-DLI">
-                                            <rect key="frame" x="132" y="364" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="364" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="2pm-oR-x4z"/>
                                                 <constraint firstAttribute="width" constant="174" id="Dcp-W4-iwD"/>
@@ -1538,7 +1526,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7ma-eB-mr6">
-                                            <rect key="frame" x="132" y="327" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="327" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="174" id="XvL-gZ-BAn"/>
                                                 <constraint firstAttribute="height" constant="20" id="kjz-cv-x09"/>
@@ -1549,7 +1537,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gg5-fd-TiD">
-                                            <rect key="frame" x="132" y="289" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="289" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="2xf-Ub-i65"/>
                                                 <constraint firstAttribute="width" constant="174" id="cjy-cl-ulz"/>
@@ -1560,7 +1548,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="p4s-1z-xe3">
-                                            <rect key="frame" x="132" y="250" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="250" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="174" id="VSs-6p-xW7"/>
                                                 <constraint firstAttribute="height" constant="20" id="eYi-Dh-nBJ"/>
@@ -1571,7 +1559,7 @@
                                             </connections>
                                         </slider>
                                         <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6bP-UZ-CeQ">
-                                            <rect key="frame" x="132" y="215" width="178" height="28"/>
+                                            <rect key="frame" x="123" y="215" width="178" height="28"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="174" id="BBE-FP-HoX"/>
                                                 <constraint firstAttribute="height" constant="20" id="jL6-Xe-QHW"/>
@@ -1673,6 +1661,18 @@ Gw
                                                 <action selector="imageCtrlApplyAction:" target="494" id="sHs-Gb-0gz"/>
                                             </connections>
                                         </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rFE-8E-c55">
+                                            <rect key="frame" x="305" y="528" width="34" height="16"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="aGf-c8-xeq"/>
+                                                <constraint firstAttribute="height" constant="16" id="zJt-Oc-stJ"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="Idj-z3-EUh">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="qZS-df-gPC" firstAttribute="leading" secondItem="1EY-Pa-keR" secondAttribute="leading" constant="7" id="1dt-df-IU4"/>
@@ -1683,7 +1683,6 @@ Gw
                                         <constraint firstItem="p4s-1z-xe3" firstAttribute="top" secondItem="gg5-fd-TiD" secondAttribute="bottom" constant="19" id="7JD-hw-GrG"/>
                                         <constraint firstItem="qZS-df-gPC" firstAttribute="top" secondItem="mPo-lE-zNH" secondAttribute="bottom" constant="23" id="AsE-hG-u3H"/>
                                         <constraint firstItem="LhA-fl-9UK" firstAttribute="leading" secondItem="6fb-ro-vhD" secondAttribute="trailing" constant="8" symbolic="YES" id="BgQ-ob-R1g"/>
-                                        <constraint firstItem="27z-q7-T8y" firstAttribute="top" secondItem="rFE-8E-c55" secondAttribute="bottom" constant="22" id="BkA-X4-mr3"/>
                                         <constraint firstItem="FA9-sK-Ou8" firstAttribute="leading" secondItem="4Uh-Dl-Ihq" secondAttribute="trailing" constant="8" id="Bzn-GI-EsW"/>
                                         <constraint firstItem="PER-U6-wTJ" firstAttribute="top" secondItem="4Uh-Dl-Ihq" secondAttribute="bottom" constant="20" id="CJF-oc-hLw"/>
                                         <constraint firstAttribute="trailing" secondItem="LhA-fl-9UK" secondAttribute="trailing" constant="39" id="CZh-en-HJF"/>
@@ -1693,6 +1692,7 @@ Gw
                                         <constraint firstItem="27z-q7-T8y" firstAttribute="leading" secondItem="qus-gr-TY2" secondAttribute="trailing" constant="8" id="GNS-vu-sge"/>
                                         <constraint firstItem="o1r-RR-ohP" firstAttribute="top" secondItem="2KI-gh-0w5" secondAttribute="bottom" constant="21" id="Gcj-eU-GcS"/>
                                         <constraint firstAttribute="trailing" secondItem="er2-QH-q4u" secondAttribute="trailing" constant="39" id="H4K-rh-Kcd"/>
+                                        <constraint firstItem="6Hb-af-iX6" firstAttribute="leading" secondItem="qus-gr-TY2" secondAttribute="leading" id="H7x-tg-VSS"/>
                                         <constraint firstItem="0yk-W6-dFN" firstAttribute="top" secondItem="sXU-5l-KdL" secondAttribute="bottom" constant="21" id="Ha1-i2-cmn"/>
                                         <constraint firstItem="0yk-W6-dFN" firstAttribute="leading" secondItem="1EY-Pa-keR" secondAttribute="leading" constant="7" id="Iy3-pr-ov2"/>
                                         <constraint firstItem="gg5-fd-TiD" firstAttribute="top" secondItem="7ma-eB-mr6" secondAttribute="bottom" constant="18" id="JnZ-oY-k3m"/>
@@ -1702,6 +1702,7 @@ Gw
                                         <constraint firstItem="ryI-f4-xSi" firstAttribute="top" secondItem="PER-U6-wTJ" secondAttribute="bottom" constant="25" id="MEd-Gq-Yd2"/>
                                         <constraint firstItem="6fb-ro-vhD" firstAttribute="leading" secondItem="6bP-UZ-CeQ" secondAttribute="trailing" constant="8" symbolic="YES" id="Mym-Hs-Mpf"/>
                                         <constraint firstItem="2KI-gh-0w5" firstAttribute="top" secondItem="v3A-NJ-bvU" secondAttribute="bottom" constant="25" id="N2K-LG-cw2"/>
+                                        <constraint firstItem="27z-q7-T8y" firstAttribute="top" secondItem="rFE-8E-c55" secondAttribute="bottom" constant="22" id="N7e-m7-mPN"/>
                                         <constraint firstItem="PER-U6-wTJ" firstAttribute="leading" secondItem="ZX0-S0-gIo" secondAttribute="trailing" constant="8" symbolic="YES" id="OyW-Pj-p0N"/>
                                         <constraint firstItem="SsA-k1-w2T" firstAttribute="top" secondItem="oQ5-AJ-7ia" secondAttribute="bottom" constant="27" id="PDK-RU-o1p"/>
                                         <constraint firstItem="728-iS-Dc7" firstAttribute="top" secondItem="0yk-W6-dFN" secondAttribute="bottom" constant="21" id="QRL-hh-9u4"/>
@@ -1719,6 +1720,7 @@ Gw
                                         <constraint firstItem="X3j-2A-f7j" firstAttribute="top" secondItem="1EY-Pa-keR" secondAttribute="top" constant="34" id="ZD4-av-gar"/>
                                         <constraint firstItem="8UC-jp-N7g" firstAttribute="top" secondItem="Sal-tN-Lqm" secondAttribute="bottom" constant="25" id="aaT-VZ-7FS"/>
                                         <constraint firstItem="oQ5-AJ-7ia" firstAttribute="leading" secondItem="Sal-tN-Lqm" secondAttribute="trailing" constant="8" symbolic="YES" id="ajr-6X-YVl"/>
+                                        <constraint firstItem="sc8-8B-lo9" firstAttribute="leading" secondItem="rFE-8E-c55" secondAttribute="trailing" constant="8" symbolic="YES" id="anC-BG-Sei"/>
                                         <constraint firstItem="LhA-fl-9UK" firstAttribute="top" secondItem="SsA-k1-w2T" secondAttribute="bottom" constant="19" id="aqz-Gp-30t"/>
                                         <constraint firstItem="UGY-8u-CrM" firstAttribute="leading" secondItem="ESJ-3f-KV5" secondAttribute="trailing" constant="8" symbolic="YES" id="b0q-Ya-0Ke"/>
                                         <constraint firstItem="6Hb-af-iX6" firstAttribute="top" secondItem="1EY-Pa-keR" secondAttribute="top" constant="32" id="bRE-Z5-fqj"/>
@@ -1730,7 +1732,6 @@ Gw
                                         <constraint firstAttribute="trailing" secondItem="Z6d-8N-chy" secondAttribute="trailing" constant="31" id="d02-Oi-Wm9"/>
                                         <constraint firstItem="oQ5-AJ-7ia" firstAttribute="top" secondItem="cig-mn-sOv" secondAttribute="bottom" constant="24" id="db7-O4-o5M"/>
                                         <constraint firstItem="SsA-k1-w2T" firstAttribute="leading" secondItem="8UC-jp-N7g" secondAttribute="trailing" constant="8" symbolic="YES" id="ehp-sA-s1B"/>
-                                        <constraint firstItem="6Hb-af-iX6" firstAttribute="leading" secondItem="X3j-2A-f7j" secondAttribute="trailing" constant="62" id="eut-tC-DyZ"/>
                                         <constraint firstItem="ryI-f4-xSi" firstAttribute="leading" secondItem="HRv-xi-DLI" secondAttribute="trailing" constant="8" symbolic="YES" id="faI-lm-3ti"/>
                                         <constraint firstItem="728-iS-Dc7" firstAttribute="leading" secondItem="1EY-Pa-keR" secondAttribute="leading" constant="7" id="foO-qq-O0A"/>
                                         <constraint firstItem="qus-gr-TY2" firstAttribute="top" secondItem="6Hb-af-iX6" secondAttribute="bottom" constant="19" id="gVG-UB-ujU"/>
@@ -1740,6 +1741,7 @@ Gw
                                         <constraint firstItem="7ma-eB-mr6" firstAttribute="top" secondItem="HRv-xi-DLI" secondAttribute="bottom" constant="17" id="ifb-6I-E4q"/>
                                         <constraint firstItem="6YC-OH-8fM" firstAttribute="leading" secondItem="27z-q7-T8y" secondAttribute="trailing" constant="8" id="ixS-W1-fhM"/>
                                         <constraint firstItem="er2-QH-q4u" firstAttribute="top" secondItem="FA9-sK-Ou8" secondAttribute="bottom" constant="22" id="k6V-g7-dEq"/>
+                                        <constraint firstItem="6Hb-af-iX6" firstAttribute="bottom" secondItem="rFE-8E-c55" secondAttribute="bottom" id="lGg-cs-0oF"/>
                                         <constraint firstItem="UGY-8u-CrM" firstAttribute="top" secondItem="6bP-UZ-CeQ" secondAttribute="bottom" constant="44" id="lPL-Fr-Ya3"/>
                                         <constraint firstAttribute="trailing" secondItem="FA9-sK-Ou8" secondAttribute="trailing" constant="39" id="lhp-mN-wH1"/>
                                         <constraint firstAttribute="trailing" secondItem="717-qn-PDm" secondAttribute="trailing" constant="39" id="mU3-fL-Z9Q"/>
@@ -1754,10 +1756,8 @@ Gw
                                         <constraint firstItem="YFp-Ww-vL4" firstAttribute="top" secondItem="qus-gr-TY2" secondAttribute="bottom" constant="22" id="u9t-sS-xDm"/>
                                         <constraint firstAttribute="trailing" secondItem="oQ5-AJ-7ia" secondAttribute="trailing" constant="39" id="v9o-oa-2Um"/>
                                         <constraint firstItem="cig-mn-sOv" firstAttribute="leading" secondItem="k6x-5x-EmS" secondAttribute="trailing" constant="8" symbolic="YES" id="w7g-GO-0UR"/>
-                                        <constraint firstItem="rFE-8E-c55" firstAttribute="leading" secondItem="6Hb-af-iX6" secondAttribute="trailing" constant="8" id="xN1-6L-fI7"/>
                                         <constraint firstItem="v3A-NJ-bvU" firstAttribute="leading" secondItem="1EY-Pa-keR" secondAttribute="leading" constant="7" id="y3J-f9-b1f"/>
                                         <constraint firstItem="k6x-5x-EmS" firstAttribute="top" secondItem="ryI-f4-xSi" secondAttribute="bottom" constant="20" id="yNn-1v-f6F"/>
-                                        <constraint firstItem="rFE-8E-c55" firstAttribute="top" secondItem="1EY-Pa-keR" secondAttribute="top" constant="35" id="yUs-3N-HF1"/>
                                         <constraint firstItem="2KI-gh-0w5" firstAttribute="leading" secondItem="1EY-Pa-keR" secondAttribute="leading" constant="7" id="yvR-ex-BSt"/>
                                         <constraint firstItem="dk1-DT-f2e" firstAttribute="top" secondItem="728-iS-Dc7" secondAttribute="bottom" constant="43" id="ziN-oi-jZf"/>
                                         <constraint firstItem="cig-mn-sOv" firstAttribute="top" secondItem="717-qn-PDm" secondAttribute="bottom" constant="23" id="zzH-TO-Grv"/>
@@ -1839,7 +1839,7 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0mY-fB-j5p">
-                                                    <rect key="frame" x="132" y="522" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="522" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="174" id="7Hw-QM-YgV"/>
                                                         <constraint firstAttribute="height" constant="20" id="XyT-d0-H4T"/>
@@ -1850,7 +1850,7 @@ Gw
                                                     </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pU8-fV-GWg">
-                                                    <rect key="frame" x="132" y="483" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="483" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="174" id="iz3-YY-B2M"/>
                                                         <constraint firstAttribute="height" constant="20" id="uIf-2U-ZLq"/>
@@ -1861,7 +1861,7 @@ Gw
                                                     </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="G1U-Xt-KRK">
-                                                    <rect key="frame" x="132" y="441" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="441" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="174" id="L9q-Di-J5D"/>
                                                         <constraint firstAttribute="height" constant="20" id="dZ4-ow-8r9"/>
@@ -1872,7 +1872,7 @@ Gw
                                                     </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Agf-sQ-7bn">
-                                                    <rect key="frame" x="132" y="405" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="405" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="FBH-sY-dig"/>
                                                         <constraint firstAttribute="width" constant="174" id="gXq-xt-xs4"/>
@@ -1884,10 +1884,10 @@ Gw
                                                     </sliderCell>
                                                 </slider>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DI1-dX-q68">
-                                                    <rect key="frame" x="314" y="491" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="491" width="64" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="tvF-W8-L8f"/>
-                                                        <constraint firstAttribute="width" constant="21" id="zwO-gr-6Hx"/>
+                                                        <constraint firstAttribute="width" constant="60" id="zwO-gr-6Hx"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="1jG-EX-SbP">
                                                         <font key="font" metaFont="system"/>
@@ -1896,9 +1896,9 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Y41-3d-8UR">
-                                                    <rect key="frame" x="314" y="449" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="449" width="64" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="21" id="KSd-CQ-xoO"/>
+                                                        <constraint firstAttribute="width" constant="60" id="KSd-CQ-xoO"/>
                                                         <constraint firstAttribute="height" constant="16" id="wgo-As-YLm"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="wzZ-zl-zTr">
@@ -1908,10 +1908,10 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bGf-n0-ui0">
-                                                    <rect key="frame" x="314" y="413" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="413" width="64" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="Lkv-RA-LHQ"/>
-                                                        <constraint firstAttribute="width" constant="21" id="b4N-Ud-Pbg"/>
+                                                        <constraint firstAttribute="width" constant="60" id="b4N-Ud-Pbg"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="eiI-jL-UUp">
                                                         <font key="font" metaFont="system"/>
@@ -1920,10 +1920,10 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bgF-Ci-Q13">
-                                                    <rect key="frame" x="314" y="372" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="372" width="64" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="Uce-V8-udj"/>
-                                                        <constraint firstAttribute="width" constant="21" id="fMN-1C-LBe"/>
+                                                        <constraint firstAttribute="width" constant="60" id="fMN-1C-LBe"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="RER-ic-iiB">
                                                         <font key="font" metaFont="system"/>
@@ -1932,9 +1932,9 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bgw-ti-HSu">
-                                                    <rect key="frame" x="314" y="336" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="336" width="64" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="21" id="GvR-1g-0ew"/>
+                                                        <constraint firstAttribute="width" constant="60" id="GvR-1g-0ew"/>
                                                         <constraint firstAttribute="height" constant="16" id="V7k-0Q-fQT"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="YQW-Bx-cpn">
@@ -1944,10 +1944,10 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HYm-Za-K3l">
-                                                    <rect key="frame" x="314" y="297" width="25" height="16"/>
+                                                    <rect key="frame" x="275" y="297" width="64" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="8hQ-Lg-Udo"/>
-                                                        <constraint firstAttribute="width" constant="21" id="T0h-n6-iuP"/>
+                                                        <constraint firstAttribute="width" constant="60" id="T0h-n6-iuP"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="0" id="eav-EK-ryI">
                                                         <font key="font" metaFont="system"/>
@@ -2034,7 +2034,7 @@ Gw
                                                     </textFieldCell>
                                                 </textField>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NAI-aF-fS9">
-                                                    <rect key="frame" x="132" y="364" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="364" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="T46-ld-TzQ"/>
                                                         <constraint firstAttribute="width" constant="174" id="iuT-X6-pi2"/>
@@ -2045,7 +2045,7 @@ Gw
                                                     </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UGS-er-mFz">
-                                                    <rect key="frame" x="132" y="327" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="327" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="174" id="GG9-6Q-fOv"/>
                                                         <constraint firstAttribute="height" constant="20" id="ZqQ-lB-IBP"/>
@@ -2056,7 +2056,7 @@ Gw
                                                     </connections>
                                                 </slider>
                                                 <slider verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="M7h-67-hNZ">
-                                                    <rect key="frame" x="132" y="289" width="178" height="28"/>
+                                                    <rect key="frame" x="93" y="289" width="178" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="6gX-Bz-IO6"/>
                                                         <constraint firstAttribute="width" constant="174" id="Zed-F2-xkT"/>
@@ -2107,9 +2107,9 @@ Gw
                                                     </buttonCell>
                                                 </button>
                                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8ax-7K-tvH">
-                                                    <rect key="frame" x="313" y="529" width="25" height="16"/>
+                                                    <rect key="frame" x="274" y="529" width="64" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="21" id="Trg-SC-gUi"/>
+                                                        <constraint firstAttribute="width" constant="60" id="Trg-SC-gUi"/>
                                                         <constraint firstAttribute="height" constant="16" id="f7g-gL-MGD"/>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="gD4-h2-LQA"/>
                                                     </constraints>
@@ -2244,7 +2244,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
                         <clipView key="contentView" drawsBackground="NO" id="WRL-LN-KmG">
                             <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="WQd-uf-CEC">
                                     <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
@@ -2253,6 +2253,16 @@ Gw
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <size key="minSize" width="386" height="612"/>
                                     <size key="maxSize" width="397" height="10000000"/>
+                                    <attributedString key="textStorage">
+                                        <fragment>
+                                            <string key="content">The USBBusProber framework is based on apple's open-source code, and as such, it retains the "apple public source license" (which is included).</string>
+                                            <attributes>
+                                                <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <font key="NSFont" usesAppearanceFont="YES"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                 </textView>
                             </subviews>

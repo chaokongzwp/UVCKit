@@ -37,10 +37,10 @@ typedef struct {
 
 typedef struct	{
 	BOOL	supported;	//	if YES, this parameter is supported. if NO, either the camera doesn't support this parameter, or the "inputTerminalID" or "processingUnitID" of the camera is wrong!
-	long	min;	//	the paramter's actual min val
-	long	max;	//	the parameter's actual max val
-	long	val;	//	the parameter's actual val
-	long	def;	//	the parameter's default val
+	int 	min;	//	the paramter's actual min val
+	int 	max;	//	the parameter's actual max val
+	int 	val;	//	the parameter's actual val
+	int 	def;	//	the parameter's default val
 	int		actualSize;
 	uvc_control_info_t	*ctrlInfo;
 } uvc_param;
@@ -170,29 +170,29 @@ struct fireware_info{
 ///	Resets the auto exposure priority to the hardware-defined default
 - (void) resetAutoExposurePriority;
 ///	Sets the exposure time to the passed value
-- (void) setExposureTime:(long)n;
+- (void) setExposureTime:(int)n;
 ///	Gets the current exposure time value being used by the camera
-- (long) exposureTime;
+- (int) exposureTime;
 ///	Whether or not this camera supports the exposure time parameter
 - (BOOL) exposureTimeSupported;
 ///	Resets the exposure time value to the hardware-defined default
 - (void) resetExposureTime;
 ///	The min exposure time value
-- (long) minExposureTime;
+- (int) minExposureTime;
 ///	The max exposure time value
-- (long) maxExposureTime;
+- (int) maxExposureTime;
 ///	Sets the iris to the passed value
-- (void) setIris:(long)n;
+- (void) setIris:(int)n;
 ///	Gets the current iris value being used by the camera
-- (long) iris;
+- (int) iris;
 ///	Whether or not this camera supports the iris parameter
 - (BOOL) irisSupported;
 ///	Resets the iris value to the hardware-defined default
 - (void) resetIris;
 ///	The min iris value
-- (long) minIris;
+- (int) minIris;
 ///	The max iris value
-- (long) maxIris;
+- (int) maxIris;
 ///	Sets the auto focus to the passed value
 - (void) setAutoFocus:(BOOL)n;
 ///	Gets the auto focus value being used by the camera
@@ -202,89 +202,89 @@ struct fireware_info{
 ///	Resets the auto focus value to the hardware-defined default.
 - (void) resetAutoFocus;
 ///	Sets the focus value
-- (void) setFocus:(long)n;
+- (void) setFocus:(int)n;
 ///	Gets the focus value currently being used by the camera
-- (long) focus;
+- (int) focus;
 ///	Whether or not this camera supports the focus parameter
 - (BOOL) focusSupported;
 ///	Resets the focus value to the hardware-defined default
 - (void) resetFocus;
 ///	The min focus value
-- (long) minFocus;
+- (int) minFocus;
 ///	The max focus value
-- (long) maxFocus;
+- (int) maxFocus;
 ///	Sets the zoom value
-- (void) setZoom:(long)n;
+- (void) setZoom:(int)n;
 ///	Gets the current zoom value being used by the camera
-- (long) zoom;
+- (int) zoom;
 ///	Whether or not this camera supports the zoom parameter
 - (BOOL) zoomSupported;
 ///	Resets the zoom value to the hardware-defined default
 - (void) resetZoom;
 ///	The min zoom value
-- (long) minZoom;
+- (int) minZoom;
 ///	The max zoom value
-- (long) maxZoom;
+- (int) maxZoom;
 ///	Sets the backlight to the passed value
-- (void) setBacklight:(long)n;
+- (void) setBacklight:(int)n;
 ///	Gets the backlight value currently being used by the camera
-- (long) backlight;
+- (int) backlight;
 ///	Whether or not this camera supports the backlight parameter
 - (BOOL) backlightSupported;
 ///	Resets the backlight value to the hardware-defined default
 - (void) resetBacklight;
 ///	The min backlight value
-- (long) minBacklight;
+- (int) minBacklight;
 ///	The max backlight value
-- (long) maxBacklight;
+- (int) maxBacklight;
 ///	Sets the bright value to the passed value
-- (void) setBright:(long)n;
+- (void) setBright:(int)n;
 ///	Gets the bright value currently being used by the camera
-- (long) bright;
+- (int) bright;
 ///	Whether or not this camera supports the bright parameter
 - (BOOL) brightSupported;
 ///	Resets the bright parameter to the hardware-defined default
 - (void) resetBright;
 ///	The min bright value
-- (long) minBright;
+- (int) minBright;
 ///	The max bright value
-- (long) maxBright;
+- (int) maxBright;
 ///	Sets the contrast to the passed value
-- (void) setContrast:(long)n;
+- (void) setContrast:(int)n;
 ///	Gets the contrast value currently being used by the camera
-- (long) contrast;
+- (int) contrast;
 ///	Whether or not this camera supports the contrast parameter
 - (BOOL) contrastSupported;
 ///	Resets the contrast to the hardware-defined default
 - (void) resetContrast;
 ///	The min contrast value
-- (long) minContrast;
+- (int) minContrast;
 ///	The max contrast value
-- (long) maxContrast;
+- (int) maxContrast;
 ///	Sets the gain to the passed value
-- (void) setGain:(long)n;
+- (void) setGain:(int)n;
 ///	Gets the gain value currently being used by the camera
-- (long) gain;
+- (int) gain;
 ///	Whether or not this camera supports the gain parameter
 - (BOOL) gainSupported;
 ///	Resets the gain value to the hardware-defined default
 - (void) resetGain;
 ///	The min gain value
-- (long) minGain;
+- (int) minGain;
 ///	The max gain value
-- (long) maxGain;
+- (int) maxGain;
 ///	Sets the powerline to the passed value
-- (void) setPowerLine:(long)n;
+- (void) setPowerLine:(int)n;
 ///	Gets the powerline value currently being used by the camera
-- (long) powerLine;
+- (int) powerLine;
 ///	Whether or not this camera supports the powerline parameter
 - (BOOL) powerLineSupported;
 ///	Resets the powerline value to the hardware-defined default
 - (void) resetPowerLine;
 ///	The min powerline value
-- (long) minPowerLine;
+- (int) minPowerLine;
 ///	The max powerline value
-- (long) maxPowerLine;
+- (int) maxPowerLine;
 ///	Sets the auto hue to the passed value
 - (void) setAutoHue:(BOOL)n;
 ///	The auto hue value currently being used by the camera
@@ -294,53 +294,53 @@ struct fireware_info{
 ///	Resets the auto hue parameter to the hardware-defined default
 - (void) resetAutoHue;
 ///	Sets the hue to the passed value
-- (void) setHue:(long)n;
+- (void) setHue:(int)n;
 ///	Gets the hue value currently being used by the camera
-- (long) hue;
+- (int) hue;
 ///	Whether or not this camera supports the hue parameter
 - (BOOL) hueSupported;
 ///	Resets the hue parameter to the hardware-defined default
 - (void) resetHue;
 ///	The min hue value
-- (long) minHue;
+- (int) minHue;
 ///	The max hue value
-- (long) maxHue;
+- (int) maxHue;
 ///	Sets the saturation to the passed value
-- (void) setSaturation:(long)n;
+- (void) setSaturation:(int)n;
 ///	Gets the saturation value currently being used by the camera
-- (long) saturation;
+- (int) saturation;
 ///	Whether or not this camera supports the saturation parameter
 - (BOOL) saturationSupported;
 ///	Resets the saturation to the hardware-defined default
 - (void) resetSaturation;
 ///	The min saturation value
-- (long) minSaturation;
+- (int) minSaturation;
 ///	The max saturation value
-- (long) maxSaturation;
+- (int) maxSaturation;
 ///	Sets the sharpness to the passed value
-- (void) setSharpness:(long)n;
+- (void) setSharpness:(int)n;
 ///	Gets the sharpness value currently being used by the camera
-- (long) sharpness;
+- (int) sharpness;
 ///	Whether or not this camera supports the sharpness parameter
 - (BOOL) sharpnessSupported;
 ///	Resets the sharpness to the hardware-defined default
 - (void) resetSharpness;
 ///	The min sharpness value
-- (long) minSharpness;
+- (int) minSharpness;
 ///	The max sharpness value
-- (long) maxSharpness;
+- (int) maxSharpness;
 ///	Sets the gamma to the passed value
-- (void) setGamma:(long)n;
+- (void) setGamma:(int)n;
 ///	Gets the gamma value currently being used by the camera
-- (long) gamma;
+- (int) gamma;
 ///	Whether or not this camera supports the gamma parameter
 - (BOOL) gammaSupported;
 ///	Resets the gamma value to the hardware-defined default
 - (void) resetGamma;
 ///	The min gamma value
-- (long) minGamma;
+- (int) minGamma;
 ///	The max gamma value
-- (long) maxGamma;
+- (int) maxGamma;
 ///	Sets the auto white balance to the passed value
 - (void) setAutoWhiteBalance:(BOOL)n;
 ///	Gets the auto white balance value currently being used by the camera
@@ -350,29 +350,35 @@ struct fireware_info{
 ///	Resets the auto white balance to the hardware-defined default
 - (void) resetAutoWhiteBalance;
 ///	Sets the white balance to the passed value
-- (void) setWhiteBalance:(long)n;
+- (void) setWhiteBalance:(int)n;
 ///	Gets the white balance value currently being used by the camera
-- (long) whiteBalance;
+- (int) whiteBalance;
 ///	Whether or not this camera supports the white balance parameter
 - (BOOL) whiteBalanceSupported;
 ///	Resets the white balance value to the hardware-defined default
 - (void) resetWhiteBalance;
 ///	The min white balance value
-- (long) minWhiteBalance;
+- (int) minWhiteBalance;
 ///	The max white balance value
-- (long) maxWhiteBalance;
+- (int) maxWhiteBalance;
 - (BOOL) panTilt:(UVC_PAN_TILT_DIRECTION)direction;
 - (NSString *)getExtensionVersion;
 - (BOOL)setUpdateMode;
 - (BOOL)resetPanTilt;
 - (BOOL) setRelativeZoomControl:(UInt8)bZoom;
 
-- (long)absPan;
-- (BOOL)setAbsPan:(long)pan;
-- (long)absTilt;
-- (BOOL)setAbsTilt:(long)tilt;
-- (void) setRoll:(long)n;
-- (long) roll;
+- (int)minAbsPan;
+- (int)maxAbsPan;
+- (int)absPan;
+- (BOOL)setAbsPan:(int)pan;
+- (int)minAbsTilt;
+- (int)maxAbsTilt;
+- (int)absTilt;
+- (BOOL)setAbsTilt:(int)tilt;
+- (void) setRoll:(int)n;
+- (int)minRoll;
+- (int)maxRoll;
+- (int) roll;
 - (BOOL) rollSupported;
 
 // flip
