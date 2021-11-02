@@ -665,7 +665,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="611"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="876" height="680"/>
             <value key="maxSize" type="size" width="876" height="680"/>
             <value key="minFullScreenContentSize" type="size" width="876" height="680"/>
@@ -772,7 +772,7 @@
                         <rect key="frame" x="336" y="58" width="508" height="79"/>
                         <clipView key="contentView" drawsBackground="NO" id="c6d-eN-Bjp">
                             <rect key="frame" x="2" y="2" width="504" height="75"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="KPx-Qc-dSx">
                                     <rect key="frame" x="0.0" y="0.0" width="504" height="75"/>
@@ -1102,7 +1102,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
+            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -1144,7 +1144,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N8j-aQ-lB0">
-                                            <rect key="frame" x="295" y="424" width="69" height="32"/>
+                                            <rect key="frame" x="294" y="424" width="70" height="32"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gZe-IP-D42">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -1586,7 +1586,7 @@
                                                 <constraint firstAttribute="width" constant="67" id="22e-zy-QcW"/>
                                                 <constraint firstAttribute="height" constant="16" id="fZM-xf-fOo"/>
                                             </constraints>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Anti-Ficker" id="nhB-Cn-mPV">
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Anti-Flicker" id="nhB-Cn-mPV">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -2232,7 +2232,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1792" height="1095"/>
+            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -2244,7 +2244,7 @@ Gw
                         <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
                         <clipView key="contentView" drawsBackground="NO" id="WRL-LN-KmG">
                             <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <autoresizingMask key="autoresizingMask"/>
                             <subviews>
                                 <textView importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="WQd-uf-CEC">
                                     <rect key="frame" x="0.0" y="0.0" width="386" height="612"/>
@@ -2327,14 +2327,14 @@ Gw
         </textField>
     </objects>
     <resources>
-        <image name="app_icon" width="32" height="32"/>
-        <image name="arrow-down-filling" width="16" height="16"/>
-        <image name="arrow-left-filling" width="16" height="16"/>
-        <image name="arrow-right-filling" width="16" height="16"/>
-        <image name="arrow-up-filling" width="16" height="16"/>
-        <image name="home-filling" width="16" height="16"/>
-        <image name="menu" width="32" height="32"/>
-        <image name="zoom-in" width="16" height="16"/>
-        <image name="zoom-out" width="16" height="16"/>
+        <image name="app_icon" width="64" height="64"/>
+        <image name="arrow-down-filling" width="32" height="32"/>
+        <image name="arrow-left-filling" width="32" height="32"/>
+        <image name="arrow-right-filling" width="32" height="32"/>
+        <image name="arrow-up-filling" width="32" height="32"/>
+        <image name="home-filling" width="32" height="32"/>
+        <image name="menu" width="64" height="64"/>
+        <image name="zoom-in" width="32" height="32"/>
+        <image name="zoom-out" width="32" height="32"/>
     </resources>
 </document>

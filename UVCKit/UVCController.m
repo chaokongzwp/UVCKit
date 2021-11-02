@@ -645,9 +645,9 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     [self cameraCtrlInit];
 	
 	//	create the nib from my class name
-	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
+//	theNib = [[NSNib alloc] initWithNibNamed:[self className] bundle:[NSBundle bundleForClass:[self class]]];
 	//	unpack the nib, instantiating the object
-	[theNib instantiateWithOwner:self topLevelObjects:nil];
+//	[theNib instantiateWithOwner:self topLevelObjects:nil];
 	
 	if (uiCtrlr != nil)
 		[uiCtrlr _pushCameraControlStateToUI];

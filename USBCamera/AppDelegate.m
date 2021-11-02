@@ -515,7 +515,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)otherCameraSetting:(id)sender {
-	[uvcController openSettingsWindow];
+//	[uvcController openSettingsWindow];
 }
 
 - (IBAction)saveLogAction:(id)sender {
