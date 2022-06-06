@@ -377,6 +377,7 @@
 		NSString		*uniqueID = [devicePtr uniqueID];
 		[newItem setRepresentedObject:uniqueID];
 		[returnMe addObject:newItem];
+        NSXLog(@"arrayOfSourceMenuItems %@ %@",[devicePtr localizedName], uniqueID);
 	}
 	
 	return returnMe;

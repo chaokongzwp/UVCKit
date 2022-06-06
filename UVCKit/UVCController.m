@@ -325,8 +325,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 /*------------------------------------*/
 - (id) initWithDeviceIDString:(NSString *)n	{
 	if (n != nil)	{
-		unsigned int locationID = 0;
-		sscanf([n UTF8String], "0x%8x",&locationID);
+		NSUInteger locationID = 0;
+        sscanf([n UTF8String], "0x%16lx",&locationID);
 		if (locationID){
 			return [self initWithLocationID:locationID];
 		}
@@ -335,24 +335,26 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	return nil;
 }
 
-- (id) initWithLocationID:(UInt32)locationID {
-	NSXLog(@"%d, %X",(unsigned int)locationID,(unsigned int)locationID);
+- (id) initWithLocationID:(NSUInteger)locationID {
+	NSXLog(@"initWithLocationID %lu, 0x%x", locationID, locationID);
 	self = [super init];
 	if (self!=nil) {
 		//	technically i don't need to set these here- they're calculated below from the BusProber, but default values are good, m'kay?
 		inputTerminalID = 1;
 		processingUnitID = 2;	//	logitech C910
-		deviceLocationID = locationID;
+		deviceLocationID = locationID >> 32;
 		interface = NULL;
 		videoName = [NSMutableArray array];
-		
+
 		//	first of all, i need to harvest a couple pieces of data from the USB device- i need:
 		//		- the "Terminal ID" of the "VDC ((Control) Input Terminal" of the "Video/Control" interface in the "Configuration Descriptor"
 		//		- the "Unit ID" of the "VDC ((Control) Processing Unit" of the "Video/Control" interface in the "Configuration Descriptor"
 		BusProber		*prober = [[BusProber alloc] init];
 		NSMutableArray	*devices = [prober devicesArray];
 		for (BusProbeDevice *devicePtr in devices)	{
-			if ([devicePtr locationID] == locationID)	{
+            NSXLog(@"device deviceName %@  locationID %x",[devicePtr deviceName], [devicePtr locationID]);
+            NSXLog(@"%@", [devicePtr dictionaryVersionOfMe]);
+			if ([devicePtr locationID] == deviceLocationID)	{
 				NSXLog(@"found device %@",[devicePtr deviceName]);
 				NSDictionary		*tmpDict = [devicePtr dictionaryVersionOfMe];
 				NSXLog(@"top-level keys are %@",[tmpDict allKeys]);
@@ -525,7 +527,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 					UInt32 currentLocationID = 0;
 					(*deviceInterface)->GetLocationID(deviceInterface, &currentLocationID);
 					//	if this is the USB device i was looking for...
-					if( currentLocationID == locationID ) {
+					if( currentLocationID == deviceLocationID ) {
 						//	get the usb interface
 						interface = [self _getControlInferaceWithDeviceInterface:deviceInterface];
 						[self generalInit];

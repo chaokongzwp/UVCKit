@@ -90,7 +90,7 @@ struct fireware_info{
 
 @interface UVCController : NSObject {
 	IOUSBInterfaceInterface190		**interface;
-	UInt32							deviceLocationID;
+    NSUInteger							deviceLocationID;
 	UInt8							interfaceNumber;
 	int								inputTerminalID;
 	int								processingUnitID;
@@ -131,7 +131,7 @@ struct fireware_info{
 }
 
 - (id) initWithDeviceIDString:(NSString *)n;
-- (id) initWithLocationID:(UInt32)locationID;
+- (id) initWithLocationID:(NSUInteger)locationID;
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface;
 - (void) generalInit;
 - (NSMutableDictionary *) createSnapshot;
