@@ -566,7 +566,7 @@ typedef enum : NSUInteger {
 	} else {
 		self.updateState = UVCUpdateStateNone;
 		self.updateDeviceId = nil;
-		[UVCUtils showAlert:@"启动升级模式失败！！" title:@"异常提示" window:mainView.window completionHandler:nil];
+		[UVCUtils showAlert:@"Failed to start upgrade mode! !" title:@"Exception" window:mainView.window completionHandler:nil];
 	}
 }
 
@@ -700,7 +700,7 @@ typedef enum : NSUInteger {
 		[[camPUB menu] addItem:itemPtr];
 	}
 	if (devicesMenuItems.count == 0) {
-		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:@"选择摄像头" action:nil keyEquivalent:@""];
+		NSMenuItem		*newItem = [[NSMenuItem alloc] initWithTitle:@"choose camera" action:nil keyEquivalent:@""];
 		[[camPUB menu] addItem:newItem];
 	}
 	[camPUB selectItemAtIndex:0];
@@ -783,7 +783,7 @@ typedef enum : NSUInteger {
             upgradeProgressIndicator.doubleValue = 100;
             self.updateState = UVCUpdateStateNone;
             self.updateDeviceId = nil;
-            [UVCUtils showAlert:@"请检查设备新版本号！" title:@"更新结束" window:mainView.window completionHandler:nil];
+            [UVCUtils showAlert:@"Please check the new version number of the device!" title:@"End of update" window:mainView.window completionHandler:nil];
             return;
             
         default:
@@ -839,7 +839,7 @@ typedef enum : NSUInteger {
 - (void)updateDeviceBinFail:(NSString *)errMsg{
     self.updateState = UVCUpdateStateNone;
     self.updateDeviceId = nil;
-    [UVCUtils showAlert:errMsg title:@"异常提示" window:mainView.window completionHandler:nil];
+    [UVCUtils showAlert:errMsg title:@"Exception" window:mainView.window completionHandler:nil];
 }
 
 - (void)setAllButtonState:(BOOL)enable{
@@ -862,19 +862,19 @@ typedef enum : NSUInteger {
     [self setAllButtonState:NO];
     switch (updateState) {
         case UVCUpdateStateStart:
-            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！"];
+            [versionTextView setString:@"During the upgrade, please do not plug and unplug any usb devices, and do not disconnect the camera!"];
             break;
         
         case UVCUpdateStateDownloadBinFileSuccess:
-            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功，升级中...."];
+            [versionTextView setString:@"During the upgrade, please do not plug and unplug any usb devices, and do not disconnect the camera! \n1. The bin file is successfully transferred, and the upgrade is in progress...."];
             break;
             
         case UVCUpdateStateRestarting:
-            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功 \n2.升级成功，设备重启中..."];
+            [versionTextView setString:@"During the upgrade, please do not plug and unplug any usb devices, and do not disconnect the camera! \n1. The bin file is successfully transferred \n2. The upgrade is successful, the device is restarting..."];
             break;
             
         case UVCUpdateStateSuccess:
-            [versionTextView setString:@"升级中，请勿插拔任何usb设备，请勿断开摄像头！\n1. bin文件传输成功 \n2.更新文件成功\n3.版本升级成功"];
+            [versionTextView setString:@"During the upgrade, please do not plug and unplug any usb devices, and do not disconnect the camera! \n1. The bin file was transferred successfully \n2. The update file was successful\n3. The version was upgraded successfully"];
             break;
         
         default:
@@ -894,7 +894,7 @@ typedef enum : NSUInteger {
             }
         }
         
-        [self updateDeviceBinFail:@"下载更新文件失败，请重启设备，重试一下！！"];
+        [self updateDeviceBinFail:@"Failed to download the update file, please restart the device and try again! !"];
     }
 }
 

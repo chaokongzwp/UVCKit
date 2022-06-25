@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -665,7 +665,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="63" y="565" width="876" height="611"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="876" height="680"/>
             <value key="maxSize" type="size" width="876" height="680"/>
             <value key="minFullScreenContentSize" type="size" width="876" height="680"/>
@@ -1102,7 +1102,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -1114,7 +1114,7 @@
                         <rect key="frame" x="-8" y="-19" width="418" height="626"/>
                         <font key="font" metaFont="system" size="16"/>
                         <tabViewItems>
-                            <tabViewItem label="Setting" identifier="" id="ScQ-99-qbW">
+                            <tabViewItem label="Settings" identifier="" id="ScQ-99-qbW">
                                 <view key="view" id="Fr5-Dj-Eyx">
                                     <rect key="frame" x="10" y="33" width="398" height="580"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1144,7 +1144,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N8j-aQ-lB0">
-                                            <rect key="frame" x="294" y="424" width="70" height="32"/>
+                                            <rect key="frame" x="295" y="424" width="69" height="32"/>
                                             <buttonCell key="cell" type="push" title="Reset" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gZe-IP-D42">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -1252,8 +1252,8 @@
                                             </textFieldCell>
                                         </textField>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="728-iS-Dc7">
-                                            <rect key="frame" x="5" y="223" width="32" height="16"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Gain" id="wlr-9R-urz">
+                                            <rect key="frame" x="5" y="223" width="92" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Exposure Gain" id="wlr-9R-urz">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1619,7 +1619,7 @@
                                                 <constraint firstAttribute="height" constant="20" id="qyq-NQ-duj"/>
                                                 <constraint firstAttribute="width" constant="70" id="wF2-2h-w4Z"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="push" title="Defatult" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9gD-XB-fk7">
+                                            <buttonCell key="cell" type="push" title="Default" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9gD-XB-fk7">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -2232,7 +2232,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="-179" y="1355" width="386" height="612"/>
-            <rect key="screenRect" x="-462" y="1050" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="402" height="680"/>
             <value key="maxSize" type="size" width="402" height="680"/>
             <value key="maxFullScreenContentSize" type="size" width="402" height="680"/>
@@ -2327,14 +2327,14 @@ Gw
         </textField>
     </objects>
     <resources>
-        <image name="app_icon" width="64" height="64"/>
-        <image name="arrow-down-filling" width="32" height="32"/>
-        <image name="arrow-left-filling" width="32" height="32"/>
-        <image name="arrow-right-filling" width="32" height="32"/>
-        <image name="arrow-up-filling" width="32" height="32"/>
-        <image name="home-filling" width="32" height="32"/>
-        <image name="menu" width="64" height="64"/>
-        <image name="zoom-in" width="32" height="32"/>
-        <image name="zoom-out" width="32" height="32"/>
+        <image name="app_icon" width="32" height="32"/>
+        <image name="arrow-down-filling" width="16" height="16"/>
+        <image name="arrow-left-filling" width="16" height="16"/>
+        <image name="arrow-right-filling" width="16" height="16"/>
+        <image name="arrow-up-filling" width="16" height="16"/>
+        <image name="home-filling" width="16" height="16"/>
+        <image name="menu" width="32" height="32"/>
+        <image name="zoom-in" width="16" height="16"/>
+        <image name="zoom-out" width="16" height="16"/>
     </resources>
 </document>
