@@ -1825,7 +1825,7 @@ Gw
                                                     <rect key="frame" x="5" y="297" width="27" height="16"/>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="Roll" id="LVc-i8-zPC">
                                                         <font key="font" usesAppearanceFont="YES"/>
-                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
