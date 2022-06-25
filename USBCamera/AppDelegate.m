@@ -354,10 +354,10 @@ typedef enum : NSUInteger {
     [_irisSlider setIntegerValue:[uvcController iris]];
     [_irisLabel setStringValue:@(_irisSlider.intValue).stringValue];
     
-    _panoramaSlider.minValue = [uvcController minAbsPan];
-    _panoramaSlider.maxValue = [uvcController maxAbsPan];
+    _panoramaSlider.minValue = [uvcController minAbsPan]/3600;
+    _panoramaSlider.maxValue = [uvcController maxAbsPan]/3600;
     _panoramaSlider.altIncrementValue = 1;
-    [_panoramaSlider setIntegerValue:[uvcController absPan]];
+    [_panoramaSlider setIntegerValue:[uvcController absPan]/3600];
     [_panoramaLabel setStringValue:@(_panoramaSlider.intValue).stringValue];
     
     _tiltSlider.minValue = [uvcController minAbsTilt];
@@ -429,7 +429,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)panoramaSliderAction:(id)sender {
-    [uvcController setAbsPan:_panoramaSlider.intValue];
+    [uvcController setAbsPan:_panoramaSlider.intValue*3600];
     [_panoramaLabel setStringValue:@(_panoramaSlider.intValue).stringValue];
 }
 
