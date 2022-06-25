@@ -474,10 +474,10 @@ typedef enum : NSUInteger {
 		[uvcController panTilt:UVC_PAN_TILT_LEFT];
 	} else if (sender == zoom_in){
 		[zoom_in setImage:[NSImage imageNamed:@"zoom-in_blue"]];
-		[uvcController setRelativeZoomControl:1];
+        [uvcController setRelativeZoomControl:0xFF];
 	} else if (sender == zoom_out){
 		[zoom_out setImage:[NSImage imageNamed:@"zoom-out_blue"]];
-		[uvcController setRelativeZoomControl:0xFF];
+        [uvcController setRelativeZoomControl:1];
     } else if (resetHomeButton == sender) {
         [resetHomeButton setImage:[NSImage imageNamed:@"home-filling_blue"]];
     }
