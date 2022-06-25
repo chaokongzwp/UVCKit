@@ -132,6 +132,7 @@ struct fireware_info{
 
 - (id) initWithDeviceIDString:(NSString *)n;
 - (id) initWithLocationID:(NSUInteger)locationID;
+- (void)resetPTZ;
 - (IOUSBInterfaceInterface190 **) _getControlInferaceWithDeviceInterface:(IOUSBDeviceInterface **)deviceInterface;
 - (void) generalInit;
 - (NSMutableDictionary *) createSnapshot;

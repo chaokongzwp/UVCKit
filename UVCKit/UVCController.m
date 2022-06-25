@@ -1251,6 +1251,11 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
     [self _pushParamToDevice:&roll];
 }
 
+- (void)resetPTZ{
+    [self _resetParamToDefault:&zoom];
+    [self resetPanTilt];
+}
+
 - (void)resetDefaultCameraCtrlParams{
     [self _resetParamToDefault:&zoom];
     [self _resetParamToDefault:&focus];
@@ -1694,8 +1699,8 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 }
 
 - (BOOL)resetPanTilt{
-    panTilt.pan.val = panTilt.pan.def;
-    panTilt.tilt.val = panTilt.tilt.def;
+    panTilt.pan.val = panTilt.pan.def?:3600;
+    panTilt.tilt.val = panTilt.tilt.def?:3600;
 	
     return [self pushAbsPanTiltToDevice:&panTilt];
 }

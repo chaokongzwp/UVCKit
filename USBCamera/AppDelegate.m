@@ -307,7 +307,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)imageCtrlDefaultAction:(id)sender {
-    [uvcController resetDefaultImageCtrlParams];
+    [uvcController rollbackImageCtrlParams];
     [self imageCtrlPageUpdate];
 }
 
@@ -360,10 +360,10 @@ typedef enum : NSUInteger {
     [_panoramaSlider setIntegerValue:[uvcController absPan]/3600];
     [_panoramaLabel setStringValue:@(_panoramaSlider.intValue).stringValue];
     
-    _tiltSlider.minValue = [uvcController minAbsTilt];
-    _tiltSlider.maxValue = [uvcController maxAbsTilt];
+    _tiltSlider.minValue = [uvcController minAbsTilt]/3600;
+    _tiltSlider.maxValue = [uvcController maxAbsTilt]/3600;
     _tiltSlider.altIncrementValue = 1;
-    [_tiltSlider setIntegerValue:[uvcController absTilt]];
+    [_tiltSlider setIntegerValue:[uvcController absTilt]/3600];
     [_tiltLabel setStringValue:@(_tiltSlider.intValue).stringValue];
     
     _rollSlider.minValue = [uvcController minRoll];
@@ -437,7 +437,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)tiltSliderAction:(id)sender {
-    [uvcController setAbsTilt:_tiltSlider.intValue];
+    [uvcController setAbsTilt:_tiltSlider.intValue*3600];
     [_tiltLabel setStringValue:@(_tiltSlider.intValue).stringValue];
 }
 
@@ -491,8 +491,8 @@ typedef enum : NSUInteger {
 	if (sender == zoom_in || sender == zoom_out){
 		[uvcController setRelativeZoomControl:0];
 	} else if (resetHomeButton == sender) {
-        [uvcController resetPanTilt];
         [uvcController setZoom:0];
+        [uvcController resetPanTilt];
     } else {
 		[uvcController panTilt:UVC_PAN_TILT_CANCEL];
 	}
