@@ -358,10 +358,10 @@ typedef enum : NSUInteger {
         _exposureSlider.enabled = true;
     }
     
-    _irisSlider.minValue = [uvcController minIris];
-    _irisSlider.maxValue = [uvcController maxIris];
+    _irisSlider.minValue = [uvcController minIris]*10;
+    _irisSlider.maxValue = [uvcController maxIris]*10;
     _irisSlider.altIncrementValue = 1;
-    [_irisSlider setIntegerValue:[uvcController iris]];
+    [_irisSlider setIntegerValue:[uvcController iris]*10];
     [_irisLabel setStringValue:@(_irisSlider.intValue).stringValue];
     
     _panoramaSlider.minValue = [uvcController minAbsPan]/3600;
@@ -438,7 +438,7 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)irisSliderAction:(id)sender {
-    [uvcController setIris:_irisSlider.intValue];
+    [uvcController setIris:_irisSlider.intValue/10];
     [_irisLabel setStringValue:@(_irisSlider.intValue).stringValue];
 }
 
