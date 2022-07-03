@@ -335,6 +335,33 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 	return nil;
 }
 
+NSString *dictionaryToJSON(NSDictionary *eventAsDictionary) {
+  NSError *error = nil;
+
+  if (eventAsDictionary == nil) {
+    return nil;
+  }
+
+  if (![NSJSONSerialization isValidJSONObject:eventAsDictionary]) {
+    return nil;
+  }
+
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:eventAsDictionary
+                                                     options:0
+                                                       error:&error];
+
+  if (error == nil) {
+    NSString *json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    return json;
+  } else {
+    return nil;
+  }
+}
+
+- (NSMutableArray<NSString *> *)getVideoName {
+    return videoName;
+}
+
 - (id) initWithLocationID:(NSUInteger)locationID {
 	NSXLog(@"initWithLocationID %lu, 0x%x", locationID, locationID);
 	self = [super init];
@@ -360,6 +387,9 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 				NSXLog(@"top-level keys are %@",[tmpDict allKeys]);
 				NSXLog(@"device dict is %@",tmpDict);
 				NSDictionary		*topLevelNodeDataDict = (tmpDict==nil) ? nil : [tmpDict objectForKey:@"nodeData"];
+                
+                NSString *json = dictionaryToJSON(tmpDict);
+                NSXLog(@"device info\n %@", json);
 				//	from the node data dict, get the 'children' array
 				NSArray				*topLevelNodeChildren = (topLevelNodeDataDict==nil) ? nil : [topLevelNodeDataDict objectForKey:@"children"];
 				//	run through the children- each child is a dict, look for the dict with a "nodeName" that contains the string "Configuration Descriptor"
@@ -455,6 +485,7 @@ uvc_control_info_t  _extensionFlipSettingCtrl;
 										}
 									}
 									
+                                    NSLog(@"=======formatIndex %@ %@ %@", formatIndex, nodeName, formatGuid);
 									if (formatIndex) {
 										if (formatGuid != NULL){
 											NSLog(@"formatGuid %@", formatGuid);

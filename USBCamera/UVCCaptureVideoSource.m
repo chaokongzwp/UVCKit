@@ -9,19 +9,7 @@
 }
 
 - (NSString *)alias{
-	if ([self.subMediaType isEqualTo:@"yuvs"]) {
-		return @"YUY2";
-	}
-
-	if ([self.subMediaType isEqualTo:@"dmb1"]) {
-		return @"MJPG";
-	}
-	
-	if ([self.subMediaType isEqualTo:@"420v"]) {
-		return @"NV12";
-	}
-
-	return _subMediaType;
+	return self.videoName;
 }
 @end
 
@@ -61,28 +49,44 @@
 	if (propDeviceInput == nil){
 		return nil;
 	}
+    
+    UVCCaptureDeviceFormat *current = [self activeFormatInfo];
 	
 	AVCaptureDevice		*propDevice = propDeviceInput.device;
 	NSMutableDictionary<NSString *, NSMutableArray *> *types = [NSMutableDictionary dictionary];
+    NSMutableArray *dimensionList = [NSMutableArray array];
 	NSXLog(@"[%@] Media Sub Types:", [propDevice localizedName]);
 	for (AVCaptureDeviceFormat *format in propDevice.formats){
 		FourCharCode codeType=CMFormatDescriptionGetMediaSubType(format.formatDescription);
 		NSString *codeTypeStr = [[NSString alloc] initWithUTF8String:FourCC2Str(codeType)];
+        if (![codeTypeStr isEqualToString:current.subMediaType]) {
+            continue;
+        }
+        
 		UVCCaptureDeviceFormat *uvcFormat = [UVCCaptureDeviceFormat new];
 		uvcFormat.subMediaType = codeTypeStr;
 		CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions(format.formatDescription);
 		NSXLog(@"%@ %u*%u", codeTypeStr, dimensions.width, dimensions.height);
 		uvcFormat.height = dimensions.height;
 		uvcFormat.width = dimensions.width;
-		
-		NSMutableArray *dimensionList = types[uvcFormat.alias];
-		if (dimensionList == nil) {
-			dimensionList = [NSMutableArray array];
-			types[uvcFormat.alias] = dimensionList;
-		}
-		
 		[dimensionList addObject:uvcFormat];
 	}
+    
+    for (NSString *videoName in self.videoName) {
+        for (UVCCaptureDeviceFormat *format in dimensionList){
+            format.videoName = videoName;
+        }
+        [types setValue:dimensionList forKey:videoName];
+    }
+    
+    if (types.count == 0) {
+        [types setValue:dimensionList forKey:@"YUV2"];
+    }
+    
+    if (current.videoName == nil) {
+        current.videoName = self.videoName.firstObject?:@"YUV2";
+        
+    }
 	
 	return types;
 }
@@ -104,6 +108,12 @@
 	uvcFormat.height = dimensions.height;
 	uvcFormat.width = dimensions.width;
 	
+    if (self.videoName.count == 0) {
+        uvcFormat.videoName = @"YUV2";
+    } else {
+        uvcFormat.videoName = self.videoName.firstObject;
+    }
+    
 	return uvcFormat;
 }
 

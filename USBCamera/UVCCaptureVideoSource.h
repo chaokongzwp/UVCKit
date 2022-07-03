@@ -9,6 +9,7 @@
 @property (assign, nonatomic) int32_t width;
 @property (assign, nonatomic) int32_t height;
 @property (copy, nonatomic)  NSString *subMediaType;
+@property (copy, nonatomic) NSString *videoName;
 
 - (NSString *)alias;
 - (NSString *)formatDesc;
@@ -23,7 +24,8 @@
 	AVCaptureVideoDataOutput			*propOutput;
 	dispatch_queue_t					propQueue;
 }
-
+@property (nonatomic, copy) NSMutableArray<NSString *> *videoName;
+ 
 - (void) loadDeviceWithUniqueID:(NSString *)n;
 - (void) loadDeviceWithUniqueID:(NSString *)n format:(UVCCaptureDeviceFormat *)uvcFormat;
 - (NSString *)currentDeivceId;

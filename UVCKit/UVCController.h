@@ -129,7 +129,7 @@ struct fireware_info{
 	IBOutlet NSView		*settingsView;
 	NSMutableArray<NSString *> *videoName;
 }
-
+- (NSMutableArray<NSString *> *)getVideoName;
 - (id) initWithDeviceIDString:(NSString *)n;
 - (id) initWithLocationID:(NSUInteger)locationID;
 - (void)resetPTZ;

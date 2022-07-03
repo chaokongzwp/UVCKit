@@ -336,6 +336,16 @@ typedef enum : NSUInteger {
     [_focusSlider setIntegerValue:[uvcController focus]];
     [_focusLabel setStringValue:@(_focusSlider.intValue).stringValue];
     
+    if ([uvcController autoFocusSupported]) {
+        _focusSwitch.enabled = [uvcController autoFocusSupported];
+        [_focusSwitch setState:[uvcController autoFocus]?NSControlStateValueOn:NSControlStateValueOff];
+        if ([uvcController autoFocus]){
+            _focusSlider.enabled = false;
+        } else {
+            _focusSlider.enabled = true;
+        }
+    }
+    
     _exposureSlider.minValue = [uvcController minExposureTime];
     _exposureSlider.maxValue = [uvcController maxExposureTime];
     _exposureSlider.altIncrementValue = 1;
@@ -402,6 +412,13 @@ typedef enum : NSUInteger {
 }
 
 - (IBAction)focusSwitchAction:(id)sender {
+    if (_focusSwitch.state == NSControlStateValueOn) {
+        [uvcController setAutoFocus:NO];
+        _exposureSlider.enabled = NO;
+    } else {
+        [uvcController setAutoFocus:YES];
+        _exposureSlider.enabled = YES;
+    }
 }
 
 - (IBAction)exposureSliderAction:(id)sender {
@@ -745,14 +762,14 @@ typedef enum : NSUInteger {
 	for (int i = 0; i < returnMe.count;i++){
 		NSMenuItem *item = returnMe[i];
 		[[subMediaTypePUB menu] addItem:item];
-		if ([[item title] isEqualToString:activeFormat.alias]) {
+		if ([[item title] isEqualToString:activeFormat.videoName]) {
 			selectItem = i;
 		}
 	}
 	
 	[subMediaTypePUB selectItemAtIndex:selectItem];
 	
-	[self updateDimensionPopUpButton:activeFormat.alias];
+	[self updateDimensionPopUpButton:activeFormat.videoName];
 }
 
 - (BOOL)isInUpdating{
@@ -974,6 +991,7 @@ typedef enum : NSUInteger {
         [self imageCtrlPageUpdate];
         [self cameraCtrlPageUpdate];
         [self settingPageUpdate];
+        vidSrc.videoName = [uvcController getVideoName];
     }
 	
 	[versionTextView setString:@""];
