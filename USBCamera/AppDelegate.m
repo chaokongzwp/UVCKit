@@ -538,7 +538,7 @@ typedef enum : NSUInteger {
 - (IBAction)saveLogAction:(id)sender {
 	if ([logMenu.title isEqualToString:@"Save Log"]) {
 		[UVCUtils openLog];
-		[UVCUtils showAlert:[UVCUtils logPath] title:@"Log存储路径" window:mainView.window completionHandler:nil];
+		[UVCUtils showAlert:[UVCUtils logPath] title:@"Log File Path" window:mainView.window completionHandler:nil];
 		logMenu.title = @"Close Log";
 	} else {
 		logMenu.title = @"Save Log";
