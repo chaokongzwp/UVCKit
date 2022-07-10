@@ -155,35 +155,47 @@ typedef enum : NSUInteger {
     _brightnessSlider.maxValue = [uvcController maxBright];
     _brightnessSlider.altIncrementValue = 1;
     [_brightnessSlider setIntegerValue:[uvcController bright]];
+    _brightnessSlider.allowsTickMarkValuesOnly = YES;
+    _brightnessSlider.numberOfTickMarks = [uvcController maxBright] - [uvcController minBright] + 1;
     [_brightnessLabel setStringValue:@(_brightnessSlider.intValue).stringValue];
     
     _contrastSlider.minValue = [uvcController minContrast];
     _contrastSlider.maxValue = [uvcController maxContrast];
     _contrastSlider.altIncrementValue = 1;
     [_contrastSlider setIntegerValue:[uvcController contrast]];
+    _contrastSlider.allowsTickMarkValuesOnly = YES;
+    _contrastSlider.numberOfTickMarks = [uvcController maxContrast] - [uvcController minContrast] + 1;
     [_contrastLabel setStringValue:@(_contrastSlider.intValue).stringValue];
     
     [_hueSlider setIntegerValue:[uvcController hue]];
     _hueSlider.minValue = [uvcController minHue];
     _hueSlider.maxValue = [uvcController maxHue];
     _hueSlider.altIncrementValue = 1;
+    _hueSlider.allowsTickMarkValuesOnly = YES;
+    _hueSlider.numberOfTickMarks = [uvcController maxHue] - [uvcController minHue] + 1;
     [_hueLabel setStringValue:@(_hueSlider.intValue).stringValue];
     
     [_saturateSlider setIntegerValue:[uvcController saturation]];
     _saturateSlider.minValue = [uvcController minSaturation];
     _saturateSlider.maxValue = [uvcController maxSaturation];
     _saturateSlider.altIncrementValue = 1;
+    _saturateSlider.allowsTickMarkValuesOnly = YES;
+    _saturateSlider.numberOfTickMarks = [uvcController maxSaturation] - [uvcController minSaturation] + 1;
     [_saturateLabel setStringValue:@(_saturateSlider.intValue).stringValue];
     
     _sharpnessSlider.minValue = [uvcController minSharpness];
     _sharpnessSlider.maxValue = [uvcController maxSharpness];
     _sharpnessSlider.altIncrementValue = 1;
+    _sharpnessSlider.allowsTickMarkValuesOnly = YES;
+    _sharpnessSlider.numberOfTickMarks = [uvcController maxSharpness] - [uvcController minSharpness] + 1;
     [_sharpnessSlider setIntegerValue:[uvcController sharpness]];
     [_sharpnessLabel setStringValue:@(_sharpnessSlider.intValue).stringValue];
     
     _gammaSlider.minValue = [uvcController minGamma];
     _gammaSlider.maxValue = [uvcController maxGamma];
     _gammaSlider.altIncrementValue = 1;
+    _gammaSlider.allowsTickMarkValuesOnly = YES;
+    _gammaSlider.numberOfTickMarks = [uvcController maxGamma] - [uvcController minGamma] + 1;
     [_gammaSlider setIntegerValue:[uvcController gamma]];
     [_gammaLabel setStringValue:@(_gammaSlider.intValue).stringValue];
     
@@ -203,6 +215,8 @@ typedef enum : NSUInteger {
     _backlightContrastSlider.minValue = [uvcController minBacklight];
     _backlightContrastSlider.maxValue = [uvcController maxBacklight];
     _backlightContrastSlider.altIncrementValue = 1;
+    _backlightContrastSlider.allowsTickMarkValuesOnly = YES;
+    _backlightContrastSlider.numberOfTickMarks = [uvcController maxBacklight] - [uvcController minBacklight] + 1;
     [_backlightContrastSlider setIntegerValue:[uvcController backlight]];
     [_backlightLabel setStringValue:@(_backlightContrastSlider.intValue).stringValue];
     
@@ -210,6 +224,8 @@ typedef enum : NSUInteger {
     _gainSlider.maxValue = [uvcController maxGain];
     _gainSlider.altIncrementValue = 1;
     [_gainSlider setIntegerValue:[uvcController gain]];
+    _gainSlider.allowsTickMarkValuesOnly = YES;
+    _gainSlider.numberOfTickMarks = [uvcController maxGain] - [uvcController minGain] + 1;
     [_gainLabel setStringValue:@(_gainSlider.intValue).stringValue];
     
     [_anitFickerSelector selectItemAtIndex:[uvcController powerLine]];
